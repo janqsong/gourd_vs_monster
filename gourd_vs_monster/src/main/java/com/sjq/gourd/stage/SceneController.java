@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.regex.*;
@@ -12,6 +13,12 @@ import java.util.regex.*;
 import com.sjq.gourd.communication.*;
 
 public class SceneController {
+
+    @FXML
+    private Pane start_scene;
+
+    @FXML
+    private Pane fight_scene;
 
     @FXML
     private Button connectButton;
@@ -54,7 +61,10 @@ public class SceneController {
 
     @FXML
     void about_us(ActionEvent event) {
-
+        start_scene.setVisible(false);
+        start_scene.setDisable(true);
+        fight_scene.setVisible(true);
+        fight_scene.setDisable(false);
     }
 
     @FXML
@@ -71,8 +81,12 @@ public class SceneController {
         if(ipisMatch == false && portisMatch == false) {
             System.out.println("请输入规范的ip和port地址");
         }
-        client = new GameClient(ipString, Integer.parseInt(portString));
-        client.start_connect_server();
+        try {
+            Thread clientthread = new GameClient(ipString, Integer.parseInt(portString));
+            clientthread.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -82,8 +96,7 @@ public class SceneController {
 
         boolean isMatch = Pattern.matches(portpattern, text);
         if(isMatch == false) {
-            
-            System.out.println("======创建服务器端口不符合规范，请重新输入");
+            System.out.println("创建服务器端口不符合规范，请重新输入");
             return;
         }
         int port = Integer.parseInt(text);
@@ -94,7 +107,7 @@ public class SceneController {
 
         try {
             Thread serverthread = new GameServer(port);
-            serverthread.run();
+            serverthread.start();
         } catch(IOException e) {
             e.printStackTrace();
         }

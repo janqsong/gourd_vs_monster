@@ -12,8 +12,11 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("SceneController.fxml"));
-            Scene scene = new Scene(root, 900, 700);
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(this.getClass().getResource("SceneController.fxml"));
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root, 1200, 700);
+            //scene.getStylesheets().addAll(this.getClass().getResource("/style.css").toExternalForm());
             primaryStage.setTitle("葫芦娃大战妖精");
             primaryStage.setScene(scene);
             primaryStage.show();
