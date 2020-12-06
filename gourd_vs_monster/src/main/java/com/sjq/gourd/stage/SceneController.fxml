@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
-
 
 <Pane prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
    <children>
       <Button fx:id="connectButton" layoutX="373.0" layoutY="146.0" mnemonicParsing="false" onAction="#start_network_fight" text="联机对战" />
-      <Button layoutX="373.0" layoutY="240.0" mnemonicParsing="false" onAction="#local_playback" text="本地回放" />
-      <Button layoutX="373.0" layoutY="328.0" mnemonicParsing="false" onAction="#game_discription" text="游戏说明" />
-      <Button layoutX="372.0" layoutY="441.0" mnemonicParsing="false" onAction="#about_us" text="关       于" />
+      <Button fx:id="playbackButton" layoutX="373.0" layoutY="240.0" mnemonicParsing="false" onAction="#local_playback" text="本地回放" />
+      <Button fx:id="descriptionButton" layoutX="373.0" layoutY="328.0" mnemonicParsing="false" onAction="#game_discription" text="游戏说明" />
+      <Button fx:id="aboutButton" layoutX="372.0" layoutY="441.0" mnemonicParsing="false" onAction="#about_us" text="关       于" />
+      <Button fx:id="createButton" layoutX="162.0" layoutY="277.0" mnemonicParsing="false" onAction="#create_server" text="创建服务器" visible="false" />
+      <Button fx:id="connectserverButton" layoutX="524.0" layoutY="277.0" mnemonicParsing="false" onAction="#connect_server" text="连接服务器" visible="false" />
+      <TextField fx:id="serveripText" layoutX="574.0" layoutY="178.0" prefHeight="23.0" prefWidth="138.0" promptText="形如：192.168.1.105" visible="false" />
+      <TextField fx:id="serverportText2" layoutX="574.0" layoutY="229.0" prefHeight="23.0" prefWidth="86.0" promptText="5001~65535" visible="false" />
+      <Label fx:id="serveripLabel" layoutX="524.0" layoutY="182.0" text="ip地址" visible="false" />
+      <Label fx:id="serverportLabel2" layoutX="524.0" layoutY="233.0" text="端口号" visible="false" />
+      <TextField fx:id="serverportText" layoutX="218.0" layoutY="229.0" prefHeight="23.0" prefWidth="86.0" promptText="5001~65535" visible="false" />
+      <Label fx:id="serverportLabel" layoutX="164.0" layoutY="233.0" text="端口号" visible="false" />
    </children>
 </Pane>
