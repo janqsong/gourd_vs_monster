@@ -1,142 +1,115 @@
 package com.sjq.gourd.stage;
 
-import javafx.event.ActionEvent;
+import com.sjq.gourd.client.GameClient;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.regex.*;
 
-import com.sjq.gourd.communication.*;
+import com.sjq.gourd.server.*;
 
 public class SceneController {
 
     @FXML
-    private Pane start_scene;
+    private Pane StartScene;
 
     @FXML
-    private Pane fight_scene;
+    private Pane ConnectScene;
 
     @FXML
-    private Button connectButton;
+    private Pane fightScene;
 
     @FXML
-    private Button playbackButton;
+    private TextField ServerPortText2;
 
     @FXML
-    private Button descriptionButton;
+    private TextField ServerIpText;
 
     @FXML
-    private Button aboutButton;
+    private TextField ServerPortText1;
 
     @FXML
-    private Button createButton;
-
-    @FXML
-    private Button connectserverButton;
-
-    @FXML
-    private TextField serveripText;
-
-    @FXML
-    private TextField serverportText2;
-    
-    @FXML
-    private Label serveripLabel;
-
-    @FXML
-    private Label serverportLabel2;
-
-    @FXML
-    private TextField serverportText;
-
-    @FXML
-    private Label serverportLabel;
-
-    GameServer server;
-    GameClient client;
-
-    @FXML
-    void about_us(ActionEvent event) {
-        start_scene.setVisible(false);
-        start_scene.setDisable(true);
-        fight_scene.setVisible(true);
-        fight_scene.setDisable(false);
+    void AboutUsMouseClickEvent(MouseEvent event) {
+        System.out.println("about");
     }
 
     @FXML
-    void connect_server(ActionEvent event) {
-        String ipString = serveripText.getText();
-        String portString = serverportText2.getText();
+    void ExitMouseClickEvent(MouseEvent event) {
+        System.out.println("exit");
+    }
+
+    @FXML
+    void LocalPlaybackMouseClickEvent(MouseEvent event) {
+        System.out.println("localplay");
+    }
+
+    @FXML
+    void NetPlayMouseClickEvent(MouseEvent event) {
+        StartScene.setVisible(false);
+        StartScene.setDisable(true);
+        ConnectScene.setVisible(true);
+        ConnectScene.setDisable(false);
+    }
+
+    @FXML
+    void ConnectServerMouseClick(MouseEvent event) {
+        String ipString = ServerIpText.getText();
+        String portString = ServerPortText1.getText();
 
         String ipPattern = "\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}";
         String portPattern = "\\d{4,5}";
 
-        boolean ipisMatch = Pattern.matches(ipPattern, ipString);
-        boolean portisMatch = Pattern.matches(portPattern, portString);
+        boolean ipMatch = Pattern.matches(ipPattern, ipString);
+        boolean portMatch = Pattern.matches(portPattern, portString);
 
-        if(ipisMatch == false && portisMatch == false) {
+        if (!ipMatch && !portMatch) {
             System.out.println("请输入规范的ip和port地址");
         }
         try {
-            Thread clientthread = new GameClient(ipString, Integer.parseInt(portString));
-            clientthread.start();
-        } catch(Exception e) {
+            ConnectScene.setVisible(false);
+            ConnectScene.setDisable(true);
+            fightScene.setVisible(true);
+            fightScene.setDisable(false);
+            new GameClient(ipString, Integer.parseInt(portString), this).run();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    void create_server(ActionEvent event) {
-        String text = serverportText.getText();
-        String portpattern = "\\d{4,5}";
+    void CreateServerMouseClick(MouseEvent event) {
+        String text = ServerPortText2.getText();
+        String portPattern = "\\d{4,5}";
 
-        boolean isMatch = Pattern.matches(portpattern, text);
-        if(isMatch == false) {
+        boolean isMatch = Pattern.matches(portPattern, text);
+        if (!isMatch) {
             System.out.println("创建服务器端口不符合规范，请重新输入");
             return;
         }
         int port = Integer.parseInt(text);
-        if(port < 5001 && port > 65535) {
+        if (port < 5001 || port > 65535) {
             System.out.println("创建服务器端口不符合规范，请重新输入");
             return;
         }
 
         try {
-            Thread serverthread = new GameServer(port);
-            serverthread.start();
-        } catch(IOException e) {
+            Thread serverThread = new GameServer(port);
+            serverThread.start();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    void game_discription(ActionEvent event) {
-
+    public void addImageView(ImageView tempImageView) {
+        fightScene.getChildren().add(tempImageView);
     }
 
-    @FXML
-    void local_playback(ActionEvent event) {
-
-    }
-
-    @FXML
-    void start_network_fight(ActionEvent event) {
-        connectButton.setVisible(false);
-        playbackButton.setVisible(false);
-        descriptionButton.setVisible(false);
-        aboutButton.setVisible(false);
-        createButton.setVisible(true);
-        connectserverButton.setVisible(true);
-        serveripText.setVisible(true);
-        serverportText.setVisible(true);
-        serverportText2.setVisible(true);
-        serveripLabel.setVisible(true);
-        serverportLabel.setVisible(true);
-        serverportLabel2.setVisible(true);
+    public void startGame() {
+        System.out.println("startGame");
     }
 
 }

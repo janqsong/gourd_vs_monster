@@ -1,9 +1,9 @@
-
-
-#start_scene{
-    -fx-background-image: url("background.png");
-    -fx-background-repeat: stretch;   
-    /* -fx-background-size: 1200 700; */
-    -fx-background-position: center center;
+#StartScene{ 
+    -fx-background-image: url("/background.png");
+    -fx-background-size: 1200 700; 
 }
 
+#ConnectScene{ 
+    -fx-background-image: url("/background.png");
+    -fx-background-size: 1200 700; 
+} 
