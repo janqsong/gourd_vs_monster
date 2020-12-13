@@ -95,7 +95,7 @@
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerIpText" layoutX="882.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="192.168.1.101">
+            <TextField fx:id="ServerIpText" layoutX="882.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="192.168.1.105">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
@@ -113,7 +113,6 @@
          </children></Pane>
 
         <Pane fx:id="fightScene" prefHeight="700" prefWidth="1200" visible="false" disable="true"><children>
-            
         </children></Pane>
    </children>
 </Pane>

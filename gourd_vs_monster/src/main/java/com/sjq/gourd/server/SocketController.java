@@ -42,29 +42,22 @@ public class SocketController {
     }
 
 
-    public void run() {
-        new NotificationMsg("匹配成功，准备战斗！").sendMsg(outGourd);
-        new NotificationMsg("匹配成功，准备战斗！").sendMsg(outMonster);
-//        for(int i = 0; i < 30; i++) {
-//            new CountDownMsg(30 - i).sendMsg(outGourd);
-//            new CountDownMsg(30 - i).sendMsg(outMonster);
-//            try {
-//                Thread.sleep(1000);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-        new ServerScene().startGame();
-//        while(true) {
-//            System.out.println("正在战斗");
-//            try {
-//                outGourd.writeUTF("葫芦娃正在战斗");
-//                outMonster.writeUTF("妖精正在战斗");
-//                Thread.sleep(10000);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+    public void prepareFight() {
+        new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outGourd);
+        new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outMonster);
+        for(int i = 0; i < 5; i++) {
+            new CountDownMsg(30 - i).sendMsg(outGourd);
+            new CountDownMsg(30 - i).sendMsg(outMonster);
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);
+        new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outMonster);
+        System.out.println("正在战斗");
+        new ServerScene(inGourd, outGourd, inMonster, outMonster).startGame();
     }
 
 }

@@ -20,7 +20,7 @@ public class App extends Application {
             fxmlLoader.setLocation(this.getClass().getResource("/SceneController.fxml"));
             Parent root = fxmlLoader.load();
             Image cursorImage = new Image("/mouse_icon.png");
-            ImageCursor Mouse = new ImageCursor(cursorImage, cursorImage.getWidth() / 2, 0);
+            ImageCursor Mouse = new ImageCursor(cursorImage, cursorImage.getWidth() / 6, 0);
             Scene scene = new Scene(root, 1200, 700);
             scene.getStylesheets().addAll(this.getClass().getResource("/style.css").toExternalForm());
             scene.setCursor(Mouse);

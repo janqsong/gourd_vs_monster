@@ -1,61 +1,82 @@
 package com.sjq.gourd.client;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.sjq.gourd.constant.CreatureId;
+import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.creature.GourdClass;
+import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.stage.SceneController;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 
-public class MonsterCamp {
-    private SceneController sceneController;
-    ArrayList<ImageView> monsterImageList = new ArrayList<>();
+public class MonsterCamp extends Camp{
 
-    public MonsterCamp(SceneController sceneController) {
-        ImageView itemImageView1 = new ImageView();
-        ImageView itemImageView2 = new ImageView();
-        ImageView itemImageView3 = new ImageView();
-        ImageView itemImageView4 = new ImageView();
-        ImageView itemImageView5 = new ImageView();
-        ImageView itemImageView6 = new ImageView();
-        ImageView itemImageView7 = new ImageView();
-        ImageView itemImageView8 = new ImageView();
-        ImageView itemImageView9 = new ImageView();
-        Image itemImage1 = new Image("/蜈蚣精.png");
-        Image itemImage2 = new Image("/蜈蚣精.png");
-        Image itemImage3 = new Image("/蜈蚣精.png");
-        Image itemImage4 = new Image("/蜈蚣精.png");
-        Image itemImage5 = new Image("/蜈蚣精.png");
-        Image itemImage6 = new Image("/蜈蚣精.png");
-        Image itemImage7 = new Image("/蜈蚣精.png");
-        Image itemImage8 = new Image("/蜈蚣精.png");
-        Image itemImage9 = new Image("/蜈蚣精.png");
-        itemImageView1.setImage(itemImage1);
-        itemImageView2.setImage(itemImage2);
-        itemImageView3.setImage(itemImage3);
-        itemImageView4.setImage(itemImage4);
-        itemImageView5.setImage(itemImage5);
-        itemImageView6.setImage(itemImage6);
-        itemImageView7.setImage(itemImage7);
-        itemImageView8.setImage(itemImage8);
-        itemImageView9.setImage(itemImage9);
-        monsterImageList.add(itemImageView1);
-        monsterImageList.add(itemImageView2);
-        monsterImageList.add(itemImageView3);
-        monsterImageList.add(itemImageView4);
-        monsterImageList.add(itemImageView5);
-        monsterImageList.add(itemImageView6);
-        monsterImageList.add(itemImageView7);
-        monsterImageList.add(itemImageView8);
-        monsterImageList.add(itemImageView9);
+    public MonsterCamp(SceneController sceneController,
+                     DataInputStream in, DataOutputStream out) {
+        super(sceneController, in, out);
     }
 
     public void initGame() {
+        for(Map.Entry<Integer, String> entry : ImageUrl.monsterImageUrlMap.entrySet()) {
+            int key = entry.getKey();
+            String value = entry.getValue();
+            ImageView tempImageView = new ImageView();
+            Image tempImage = new Image(value);
+            tempImageView.setImage(tempImage);
+            monsterFamily.get(key).addCreatureImageUrl(value);
+            monsterFamily.get(key).addCreatureImageView(tempImageView);
+        }
+        for(Map.Entry<Integer, String> entry : ImageUrl.monsterSelectImageUrlMap.entrySet()) {
+            int key = entry.getKey();
+            String value = entry.getValue();
+            monsterFamily.get(key).addSelectCreatureImageUrl(value);
+        }
+        double layoutX = 160;
+        for(MonsterClass gourdMember : monsterFamily.values()) {
+            ImageView tempImageView = gourdMember.getCreatureImageView();
+            tempImageView.setFitWidth(80);
+            tempImageView.setPreserveRatio(true);
+            tempImageView.setLayoutX(layoutX);
+            tempImageView.setLayoutY(576.0);
+            layoutX += 100;
+            tempImageView.setVisible(false);
+            tempImageView.setDisable(true);
+            sceneController.addImageView(tempImageView);
+        }
 
-        startGame();
+        for(Map.Entry<Integer, String> entry : ImageUrl.gourdImageUrlMap.entrySet()) {
+            int key = entry.getKey();
+            String value = entry.getValue();
+            ImageView tempImageView = new ImageView();
+            Image tempImage = new Image(value);
+            tempImageView.setImage(tempImage);
+            gourdFamily.get(key).addCreatureImageUrl(value);
+            gourdFamily.get(key).addCreatureImageView(tempImageView);
+        }
+        for(Map.Entry<Integer, String> entry : ImageUrl.gourdSelectImageUrlMap.entrySet()) {
+            int key = entry.getKey();
+            String value = entry.getValue();
+            gourdFamily.get(key).addSelectCreatureImageUrl(value);
+        }
+        for(GourdClass gourdMember : gourdFamily.values()) {
+            ImageView tempImageView = gourdMember.getCreatureImageView();
+            tempImageView.setFitWidth(80);
+            tempImageView.setPreserveRatio(true);
+            tempImageView.setVisible(false);
+            tempImageView.setDisable(true);
+            sceneController.addImageView(tempImageView);
+        }
     }
 
     public void startGame() {
-
+        initGame();
+        sceneController.initGameSceneController(in, out, "Monster", gourdFamily, monsterFamily);
+        sceneController.monsterStartGame();
     }
 }

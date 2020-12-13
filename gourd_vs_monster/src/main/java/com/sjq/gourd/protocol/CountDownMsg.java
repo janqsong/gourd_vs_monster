@@ -28,9 +28,10 @@ public class CountDownMsg implements  Msg{
     public void parseMsg(DataInputStream inStream) {
         try {
             timeRemaining = inStream.readInt();
-            System.out.println(timeRemaining);
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
+
+    public int getTimeRemaining() {return timeRemaining;}
 }

@@ -1,7 +1,5 @@
 package com.sjq.gourd.protocol;
 
-import com.sjq.gourd.creature.Creature;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 

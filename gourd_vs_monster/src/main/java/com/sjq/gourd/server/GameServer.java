@@ -32,6 +32,6 @@ public class GameServer extends Thread{
                 e.printStackTrace();
             }
         }
-        socketServerController.run();
+        socketServerController.prepareFight();
     }
 }

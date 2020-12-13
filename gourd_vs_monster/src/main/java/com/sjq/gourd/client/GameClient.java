@@ -39,12 +39,10 @@ public class GameClient {
 
     public void initGameCamp() {
         if(campType.equals("Gourd")) {
-            GourdCamp gourdCamp = new GourdCamp(sceneController);
-            gourdCamp.initGame();
+            GourdCamp gourdCamp = new GourdCamp(sceneController, in, out);
             gourdCamp.startGame();
         } else if(campType.equals("Monster")) {
-            MonsterCamp monsterCamp = new MonsterCamp(sceneController);
-            monsterCamp.initGame();
+            MonsterCamp monsterCamp = new MonsterCamp(sceneController, in, out);
             monsterCamp.startGame();
         }
     }
