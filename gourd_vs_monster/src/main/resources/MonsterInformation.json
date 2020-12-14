@@ -1,0 +1,112 @@
+{
+  "monsterInfo" : [
+    {
+      "creatureId" : 0,
+      "creatureName" : "snakeGoblin",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 1,
+      "creatureName" : "scorpionGoblin",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 2,
+      "creatureName" : "monster1",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 3,
+      "creatureName" : "monster2",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 4,
+      "creatureName" : "monster3",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 5,
+      "creatureName" : "monster4",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 6,
+      "creatureName" : "monster5",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 7,
+      "creatureName" : "monster6",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    },
+    {
+      "creatureId" : 8,
+      "creatureName" : "monster7",
+      "baseHealth" : 1500,
+      "baseMagic" : 100,
+      "baseAttack" : 100,
+      "baseDefense" : 30,
+      "baseAttackSpeed" : 1,
+      "baseMoveSpeed" : 10,
+      "shootRange" : 400.0,
+      "faceDirection" : 2
+    }
+  ]
+}

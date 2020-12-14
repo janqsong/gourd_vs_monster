@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gourd_vs_monster (2)" />
+        <module name="gourd_vs_monster" />
         <module name="gourd_vs_monster (1)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="gourd_vs_monster" target="1.8" />
       <module name="gourd_vs_monster (1)" target="1.8" />
       <module name="gourd_vs_monster (2)" target="1.8" />
     </bytecodeTargetLevel>

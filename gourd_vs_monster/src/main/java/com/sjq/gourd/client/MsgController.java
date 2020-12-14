@@ -57,8 +57,6 @@ public class MsgController {
                 int creatureId = positionNotifyMsg.getCreatureId();
                 double layoutX = positionNotifyMsg.getLayoutX();
                 double layoutY = positionNotifyMsg.getLayoutY();
-                System.out.println(campType);
-                System.out.println(creatureId);
                 ImageView tempImageView = new ImageView();
                 if(campType.equals("Gourd")) {
                     tempImageView = gourdFamily.get(creatureId).getCreatureImageView();
@@ -69,6 +67,18 @@ public class MsgController {
                 tempImageView.setLayoutY(layoutY);
                 tempImageView.setVisible(true);
                 tempImageView.setDisable(false);
+            }
+            case Msg.FACE_DIRECTION_MSG: {
+                FaceDirectionMsg faceDirectionMsg = new FaceDirectionMsg();
+                faceDirectionMsg.parseMsg(inputStream);
+                String campType = faceDirectionMsg.getCampType();
+                int creatureId = faceDirectionMsg.getCreatureId();
+                int faceDirection = faceDirectionMsg.getFaceDirection();
+                if(campType.equals("Gourd")) {
+                    gourdFamily.get(creatureId).setFaceDirection(faceDirection);
+                } else if(campType.equals("Monster")) {
+                    monsterFamily.get(creatureId).setFaceDirection(faceDirection);
+                }
             }
             default: {
                 break;

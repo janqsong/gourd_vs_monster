@@ -23,54 +23,10 @@ public class MonsterCamp extends Camp{
     }
 
     public void initGame() {
-        for(Map.Entry<Integer, String> entry : ImageUrl.monsterImageUrlMap.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
-            ImageView tempImageView = new ImageView();
-            Image tempImage = new Image(value);
-            tempImageView.setImage(tempImage);
-            monsterFamily.get(key).addCreatureImageUrl(value);
-            monsterFamily.get(key).addCreatureImageView(tempImageView);
-        }
-        for(Map.Entry<Integer, String> entry : ImageUrl.monsterSelectImageUrlMap.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
-            monsterFamily.get(key).addSelectCreatureImageUrl(value);
-        }
         double layoutX = 160;
-        for(MonsterClass gourdMember : monsterFamily.values()) {
-            ImageView tempImageView = gourdMember.getCreatureImageView();
-            tempImageView.setFitWidth(80);
-            tempImageView.setPreserveRatio(true);
-            tempImageView.setLayoutX(layoutX);
-            tempImageView.setLayoutY(576.0);
+        for(MonsterClass monsterMember : monsterFamily.values()) {
+            monsterMember.setCreatureImagePos(layoutX, 576.0);
             layoutX += 100;
-            tempImageView.setVisible(false);
-            tempImageView.setDisable(true);
-            sceneController.addImageView(tempImageView);
-        }
-
-        for(Map.Entry<Integer, String> entry : ImageUrl.gourdImageUrlMap.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
-            ImageView tempImageView = new ImageView();
-            Image tempImage = new Image(value);
-            tempImageView.setImage(tempImage);
-            gourdFamily.get(key).addCreatureImageUrl(value);
-            gourdFamily.get(key).addCreatureImageView(tempImageView);
-        }
-        for(Map.Entry<Integer, String> entry : ImageUrl.gourdSelectImageUrlMap.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
-            gourdFamily.get(key).addSelectCreatureImageUrl(value);
-        }
-        for(GourdClass gourdMember : gourdFamily.values()) {
-            ImageView tempImageView = gourdMember.getCreatureImageView();
-            tempImageView.setFitWidth(80);
-            tempImageView.setPreserveRatio(true);
-            tempImageView.setVisible(false);
-            tempImageView.setDisable(true);
-            sceneController.addImageView(tempImageView);
         }
     }
 

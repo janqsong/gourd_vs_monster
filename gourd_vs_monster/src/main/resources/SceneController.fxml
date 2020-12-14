@@ -5,114 +5,121 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Line?>
+
 
 <Pane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
    <children>
-      <!-- <Pane fx:id="start_scene" prefHeight="1200" prefWidth="700">
-         <Button fx:id="connectButton" layoutX="373.0" layoutY="146.0" mnemonicParsing="false" onAction="#start_network_fight" text="联机对战" />
-         <Button fx:id="playbackButton" layoutX="373.0" layoutY="240.0" mnemonicParsing="false" onAction="#local_playback" text="本地回放" />
-         <Button fx:id="descriptionButton" layoutX="373.0" layoutY="328.0" mnemonicParsing="false" onAction="#game_discription" text="游戏说明" />
-         <Button fx:id="aboutButton" layoutX="372.0" layoutY="441.0" mnemonicParsing="false" onAction="#about_us" text="关       于" />
-         <Button fx:id="createButton" layoutX="162.0" layoutY="277.0" mnemonicParsing="false" onAction="#create_server" text="创建服务器" visible="false" />
-         <Button fx:id="connectserverButton" layoutX="524.0" layoutY="277.0" mnemonicParsing="false" onAction="#connect_server" text="连接服务器" visible="false" />
-         <TextField fx:id="serveripText" layoutX="574.0" layoutY="178.0" prefHeight="23.0" prefWidth="138.0" promptText="形如：192.168.1.105" text="192.168.1.106" visible="false" />
-         <TextField fx:id="serverportText2" layoutX="574.0" layoutY="229.0" prefHeight="23.0" prefWidth="86.0" promptText="5001~65535" text="23333" visible="false" />
-         <Label fx:id="serveripLabel" layoutX="524.0" layoutY="182.0" text="ip地址" visible="false" />
-         <Label fx:id="serverportLabel2" layoutX="524.0" layoutY="233.0" text="端口号" visible="false" />
-         <TextField fx:id="serverportText" layoutX="218.0" layoutY="229.0" prefHeight="23.0" prefWidth="86.0" promptText="5001~65535" text="23333" visible="false" />
-         <Label fx:id="serverportLabel" layoutX="164.0" layoutY="233.0" text="端口号" visible="false" />
-      </Pane>
-      <Pane fx:id="fight_scene" disable="true">
-
-      </Pane> -->
-      <Pane fx:id="StartScene" disable="true" prefHeight="700" prefWidth="1200" visible="false">
+      <Pane fx:id="StartScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
         <children>
-            <ImageView fx:id="GourdIconImage" fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@gourd_icon.png" />
-                </image>
-            </ImageView>
-            <ImageView fx:id="TitleImage" fitHeight="131.0" fitWidth="200.0" layoutX="215.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@title.png" />
-                </image>
-            </ImageView>
-            <ImageView fx:id="NetPlayImage" fitHeight="131.0" fitWidth="260.0" layoutX="470.0" layoutY="200.0" onMouseClicked="#NetPlayMouseClickEvent" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@net_play.png" />
-                </image>
-            </ImageView>
-            <ImageView fx:id="LocalPlaybackImage" fitHeight="131.0" fitWidth="260.0" layoutX="470.0" layoutY="300.0" onMouseClicked="#LocalPlaybackMouseClickEvent" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@local_playback.png" />
-                </image>
-            </ImageView>
-            <ImageView fx:id="AboutUsImage" fitHeight="131.0" fitWidth="260.0" layoutX="470.0" layoutY="400.0" onMouseClicked="#AboutUsMouseClickEvent" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@about_us.png" />
-                </image>
-            </ImageView>
-            <ImageView fx:id="ExitImage" fitHeight="131.0" fitWidth="260.0" layoutX="470.0" layoutY="500.0" onMouseClicked="#ExitMouseClickEvent" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@exit.png" />
-                </image>
-            </ImageView>
-        </children></Pane>
-        <Pane fx:id="ConnectScene" prefHeight="700" prefWidth="1200">
-         <children>
             <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@gourd_icon.png" />
+                    <Image url="@images/gourd_icon.png" />
                 </image>
             </ImageView>
             <ImageView fitHeight="131.0" fitWidth="200.0" layoutX="215.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@title.png" />
+                    <Image url="@images/title.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="CreateServerBtn" fitHeight="150.0" fitWidth="200.0" layoutX="308.0" layoutY="440.0" onMouseClicked="#CreateServerMouseClick" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="NetPlayImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="200.0" onMouseClicked="#NetPlayMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/net_play.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="LocalPlaybackImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="300.0" onMouseClicked="#LocalPlaybackMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/local_playback.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="AboutUsImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="400.0" onMouseClicked="#AboutUsMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/about_us.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="ExitImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="500.0" onMouseClicked="#ExitMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/exit.png" />
+                </image>
+            </ImageView>
+        </children></Pane>
+        <Pane fx:id="ConnectScene" prefHeight="740" prefWidth="1360">
+         <children>
+            <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/gourd_icon.png" />
+                </image>
+            </ImageView>
+            <ImageView fitHeight="131.0" fitWidth="200.0" layoutX="215.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/title.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="CreateServerBtn" fitHeight="150.0" fitWidth="200.0" layoutX="348.0" layoutY="440.0" onMouseClicked="#CreateServerMouseClick" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@create_server.png" />
+                  <Image url="@images/create_server.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="ConnectServerBtn" fitHeight="150.0" fitWidth="200.0" layoutX="900.0" layoutY="440.0" onMouseClicked="#ConnectServerMouseClick" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="ConnectServerBtn" fitHeight="150.0" fitWidth="200.0" layoutX="940.0" layoutY="440.0" onMouseClicked="#ConnectServerMouseClick" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@connect_server.png" />
+                  <Image url="@images/connect_server.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="GourdIconImage" fitHeight="131.0" fitWidth="180.0" layoutX="695.0" layoutY="240.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="180.0" layoutX="735.0" layoutY="240.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@server_ip.png" />
+                    <Image url="@images/server_ip.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="TitleImage" fitHeight="131.0" fitWidth="180.0" layoutX="695.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="180.0" layoutX="735.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@server_port.png" />
+                    <Image url="@images/server_port.png" />
                 </image>
             </ImageView>
-            <TextField fx:id="ServerPortText2" layoutX="290.0" layoutY="338.0" prefHeight="49.0" prefWidth="218.0" promptText="5001~65535" text="23333">
+            <TextField fx:id="ServerPortText2" layoutX="330.0" layoutY="338.0" prefHeight="49.0" prefWidth="218.0" promptText="5001~65535" text="23333">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerIpText" layoutX="882.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="192.168.1.105">
+            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="172.25.191.147">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerPortText1" layoutX="882.0" layoutY="338.0" prefHeight="49.0" prefWidth="218.0" promptText="5001~65535" text="23333">
+            <TextField fx:id="ServerPortText1" layoutX="922.0" layoutY="338.0" prefHeight="49.0" prefWidth="218.0" promptText="5001~65535" text="23333">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <ImageView fx:id="TitleImage1" fitHeight="131.0" fitWidth="180.0" layoutX="100.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="180.0" layoutX="140.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@server_port.png" />
+                  <Image url="@images/server_port.png" />
                </image>
             </ImageView>
          </children></Pane>
 
-        <Pane fx:id="fightScene" prefHeight="700" prefWidth="1200" visible="false" disable="true"><children>
+        <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false"><children>
+            <Pane fx:id="mapPane" layoutX="20.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="475.0" startX="100.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="475.0" startY="105.0" />
+            <Line endY="105.0" layoutX="1240.0" layoutY="475.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="370.0" startY="105.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="370.0" startX="100.0" />
+            <Line endY="105.0" layoutX="1240.0" layoutY="370.0" />
+            <Line endY="105.0" layoutX="1240.0" layoutY="370.0" />
+            <Line endX="100.0" layoutX="1240.0" layoutY="370.0" />
+            <Line endX="100.0" startX="-100.0" />
+            <Line endY="105.0" layoutX="1240.0" layoutY="120.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="120.0" startY="105.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="120.0" startX="100.0" />
+            <Line endX="1200.0" layoutX="20.0" layoutY="20.0" />
+            <Line endY="700.0" layoutX="20.0" layoutY="20.0" />
+            <Line endX="1200.0" endY="700.0" layoutX="20.0" layoutY="20.0" startY="700.0" />
+            <Line endX="1200.0" endY="700.0" layoutX="20.0" layoutY="20.0" startX="1200.0" />
+            <Line endX="600.0" endY="700.0" layoutX="20.0" layoutY="20.0" startX="600.0" />
+            <Line endX="100.0" layoutX="1240.0" layoutY="20.0" />
+            <Line endY="105.0" layoutX="1240.0" layoutY="20.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="20.0" startY="105.0" />
+            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="20.0" startX="100.0" />
         </children></Pane>
    </children>
 </Pane>

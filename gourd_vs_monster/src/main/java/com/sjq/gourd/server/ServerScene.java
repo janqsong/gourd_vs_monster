@@ -1,5 +1,6 @@
 package com.sjq.gourd.server;
 
+import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.GourdClass;
@@ -11,9 +12,11 @@ import javafx.fxml.FXML;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,52 +41,81 @@ public class ServerScene {
         initScene();
     }
 
-    public void initScene() {
-        gourdFamily.put(CreatureId.FIRST_GOURD_ID, new GourdClass(CreatureId.FIRST_GOURD_NAME));
-        gourdFamily.put(CreatureId.SECOND_GOURD_ID, new GourdClass(CreatureId.SECOND_GOURD_NAME));
-        gourdFamily.put(CreatureId.THIRD_GOURD_ID, new GourdClass(CreatureId.THIRD_GOURD_NAME));
-        gourdFamily.put(CreatureId.FOURTH_GOURD_ID,new GourdClass(CreatureId.FOURTH_GOURD_NAME));
-        gourdFamily.put(CreatureId.FIFTH_GOURD_ID, new GourdClass(CreatureId.FIFTH_GOURD_NAME));
-        gourdFamily.put(CreatureId.SIXTH_GOURD_ID, new GourdClass(CreatureId.SIXTH_GOURD_NAME));
-        gourdFamily.put(CreatureId.SEVENTH_GOURD_ID, new GourdClass(CreatureId.SEVENTH_GOURD_NAME));
-        gourdFamily.put(CreatureId.PANGOLIN_ID, new GourdClass(CreatureId.PANGOLIN_NAME));
-        gourdFamily.put(CreatureId.GRANDPA_ID, new GourdClass(CreatureId.GRANDPA_NAME));
-        ImageUrl.initImageUrl();
-        for(Map.Entry<Integer, String> entry : ImageUrl.gourdImageUrlMap.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
-            gourdFamily.get(key).addCreatureImageUrl(value);
-            gourdFamily.get(key).setCreatureImageView();
+    public String getJsonContentText(String path) {
+        StringBuilder jsonContent = new StringBuilder();
+        File file = new File(path);
+        BufferedReader reader = null;
+        try {
+            FileInputStream in = new FileInputStream(file);
+            reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                jsonContent.append(tempString);
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        monsterFamily.put(CreatureId.SNAKE_GOBLIN_ID, new MonsterClass(CreatureId.SNAKE_GOBLIN_NAME));
-        monsterFamily.put(CreatureId.SCORPION_GOBLIN_ID, new MonsterClass(CreatureId.SCORPION_GOBLIN_NAME));
-        monsterFamily.put(CreatureId.MONSTER1_ID, new MonsterClass(CreatureId.MONSTER1_NAME));
-        monsterFamily.put(CreatureId.MONSTER2_ID, new MonsterClass(CreatureId.MONSTER2_NAME));
-        monsterFamily.put(CreatureId.MONSTER3_ID, new MonsterClass(CreatureId.MONSTER3_NAME));
-        monsterFamily.put(CreatureId.MONSTER4_ID, new MonsterClass(CreatureId.MONSTER4_NAME));
-        monsterFamily.put(CreatureId.MONSTER5_ID, new MonsterClass(CreatureId.MONSTER5_NAME));
-        monsterFamily.put(CreatureId.MONSTER6_ID, new MonsterClass(CreatureId.MONSTER6_NAME));
-        monsterFamily.put(CreatureId.MONSTER7_ID, new MonsterClass(CreatureId.MONSTER7_NAME));
-        for(Map.Entry<Integer, String> entry : ImageUrl.monsterImageUrlMap.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
-            monsterFamily.get(key).addCreatureImageUrl(value);
-            monsterFamily.get(key).setCreatureImageView();
-        }
-        msgController = new MsgController(gourdFamily, monsterFamily);
+        return jsonContent.toString();
     }
 
-    public void setImageViewPos(String creatureType, String creatureId, double layoutX, double layoutY) {
-//        if(creatureType.equals("Gourd")) {
-//            ImageView tempImageView = gourdFamily.get(creatureId);
-//            tempImageView.setLayoutX(layoutX);
-//            tempImageView.setLayoutY(layoutY);
-//        } else if(creatureType.equals("Monster")) {
-//            ImageView tempImageView = monsterFamily.get(creatureId);
-//            tempImageView.setLayoutX(layoutX);
-//            tempImageView.setLayoutY(layoutY);
-//        }
+    public void initScene() {
+        JSONObject gourdJSONObject = new JSONObject(getJsonContentText("/GourdInformation.json"));
+        System.out.println(gourdJSONObject.get("gourdInfo"));
+        JSONArray gourdInfoArray = (JSONArray) gourdJSONObject.get("gourdInfo");
+
+        JSONObject monsterJSONObject = new JSONObject(getJsonContentText("/MonsterInformation.json"));
+        System.out.println(monsterJSONObject.get("monsterInfo"));
+        JSONArray monsterInfoArray = (JSONArray) gourdJSONObject.get("monsterInfo");
+
+        ImageUrl.initImageUrl();
+        for(int i = 0; i < gourdInfoArray.length(); i++) {
+            JSONObject gourdObject = (JSONObject) gourdInfoArray.get(i);
+            int creatureId = gourdObject.getInt("creatureId");
+            String creatureName = gourdObject.getString("creatureName");
+            int baseHealth = gourdObject.getInt("baseHealth");
+            int baseMagic = gourdObject.getInt("baseMagic");
+            int baseAttack = gourdObject.getInt("baseAttack");
+            int baseDefense = gourdObject.getInt("baseDefense");
+            int baseAttackSpeed = gourdObject.getInt("baseAttackSpeed");
+            int baseMoveSpeed = gourdObject.getInt("baseMoveSpeed");
+            double shootRange = gourdObject.getDouble("shootRange");
+            int faceDirection = gourdObject.getInt("faceDirection");
+            Image gourdLeftImage = ImageUrl.gourdLeftImageMap.get(creatureId);
+            Image gourdLeftSelectImage = ImageUrl.gourdLeftSelectImageMap.get(creatureId);
+            Image gourdRightImage = ImageUrl.gourdRightImageMap.get(creatureId);
+            Image gourdRightSelectImage = ImageUrl.gourdRightSelectImageMap.get(creatureId);
+            GourdClass gourdMember = new GourdClass(inGourd, outGourd, Constant.CampType.GOURD, creatureId, creatureName,
+                    baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
+                    gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
+            gourdMember.setCreatureImageView();
+            gourdFamily.put(creatureId, gourdMember);
+
+        }
+
+        for(int i = 0; i < monsterInfoArray.length(); i++) {
+            JSONObject monsterObject = (JSONObject) monsterInfoArray.get(i);
+            int creatureId = monsterObject.getInt("creatureId");
+            String creatureName = monsterObject.getString("creatureName");
+            int baseHealth = monsterObject.getInt("baseHealth");
+            int baseMagic = monsterObject.getInt("baseMagic");
+            int baseAttack = monsterObject.getInt("baseAttack");
+            int baseDefense = monsterObject.getInt("baseDefense");
+            int baseAttackSpeed = monsterObject.getInt("baseAttackSpeed");
+            int baseMoveSpeed = monsterObject.getInt("baseMoveSpeed");
+            double shootRange = monsterObject.getDouble("shootRange");
+            int faceDirection = monsterObject.getInt("faceDirection");
+            Image monsterLeftImage = ImageUrl.monsterLeftImageMap.get(creatureId);
+            Image monsterLeftSelectImage = ImageUrl.monsterLeftSelectImageMap.get(creatureId);
+            Image monsterRightImage = ImageUrl.monsterRightImageMap.get(creatureId);
+            Image monsterRightSelectImage = ImageUrl.monsterRightSelectImageMap.get(creatureId);
+            MonsterClass monsterMember = new MonsterClass(inMonster, outMonster, Constant.CampType.GOURD, creatureId, creatureName,
+                    baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
+                    monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
+            monsterMember.setCreatureImageView();
+            monsterFamily.put(creatureId, monsterMember);
+        }
+        msgController = new MsgController(gourdFamily, monsterFamily);
     }
 
     public void startGame() {

@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings
-images
 target
 dependency-reduced-pom.xml
+.idea
+*.iml

@@ -1,7 +1,6 @@
 package com.sjq.gourd.stage;
 
-import java.io.FileInputStream;
-
+import com.sjq.gourd.constant.Constant;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -19,13 +18,13 @@ public class App extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(this.getClass().getResource("/SceneController.fxml"));
             Parent root = fxmlLoader.load();
-            Image cursorImage = new Image("/mouse_icon.png");
+            Image cursorImage = new Image("/images/mouse_icon.png");
             ImageCursor Mouse = new ImageCursor(cursorImage, cursorImage.getWidth() / 6, 0);
-            Scene scene = new Scene(root, 1200, 700);
+            Scene scene = new Scene(root, Constant.STAGE_WIDTH, Constant.STAGE_HEIGHT);
             scene.getStylesheets().addAll(this.getClass().getResource("/style.css").toExternalForm());
             scene.setCursor(Mouse);
             primaryStage.setTitle("Gourd VS Monster");
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/gourd_icon.png")));
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/gourd_icon.png")));
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
             primaryStage.show();

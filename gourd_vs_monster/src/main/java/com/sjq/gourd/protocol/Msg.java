@@ -11,6 +11,7 @@ public interface Msg {
     public static final int START_GAME_MSG = 5;
     public static final int POSITION_NOTIFY_MSG = 6;
     public static final int FINISH_FLAG_MSG = 7;
+    public static final int FACE_DIRECTION_MSG = 8;
 
     public void sendMsg(DataOutputStream outStream);
     public void parseMsg(DataInputStream inStream);
