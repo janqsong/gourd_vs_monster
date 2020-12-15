@@ -1,7 +1,5 @@
 package com.sjq.gourd.protocol;
 
-import com.sjq.gourd.constant.CreatureId;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
@@ -44,7 +42,6 @@ public class PositionNotifyMsg implements Msg{
             layoutX = inStream.readDouble();
             layoutY = inStream.readDouble();
         } catch (Exception e) {
-            System.out.println("Exception");
             e.printStackTrace();
         }
     }

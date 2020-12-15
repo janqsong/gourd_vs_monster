@@ -45,7 +45,7 @@ public class SocketController {
     public void prepareFight() {
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outMonster);
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 1; i++) {
             new CountDownMsg(30 - i).sendMsg(outGourd);
             new CountDownMsg(30 - i).sendMsg(outMonster);
             try {
@@ -56,7 +56,6 @@ public class SocketController {
         }
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outMonster);
-        System.out.println("正在战斗");
         new ServerScene(inGourd, outGourd, inMonster, outMonster).startGame();
     }
 

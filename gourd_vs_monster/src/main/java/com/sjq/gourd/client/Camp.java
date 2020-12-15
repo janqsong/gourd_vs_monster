@@ -56,15 +56,9 @@ public class Camp {
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
                     gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
             gourdMember.setCreatureImageView();
-            sceneController.addImageViewToFightMapPane(gourdMember.getCreatureImageView());
+            sceneController.addProgressBarToMapPane(gourdMember.getHealthProgressBar());
+            sceneController.addProgressBarToMapPane(gourdMember.getMagicProgressBar());
 
-            sceneController.addImageViewToGourdMapPane(gourdMember.getCreatureImageView());
-            sceneController.addProgressBarToGourdMapPane(gourdMember.getHealthProgressBar());
-            sceneController.addProgressBarToGourdMapPane(gourdMember.getMagicProgressBar());
-
-            sceneController.addImageViewToMonsterMapPane(gourdMember.getCreatureImageView());
-            sceneController.addProgressBarToMonsterMapPane(gourdMember.getHealthProgressBar());
-            sceneController.addProgressBarToMonsterMapPane(gourdMember.getMagicProgressBar());
             gourdFamily.put(creatureId, gourdMember);
 
         }
@@ -89,15 +83,9 @@ public class Camp {
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
                     monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
             monsterMember.setCreatureImageView();
-            sceneController.addImageViewToFightMapPane(monsterMember.getCreatureImageView());
 
-            sceneController.addImageViewToGourdMapPane(monsterMember.getCreatureImageView());
-            sceneController.addProgressBarToGourdMapPane(monsterMember.getHealthProgressBar());
-            sceneController.addProgressBarToGourdMapPane(monsterMember.getMagicProgressBar());
-
-            sceneController.addImageViewToMonsterMapPane(monsterMember.getCreatureImageView());
-            sceneController.addProgressBarToMonsterMapPane(monsterMember.getHealthProgressBar());
-            sceneController.addProgressBarToMonsterMapPane(monsterMember.getMagicProgressBar());
+            sceneController.addProgressBarToMapPane(monsterMember.getHealthProgressBar());
+            sceneController.addProgressBarToMapPane(monsterMember.getMagicProgressBar());
             monsterFamily.put(creatureId, monsterMember);
         }
     }

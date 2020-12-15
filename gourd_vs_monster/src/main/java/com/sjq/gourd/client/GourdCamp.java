@@ -28,6 +28,13 @@ public class GourdCamp extends Camp{
         for(GourdClass gourdMember : gourdFamily.values()) {
             gourdMember.setCreatureImagePos(40, layoutY);
             layoutY += 80;
+            sceneController.addImageViewToFightMapPane(gourdMember.getCreatureImageView());
+        }
+        for(MonsterClass monsterMember : monsterFamily.values()) {
+            monsterMember.setCreatureImagePos(500, 100);
+            monsterMember.getCreatureImageView().setVisible(true);
+            monsterMember.getCreatureImageView().setVisible(false);
+            sceneController.addImageViewToMapPane(monsterMember.getCreatureImageView());
         }
     }
 

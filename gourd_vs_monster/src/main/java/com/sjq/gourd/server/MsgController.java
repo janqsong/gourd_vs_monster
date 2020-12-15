@@ -36,7 +36,6 @@ public class MsgController {
                 layoutX = positionNotifyMsg.getLayoutX();
                 layoutY = positionNotifyMsg.getLayoutY();
                 if(campType.equals("Gourd")) {
-                    System.out.println("creatureId");
                     ImageView tempImageView = gourdFamily.get(creatureId).getCreatureImageView();
                     tempImageView.setLayoutX(layoutX);
                     tempImageView.setLayoutY(layoutY);

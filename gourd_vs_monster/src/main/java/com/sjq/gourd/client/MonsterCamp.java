@@ -27,7 +27,11 @@ public class MonsterCamp extends Camp{
         double layoutX = 160;
         for(MonsterClass monsterMember : monsterFamily.values()) {
             monsterMember.setCreatureImagePos(layoutX, Constant.FIGHT_PANE_HEIGHT - 100);
+            sceneController.addImageViewToFightMapPane(monsterMember.getCreatureImageView());
             layoutX += 100;
+        }
+        for(GourdClass gourdMember : gourdFamily.values()) {
+            sceneController.addImageViewToMapPane(gourdMember.getCreatureImageView());
         }
     }
 

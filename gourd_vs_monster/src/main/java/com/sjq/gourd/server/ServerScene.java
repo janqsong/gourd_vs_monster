@@ -1,14 +1,12 @@
 package com.sjq.gourd.server;
 
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.protocol.NoParseMsg;
 import com.sjq.gourd.protocol.PositionNotifyMsg;
-import javafx.fxml.FXML;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -107,7 +105,7 @@ public class ServerScene {
             Image monsterLeftSelectImage = ImageUrl.monsterLeftSelectImageMap.get(creatureId);
             Image monsterRightImage = ImageUrl.monsterRightImageMap.get(creatureId);
             Image monsterRightSelectImage = ImageUrl.monsterRightSelectImageMap.get(creatureId);
-            MonsterClass monsterMember = new MonsterClass(inMonster, outMonster, Constant.CampType.GOURD, creatureId, creatureName,
+            MonsterClass monsterMember = new MonsterClass(inMonster, outMonster, Constant.CampType.MONSTER, creatureId, creatureName,
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
                     monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
             monsterMember.setCreatureImageView();
@@ -116,7 +114,7 @@ public class ServerScene {
         msgController = new MsgController(gourdFamily, monsterFamily);
     }
 
-    public void startGame() {
+    public void startGame(){
         new Thread(new Runnable() {
             @Override
             public void run() {

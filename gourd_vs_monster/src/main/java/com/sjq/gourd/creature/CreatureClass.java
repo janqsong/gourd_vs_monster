@@ -234,7 +234,6 @@ public class CreatureClass {
             }
             creatureImageView.setLayoutX(imagePosition.getLayoutX());
             creatureImageView.setLayoutY(imagePosition.getLayoutY());
-            new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);
         }
     }
 
