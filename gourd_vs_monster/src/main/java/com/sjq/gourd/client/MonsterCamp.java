@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.GourdClass;
@@ -25,7 +26,7 @@ public class MonsterCamp extends Camp{
     public void initGame() {
         double layoutX = 160;
         for(MonsterClass monsterMember : monsterFamily.values()) {
-            monsterMember.setCreatureImagePos(layoutX, 576.0);
+            monsterMember.setCreatureImagePos(layoutX, Constant.FIGHT_PANE_HEIGHT - 100);
             layoutX += 100;
         }
     }

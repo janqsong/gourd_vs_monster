@@ -82,6 +82,7 @@ public class CreatureClass {
         this.creatureRightImage = creatureRightImage;
         this.selectCreatureRightImage = selectCreatureRightImage;
 
+        creatureImageView = new ImageView();
         creatureImageView.setFitWidth(Constant.CREATURE_IMAGE_WIDTH);
         creatureImageView.setPreserveRatio(true);
         creatureImageView.setVisible(false);
@@ -89,8 +90,6 @@ public class CreatureClass {
         imagePosition = new ImagePosition(0, 0,
                 creatureImageView.getFitWidth(), creatureImageView.getFitHeight());
 
-
-        creatureImageView = new ImageView();
         healthProgressBar.setPrefWidth(Constant.CREATURE_IMAGE_WIDTH);
         healthProgressBar.setPrefHeight(Constant.BAR_HEIGHT);
         healthProgressBar.setStyle("-fx-accent: red;");

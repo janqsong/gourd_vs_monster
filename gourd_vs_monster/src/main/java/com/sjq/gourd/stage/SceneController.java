@@ -4,6 +4,7 @@ import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.client.GameClient;
 import com.sjq.gourd.client.MsgController;
 import com.sjq.gourd.collision.Collision;
+import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
@@ -13,6 +14,7 @@ import com.sjq.gourd.protocol.PositionNotifyMsg;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +31,8 @@ import java.util.Random;
 import java.util.regex.*;
 
 import com.sjq.gourd.server.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -42,7 +46,9 @@ public class SceneController {
     @FXML
     private Pane fightScene;
     @FXML
-    private Pane mapPane;
+    private Pane gourdMapPane;
+    @FXML
+    private Pane monsterMapPane;
     @FXML
     private TextField ServerPortText2;
     @FXML
@@ -51,7 +57,7 @@ public class SceneController {
     private TextField ServerPortText1;
 
     private final Random randomNum = new Random(System.currentTimeMillis());
-    private Text notificationText;
+    private Text notificationMidText;
     private DataInputStream in;
     private DataOutputStream out;
     private MsgController msgController;
@@ -106,8 +112,6 @@ public class SceneController {
             ConnectScene.setDisable(true);
             fightScene.setVisible(true);
             fightScene.setDisable(false);
-            mapPane.setVisible(true);
-            mapPane.setDisable(false);
             new GameClient(ipString, Integer.parseInt(portString), this).run();
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,18 +151,54 @@ public class SceneController {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
         msgController = new MsgController(gourdFamily, monsterFamily);
-        notificationText = new Text();
-        notificationText.setText("等待其他玩家加入");
-        notificationText.setFont(Font.font("FangSong", 30));
-        notificationText.setWrappingWidth(240);
-        notificationText.setTextAlignment(TextAlignment.CENTER);
-        double width = notificationText.getWrappingWidth();
-        notificationText.setLayoutX(600 - width / 2);
-        notificationText.setLayoutY(260);
-        mapPane.getChildren().add(notificationText);
+        notificationMidText = new Text();
+        notificationMidText.setText("等待其他玩家加入");
+        notificationMidText.setFont(Font.font("FangSong", 30));
+        notificationMidText.setTextAlignment(TextAlignment.CENTER);
+        double width = notificationMidText.getBoundsInLocal().getWidth();
+        System.out.println(width);
+        notificationMidText.setLayoutX(600 - width / 2);
+        notificationMidText.setLayoutY(260);
+        gourdMapPane.getChildren().add(notificationMidText);
+        monsterMapPane.getChildren().add(notificationMidText);
+
+        Line midLine = setLine(0, 0, 0, 700, 600 , 0,"solid");
+        gourdMapPane.getChildren().add(midLine);
+        monsterMapPane.getChildren().add(midLine);
+
+        for(double x = 75; x < 600; x += 75) {
+            Line tempLine = setLine(0, 0, 0, 700, x, 0, "dash");
+            gourdMapPane.getChildren().add(tempLine);
+        }
+        for(double y = 70; y < 700; y += 70) {
+            Line tempLine = setLine(0, 0, 600, 0, 0, y, "dash");
+            gourdMapPane.getChildren().add(tempLine);
+        }
+        for(double x = 675; x < 1200; x += 75) {
+            Line tempLine = setLine(0, 0, 0, 700, x, 0, "dash");
+            monsterMapPane.getChildren().add(tempLine);
+        }
+        for(double y = 70; y < 700; y += 70) {
+            Line tempLine = setLine(0, 0, 600, 0, 0, y, "dash");
+            monsterMapPane.getChildren().add(tempLine);
+        }
+    }
+
+    public Line setLine(double startX, double startY, double endX, double endY,
+                        double layoutX, double layoutY, String lineType) {
+        Line resLine = new Line(startX, startY, endX, endY);
+        resLine.setLayoutX(layoutX);
+        resLine.setLayoutY(layoutY);
+        if(lineType.equals("dash"))
+            resLine.getStrokeDashArray().addAll(10d, 10d);
+        return resLine;
     }
 
     public void gourdStartGame() {
+        gourdMapPane.setVisible(true);
+        gourdMapPane.setDisable(false);
+        monsterMapPane.setVisible(false);
+        monsterMapPane.setDisable(true);
         waitForAnother();
     }
 
@@ -200,10 +240,12 @@ public class SceneController {
                     PositionXY currentPosition = new PositionXY(event.getSceneX(), event.getSceneY());
                     double deltaX = currentPosition.X - beginPosition.X;
                     double deltaY = currentPosition.Y - beginPosition.Y;
-                    deltaX = (deltaX > 520) ? 520 : deltaX;
+                    if(deltaX > Constant.FIGHT_PANE_WIDTH - Constant.CREATURE_IMAGE_WIDTH)
+                        deltaX = Constant.FIGHT_PANE_WIDTH - Constant.CREATURE_IMAGE_WIDTH;
                     deltaX = (deltaX < 0) ? 0 : deltaX;
                     deltaY = (deltaY < 0) ? 0 : deltaY;
-                    deltaY = (deltaY > 600) ? 600 : deltaY;
+                    if(deltaY > Constant.FIGHT_PANE_HEIGHT - gourdMember.getImageHeight())
+                        deltaY = Constant.FIGHT_PANE_HEIGHT - gourdMember.getImageHeight();
                     gourdMember.getCreatureImageView().setLayoutX(deltaX);
                     gourdMember.getCreatureImageView().setLayoutY(deltaY);
                 }
@@ -214,7 +256,7 @@ public class SceneController {
                 int msgType = in.readInt();
                 if (msgType == Msg.COUNT_DOWN_MSG) {
                     msgController.getMsgClass(msgType, in);
-                    notificationText.setText(String.valueOf(msgController.getTimeRemaining()));
+                    notificationMidText.setText(String.valueOf(msgController.getTimeRemaining()));
                 } else if (msgType == Msg.START_GAME_MSG) {
                     for (Map.Entry<Integer, GourdClass> entry : gourdFamily.entrySet()) {
                         int creatureId = entry.getKey();
@@ -250,7 +292,7 @@ public class SceneController {
                 e.printStackTrace();
             }
         }
-        mapPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        gourdMapPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 PositionXY curPosition = new PositionXY(event.getSceneX(), event.getSceneY());
@@ -302,6 +344,10 @@ public class SceneController {
 
 
     public void monsterStartGame() {
+        monsterMapPane.setVisible(true);
+        monsterMapPane.setDisable(false);
+        gourdMapPane.setVisible(false);
+        gourdMapPane.setDisable(true);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -346,8 +392,7 @@ public class SceneController {
                 System.out.println(msgType);
                 if (msgType == Msg.COUNT_DOWN_MSG) {
                     msgController.getMsgClass(msgType, in);
-                    System.out.println(notificationText);
-                    notificationText.setText(String.valueOf(msgController.getTimeRemaining()));
+                    notificationMidText.setText(String.valueOf(msgController.getTimeRemaining()));
                 } else if (msgType == Msg.START_GAME_MSG) {
                     if (campType.equals("Gourd")) {
                         for (Map.Entry<Integer, GourdClass> entry : gourdFamily.entrySet()) {
@@ -388,8 +433,33 @@ public class SceneController {
         System.out.println("fight");
     }
 
-    public Pane getMapPane() {
-        return mapPane;
+    public void addImageViewToFightMapPane(ImageView tempImageView) {
+        fightScene.getChildren().add(tempImageView);
+    }
+
+    public void addImageViewToGourdMapPane(ImageView tempImageView) {
+        gourdMapPane.getChildren().add(tempImageView);
+    }
+
+    public void addImageViewToMonsterMapPane(ImageView tempImageView) {
+        monsterMapPane.getChildren().add(tempImageView);
+    }
+
+
+    public void addProgressBarToGourdMapPane(ProgressBar progressBar) {
+        gourdMapPane.getChildren().add(progressBar);
+    }
+
+    public void addProgressBarToMonsterMapPane(ProgressBar progressBar) {
+        monsterMapPane.getChildren().add(progressBar);
+    }
+
+    public Pane getGourdMapPane() {
+        return gourdMapPane;
+    }
+
+    public Pane getMonsterMapPane() {
+        return monsterMapPane;
     }
 
     public void monsterStartFight() {

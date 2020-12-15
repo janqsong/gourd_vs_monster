@@ -29,13 +29,11 @@ public class Camp {
         this.in = in;
         this.out = out;
 
-        JSONObject gourdJSONObject = new JSONObject(getJsonContentText("/GourdInformation.json"));
-        System.out.println(gourdJSONObject.get("gourdInfo"));
+        JSONObject gourdJSONObject = new JSONObject(getJsonContentText("GourdInformation.json"));
         JSONArray gourdInfoArray = (JSONArray) gourdJSONObject.get("gourdInfo");
 
-        JSONObject monsterJSONObject = new JSONObject(getJsonContentText("/MonsterInformation.json"));
-        System.out.println(monsterJSONObject.get("monsterInfo"));
-        JSONArray monsterInfoArray = (JSONArray) gourdJSONObject.get("monsterInfo");
+        JSONObject monsterJSONObject = new JSONObject(getJsonContentText("MonsterInformation.json"));
+        JSONArray monsterInfoArray = (JSONArray) monsterJSONObject.get("monsterInfo");
 
         ImageUrl.initImageUrl();
         for(int i = 0; i < gourdInfoArray.length(); i++) {
@@ -58,9 +56,15 @@ public class Camp {
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
                     gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
             gourdMember.setCreatureImageView();
-            sceneController.getMapPane().getChildren().add(gourdMember.getCreatureImageView());
-            sceneController.getMapPane().getChildren().add(gourdMember.getHealthProgressBar());
-            sceneController.getMapPane().getChildren().add(gourdMember.getMagicProgressBar());
+            sceneController.addImageViewToFightMapPane(gourdMember.getCreatureImageView());
+
+            sceneController.addImageViewToGourdMapPane(gourdMember.getCreatureImageView());
+            sceneController.addProgressBarToGourdMapPane(gourdMember.getHealthProgressBar());
+            sceneController.addProgressBarToGourdMapPane(gourdMember.getMagicProgressBar());
+
+            sceneController.addImageViewToMonsterMapPane(gourdMember.getCreatureImageView());
+            sceneController.addProgressBarToMonsterMapPane(gourdMember.getHealthProgressBar());
+            sceneController.addProgressBarToMonsterMapPane(gourdMember.getMagicProgressBar());
             gourdFamily.put(creatureId, gourdMember);
 
         }
@@ -85,19 +89,25 @@ public class Camp {
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
                     monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
             monsterMember.setCreatureImageView();
-            sceneController.getMapPane().getChildren().add(monsterMember.getCreatureImageView());
-            sceneController.getMapPane().getChildren().add(monsterMember.getHealthProgressBar());
-            sceneController.getMapPane().getChildren().add(monsterMember.getMagicProgressBar());
+            sceneController.addImageViewToFightMapPane(monsterMember.getCreatureImageView());
+
+            sceneController.addImageViewToGourdMapPane(monsterMember.getCreatureImageView());
+            sceneController.addProgressBarToGourdMapPane(monsterMember.getHealthProgressBar());
+            sceneController.addProgressBarToGourdMapPane(monsterMember.getMagicProgressBar());
+
+            sceneController.addImageViewToMonsterMapPane(monsterMember.getCreatureImageView());
+            sceneController.addProgressBarToMonsterMapPane(monsterMember.getHealthProgressBar());
+            sceneController.addProgressBarToMonsterMapPane(monsterMember.getMagicProgressBar());
             monsterFamily.put(creatureId, monsterMember);
         }
     }
 
     public String getJsonContentText(String path) {
         StringBuilder jsonContent = new StringBuilder();
-        File file = new File(path);
         BufferedReader reader = null;
         try {
-            FileInputStream in = new FileInputStream(file);
+            InputStream in = getClass().getClassLoader().getResourceAsStream(path);
+            assert in != null;
             reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String tempString = null;
             while ((tempString = reader.readLine()) != null) {

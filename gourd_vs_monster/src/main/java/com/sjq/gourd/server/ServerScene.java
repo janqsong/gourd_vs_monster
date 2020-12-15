@@ -43,10 +43,10 @@ public class ServerScene {
 
     public String getJsonContentText(String path) {
         StringBuilder jsonContent = new StringBuilder();
-        File file = new File(path);
         BufferedReader reader = null;
         try {
-            FileInputStream in = new FileInputStream(file);
+            InputStream in = getClass().getClassLoader().getResourceAsStream(path);
+            assert in != null;
             reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String tempString = null;
             while ((tempString = reader.readLine()) != null) {
@@ -60,13 +60,11 @@ public class ServerScene {
     }
 
     public void initScene() {
-        JSONObject gourdJSONObject = new JSONObject(getJsonContentText("/GourdInformation.json"));
-        System.out.println(gourdJSONObject.get("gourdInfo"));
+        JSONObject gourdJSONObject = new JSONObject(getJsonContentText("GourdInformation.json"));
         JSONArray gourdInfoArray = (JSONArray) gourdJSONObject.get("gourdInfo");
 
-        JSONObject monsterJSONObject = new JSONObject(getJsonContentText("/MonsterInformation.json"));
-        System.out.println(monsterJSONObject.get("monsterInfo"));
-        JSONArray monsterInfoArray = (JSONArray) gourdJSONObject.get("monsterInfo");
+        JSONObject monsterJSONObject = new JSONObject(getJsonContentText("MonsterInformation.json"));
+        JSONArray monsterInfoArray = (JSONArray) monsterJSONObject.get("monsterInfo");
 
         ImageUrl.initImageUrl();
         for(int i = 0; i < gourdInfoArray.length(); i++) {

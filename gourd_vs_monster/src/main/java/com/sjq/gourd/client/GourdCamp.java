@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.GourdClass;
@@ -23,10 +24,10 @@ public class GourdCamp extends Camp{
     }
 
     public void initGame() {
-        double layoutX = 160;
+        double layoutY = 10;
         for(GourdClass gourdMember : gourdFamily.values()) {
-            gourdMember.setCreatureImagePos(layoutX, 576.0);
-            layoutX += 100;
+            gourdMember.setCreatureImagePos(40, layoutY);
+            layoutY += 80;
         }
     }
 

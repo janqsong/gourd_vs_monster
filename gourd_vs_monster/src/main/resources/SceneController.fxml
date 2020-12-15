@@ -80,7 +80,7 @@
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="172.25.191.147">
+            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="172.25.181.48">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
@@ -97,29 +97,12 @@
             </ImageView>
          </children></Pane>
 
-        <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false"><children>
-            <Pane fx:id="mapPane" layoutX="20.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="475.0" startX="100.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="475.0" startY="105.0" />
-            <Line endY="105.0" layoutX="1240.0" layoutY="475.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="370.0" startY="105.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="370.0" startX="100.0" />
-            <Line endY="105.0" layoutX="1240.0" layoutY="370.0" />
-            <Line endY="105.0" layoutX="1240.0" layoutY="370.0" />
-            <Line endX="100.0" layoutX="1240.0" layoutY="370.0" />
-            <Line endX="100.0" startX="-100.0" />
-            <Line endY="105.0" layoutX="1240.0" layoutY="120.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="120.0" startY="105.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="120.0" startX="100.0" />
-            <Line endX="1200.0" layoutX="20.0" layoutY="20.0" />
-            <Line endY="700.0" layoutX="20.0" layoutY="20.0" />
-            <Line endX="1200.0" endY="700.0" layoutX="20.0" layoutY="20.0" startY="700.0" />
-            <Line endX="1200.0" endY="700.0" layoutX="20.0" layoutY="20.0" startX="1200.0" />
-            <Line endX="600.0" endY="700.0" layoutX="20.0" layoutY="20.0" startX="600.0" />
-            <Line endX="100.0" layoutX="1240.0" layoutY="20.0" />
-            <Line endY="105.0" layoutX="1240.0" layoutY="20.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="20.0" startY="105.0" />
-            <Line endX="100.0" endY="105.0" layoutX="1240.0" layoutY="20.0" startX="100.0" />
+        <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
+        <children>
+            <Pane fx:id="gourdMapPane" layoutX="140.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0" style="-fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;"><children>
+            </children></Pane>
+            <Pane fx:id="monsterMapPane" layoutX="20.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0"><children>
+            </children></Pane>
         </children></Pane>
    </children>
 </Pane>
