@@ -30,8 +30,8 @@ public class ImagePosition {
 
     public void setLayoutY(double layoutY) {
         if(layoutY <= 0) layoutY = 0;
-        if(layoutY >= Constant.FIGHT_PANE_WIDTH - imageHeight)
-            layoutY = Constant.FIGHT_PANE_WIDTH - imageHeight;
+        if(layoutY >= Constant.FIGHT_PANE_HEIGHT - imageHeight)
+            layoutY = Constant.FIGHT_PANE_HEIGHT - imageHeight;
         this.layoutY = layoutY;
     }
 

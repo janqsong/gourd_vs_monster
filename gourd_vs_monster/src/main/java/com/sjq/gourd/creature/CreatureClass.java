@@ -213,7 +213,6 @@ public class CreatureClass {
 
     public void randomMove() {
         direction = randomNum.nextInt(5);
-        move();
     }
 
     public void move() {

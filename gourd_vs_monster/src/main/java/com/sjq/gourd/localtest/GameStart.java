@@ -71,7 +71,7 @@ public class GameStart {
             creatureClass.setEnemyFamily(gourdFamily);
 
         gourdStartGame();
-        //monsterStartGame();
+//        monsterStartGame();
     }
 
     public void gourdStartGame() {
@@ -137,7 +137,7 @@ public class GameStart {
                             }
                             System.out.println("endGourd");
                             //flag=!flag;
-                            Thread.sleep(Constant.FRAME_TIME / 2);
+                            Thread.sleep(Constant.FRAME_TIME);
                         }
                     } catch (Exception e){
                         System.out.println("GourdException");
@@ -214,7 +214,7 @@ public class GameStart {
                         System.out.println("MonsterException");
                         e.printStackTrace();
                     } finally {
-                        //flag = !flag;
+                        flag = !flag;
                     }
                 }
             }
