@@ -42,7 +42,6 @@ public class CreatureClass {
     protected long lastAttackMillis = System.currentTimeMillis();
 
     protected int direction;
-    protected int faceDirection;
     protected boolean isControlled = false;
     protected ImagePosition imagePosition;
 
@@ -59,10 +58,15 @@ public class CreatureClass {
 
     private final Random randomNum = new Random(System.currentTimeMillis());
 
+    private final double WIDTH;
+    private final double HEIGHT;
+
+
+    //add 加上width表示图片宽度
     public CreatureClass(DataInputStream in, DataOutputStream out,
                          String campType, int creatureId, String creatureName,
                          int baseHealth, int baseMagic, int baseAttack, int baseDefense, int baseAttackSpeed,
-                         int baseMoveSpeed, double shootRange, int faceDirection,
+                         int baseMoveSpeed, double shootRange, int faceDirection, double width,
                          Image creatureLeftImage, Image selectCreatureLeftImage,
                          Image creatureRightImage, Image selectCreatureRightImage) {
         //TODO 这个类里，尽量不要改，改也可以，你可以和我说你下，你要改哪些内容，可以多加函数。
@@ -80,7 +84,6 @@ public class CreatureClass {
         this.currentMoveSpeed = this.baseMoveSpeed = baseMoveSpeed;
         this.shootRange = shootRange;
         this.direction = faceDirection;
-        this.faceDirection = faceDirection;
 
         this.creatureLeftImage = creatureLeftImage;
         this.selectCreatureLeftImage = selectCreatureLeftImage;
@@ -88,13 +91,20 @@ public class CreatureClass {
         this.selectCreatureRightImage = selectCreatureRightImage;
 
         creatureImageView = new ImageView();
-        creatureImageView.setFitWidth(Constant.CREATURE_IMAGE_WIDTH);
-        creatureImageView.setFitHeight(Constant.CREATURE_IMAGE_HEIGHT);
+
         creatureImageView.setPreserveRatio(true);
+        this.WIDTH = width;
+        creatureImageView.setFitWidth(width);
+        this.HEIGHT = creatureImageView.getFitHeight();
+
+        if (direction == Constant.Direction.LEFT)
+            creatureImageView.setImage(creatureLeftImage);
+        else
+            creatureImageView.setImage(creatureRightImage);
+
         creatureImageView.setVisible(false);
         creatureImageView.setDisable(true);
-        imagePosition = new ImagePosition(0, 0,
-                creatureImageView.getFitWidth(), creatureImageView.getFitHeight());
+        imagePosition = new ImagePosition(0, 0);
 
 
         healthProgressBar.setPrefWidth(Constant.CREATURE_IMAGE_WIDTH);
@@ -109,41 +119,53 @@ public class CreatureClass {
         magicProgressBar.setStyle("-fx-accent: blue;");
         magicProgressBar.setVisible(false);
 
-        //debug
-        this.currentAttackSpeed=3;
-        System.out.println(creatureImageView.getFitHeight());
     }
 
+    //根据方向设置图片状态
     public void setCreatureImageView() {
-        if (faceDirection == Constant.Direction.LEFT)
-            this.creatureImageView.setImage(creatureLeftImage);
-        else
-            this.creatureImageView.setImage(creatureRightImage);
+        if (isControlled) {
+            if (direction == Constant.Direction.LEFT)
+                this.creatureImageView.setImage(selectCreatureLeftImage);
+            else
+                this.creatureImageView.setImage(selectCreatureRightImage);
+        } else {
+            if (direction == Constant.Direction.LEFT)
+                this.creatureImageView.setImage(creatureLeftImage);
+            else
+                this.creatureImageView.setImage(creatureRightImage);
+        }
     }
 
-    public void setSelectCreatureImageView() {
-        if (faceDirection == Constant.Direction.LEFT)
-            this.creatureImageView.setImage(selectCreatureLeftImage);
-        else
-            this.creatureImageView.setImage(selectCreatureRightImage);
-    }
-
+    //设置position并更新控件位置
     public void setCreatureImagePos(double layoutX, double layoutY) {
         imagePosition.setLayoutX(layoutX);
         imagePosition.setLayoutY(layoutY);
+        if(layoutY>Constant.FIGHT_PANE_HEIGHT-HEIGHT){
+            System.out.println(HEIGHT);
+            System.out.println(layoutY);
+            try {
+                Thread.sleep(100000);
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         creatureImageView.setLayoutX(layoutX);
         creatureImageView.setLayoutY(layoutY);
     }
 
-    public void setFaceDirection(int faceDirection) {
-        this.faceDirection = faceDirection;
+    //设置移动方向
+    public void setDirection(int direction) {
+        this.direction = direction;
         setCreatureImageView();
     }
 
+    //判断是否下载可以攻击,收到攻速的限制
     public boolean canAttack() {
         return (System.currentTimeMillis() - lastAttackMillis >= 1000 / currentAttackSpeed);
     }
 
+    //观测敌人,选取一个敌人下标返回
     private int observeEnemy() {
         if (isAlive()) {
             int selectEnemyId = 0;
@@ -160,6 +182,7 @@ public class CreatureClass {
         return -1;
     }
 
+    //ai攻击,返回一颗子弹
     public Bullet aiAttack() {
         if (canAttack() && isAlive()) {
             int targetEnemyId = observeEnemy();
@@ -167,12 +190,157 @@ public class CreatureClass {
                 return null;
             if (imagePosition.getDistance(enemyFamily.get(targetEnemyId).getImagePos()) > shootRange)
                 return null;
-            lastAttackMillis=System.currentTimeMillis();
+            lastAttackMillis = System.currentTimeMillis();
             return new Bullet(this, enemyFamily.get(targetEnemyId),
                     new ImagePosition(imagePosition.getLayoutX() + getImageWidth() / 2,
                             imagePosition.getLayoutY() + getImageHeight() / 2), null);
         }
         return null;
+    }
+
+    //一种移动方式,这里是随机移动
+    public void randomMove() {
+        direction = randomNum.nextInt(5);
+    }
+
+    public void move() {
+        //发生位移
+        if (!isAlive())
+            return;
+        double x = imagePosition.getLayoutX();
+        double y = imagePosition.getLayoutY();
+        switch (direction) {
+            case Constant.Direction.UP: {
+                y -= currentMoveSpeed;
+                break;
+            }
+            case Constant.Direction.DOWN: {
+                y += currentMoveSpeed;
+                break;
+            }
+            case Constant.Direction.LEFT: {
+                x -= currentMoveSpeed;
+                break;
+            }
+            case Constant.Direction.RIGHT: {
+                x += currentMoveSpeed;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+        if (x < 0)
+            x = 0;
+        if (x > Constant.FIGHT_PANE_WIDTH - WIDTH)
+            x = Constant.FIGHT_PANE_WIDTH - WIDTH;
+        if (y < 0)
+            y = 0;
+        if (y > Constant.FIGHT_PANE_HEIGHT - HEIGHT)
+            y = Constant.FIGHT_PANE_HEIGHT - HEIGHT;
+        if (isControlled) {
+            if (creatureImageView.getImage() != selectCreatureLeftImage
+                    && direction == Constant.Direction.LEFT)
+                creatureImageView.setImage(selectCreatureLeftImage);
+            else if (creatureImageView.getImage() != selectCreatureRightImage
+                    && direction == Constant.Direction.RIGHT)
+                creatureImageView.setImage(selectCreatureRightImage);
+        } else {
+            if (creatureImageView.getImage() != creatureLeftImage
+                    && direction == Constant.Direction.LEFT)
+                creatureImageView.setImage(creatureLeftImage);
+            else if (creatureImageView.getImage() != creatureRightImage
+                    && direction == Constant.Direction.RIGHT)
+                creatureImageView.setImage(creatureRightImage);
+        }
+        setCreatureImagePos(x, y);
+    }
+
+    public boolean isAlive() {
+        return currentHealth > 0;
+    }
+
+    public void drawBar() {
+        healthProgressBar.setVisible(true);
+        healthProgressBar.setLayoutX(imagePosition.getLayoutX());
+        healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
+        double progressValue = (double) currentHealth / baseHealth;
+        double finalProgressValue = progressValue;
+        Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
+
+        magicProgressBar.setVisible(true);
+        magicProgressBar.setLayoutX(imagePosition.getLayoutX());
+        magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
+        progressValue = (double) currentHealth / baseHealth;
+        double finalProgressValue1 = progressValue;
+        Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
+    }
+
+    public void setCurrentHealth(double healthVal) {
+        if (healthVal > baseHealth)
+            currentHealth = baseHealth;
+        else if (healthVal < 0)
+            currentHealth = 0;
+        else
+            currentHealth = healthVal;
+    }
+
+    public ImagePosition getCenterPos() {
+        double x = imagePosition.getLayoutX();
+        double y = imagePosition.getLayoutY();
+        return new ImagePosition(x + WIDTH / 2, y + HEIGHT / 2);
+    }
+
+    public double getImageWidth() {
+        return creatureImageView.getFitWidth();
+    }
+
+    public double getImageHeight() {
+        return creatureImageView.getFitHeight();
+    }
+
+    public void draw() {
+        if (isAlive()) {
+            drawBar();
+            move();
+        } else {
+            creatureImageView.setVisible(false);
+            creatureImageView.setDisable(true);
+            healthProgressBar.setVisible(false);
+            magicProgressBar.setVisible(false);
+        }
+    }
+
+
+    //封装移动方式,画,攻击,返回子弹
+    public Bullet update() {
+        if (!isControlled) {
+            if (isAlive()) {
+                randomMove();
+                draw();
+                Bullet bullet = aiAttack();
+                return bullet;
+            } else {
+                draw();
+                return null;
+            }
+        } else {
+            draw();
+            return null;
+        }
+    }
+
+    //翻转isControlled状态
+    public void flipControlled() {
+        isControlled = !isControlled;
+    }
+
+    public boolean isControlled() {
+        return isControlled;
+    }
+
+    public void setEnemyFamily(HashMap<Integer, CreatureClass> hashMap) {
+        enemyFamily = hashMap;
     }
 
     public String getCampType() {
@@ -209,126 +377,5 @@ public class CreatureClass {
 
     public double getCurrentDefense() {
         return currentDefense;
-    }
-
-    public void randomMove() {
-        direction = randomNum.nextInt(5);
-    }
-
-    public void move() {
-        if (isAlive()) {
-            switch (direction) {
-                case Constant.Direction.UP: {
-                    imagePosition.setLayoutY(imagePosition.getLayoutY() - currentMoveSpeed);
-                    break;
-                }
-                case Constant.Direction.DOWN: {
-                    imagePosition.setLayoutY(imagePosition.getLayoutY() + currentMoveSpeed);
-                    break;
-                }
-                case Constant.Direction.LEFT: {
-                    if (faceDirection == Constant.Direction.RIGHT) {
-                        faceDirection = Constant.Direction.LEFT;
-                        creatureImageView.setImage(creatureLeftImage);
-                    }
-                    imagePosition.setLayoutX(imagePosition.getLayoutX() - currentMoveSpeed);
-                    break;
-                }
-                case Constant.Direction.RIGHT: {
-                    if (faceDirection == Constant.Direction.LEFT) {
-                        faceDirection = Constant.Direction.RIGHT;
-                        creatureImageView.setImage(creatureRightImage);
-                    }
-                    imagePosition.setLayoutX(imagePosition.getLayoutX() + currentMoveSpeed);
-                    break;
-                }
-                default:
-                    break;
-            }
-            creatureImageView.setLayoutX(imagePosition.getLayoutX());
-            creatureImageView.setLayoutY(imagePosition.getLayoutY());
-        }
-    }
-
-    public boolean isAlive() {
-        return currentHealth > 0;
-    }
-
-    public void drawBar() {
-        healthProgressBar.setVisible(true);
-        healthProgressBar.setLayoutX(imagePosition.getLayoutX());
-        healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
-        double progressValue = (double) currentHealth / baseHealth;
-        double finalProgressValue = progressValue;
-        Platform.runLater(()->healthProgressBar.setProgress(finalProgressValue));
-
-        magicProgressBar.setVisible(true);
-        magicProgressBar.setLayoutX(imagePosition.getLayoutX());
-        magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
-        progressValue = (double) currentHealth / baseHealth;
-        double finalProgressValue1 = progressValue;
-        Platform.runLater(()->magicProgressBar.setProgress(finalProgressValue1));
-    }
-
-    public void setCurrentHealth(double healthVal) {
-        if (healthVal > baseHealth)
-            currentHealth = baseHealth;
-        else if (healthVal < 0)
-            currentHealth = 0;
-        else
-            currentHealth = healthVal;
-    }
-
-    public ImagePosition getCenterPos() {
-        return new ImagePosition(imagePosition.getLayoutX() + getImageWidth() / 2,
-                imagePosition.getLayoutY() + getImageHeight() / 2,
-                getImageWidth(), getImageHeight());
-    }
-
-    public double getImageWidth() {
-        return creatureImageView.getFitWidth();
-    }
-
-    public double getImageHeight() {
-        return creatureImageView.getFitHeight();
-    }
-
-    public void draw() {
-        if (isAlive()) {
-            drawBar();
-            move();
-        } else {
-            creatureImageView.setVisible(false);
-            creatureImageView.setDisable(true);
-            healthProgressBar.setVisible(false);
-            magicProgressBar.setVisible(false);
-        }
-    }
-
-
-    //封装移动方式,画,攻击,返回子弹
-    public Bullet update() {
-        if (isAlive()) {
-            randomMove();
-            draw();
-            Bullet bullet = aiAttack();
-            return bullet;
-        } else {
-            draw();
-            return null;
-        }
-    }
-
-    //翻转isControlled状态
-    public void flipControlled() {
-        isControlled = !isControlled;
-    }
-
-    public boolean isControlled() {
-        return isControlled;
-    }
-
-    public void setEnemyFamily(HashMap<Integer, CreatureClass> hashMap) {
-        enemyFamily = hashMap;
     }
 }

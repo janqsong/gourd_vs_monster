@@ -214,7 +214,7 @@ public class SceneController {
                         selectOwnCampCreature.setCreatureImageView();
                     }
                     beginPosition.setPosition(event.getX(), event.getY());
-                    gourdMember.setSelectCreatureImageView();
+                    gourdMember.setCreatureImageView();
                     selectOwnCampCreature = gourdMember;
                 }
             });
@@ -349,7 +349,7 @@ public class SceneController {
                         selectOwnCampCreature.setCreatureImageView();
                     }
                     beginPosition.setPosition(event.getX(), event.getY());
-                    monsterMember.setSelectCreatureImageView();
+                    monsterMember.setCreatureImageView();
                     selectOwnCampCreature = monsterMember;
                 }
             });

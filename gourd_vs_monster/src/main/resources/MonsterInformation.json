@@ -10,7 +10,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 1,
@@ -22,7 +23,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 2,
@@ -34,7 +36,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 3,
@@ -46,7 +49,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 4,
@@ -58,7 +62,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 5,
@@ -70,7 +75,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 6,
@@ -82,7 +88,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 7,
@@ -94,7 +101,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     },
     {
       "creatureId" : 8,
@@ -106,7 +114,8 @@
       "baseAttackSpeed" : 1,
       "baseMoveSpeed" : 10,
       "shootRange" : 400.0,
-      "faceDirection" : 2
+      "faceDirection" : 2,
+      "imageWidth":50.0
     }
   ]
 }

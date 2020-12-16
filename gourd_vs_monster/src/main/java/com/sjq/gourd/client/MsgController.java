@@ -83,9 +83,9 @@ public class MsgController {
                 int creatureId = faceDirectionMsg.getCreatureId();
                 int faceDirection = faceDirectionMsg.getFaceDirection();
                 if(campType.equals("Gourd")) {
-                    gourdFamily.get(creatureId).setFaceDirection(faceDirection);
+                    gourdFamily.get(creatureId).setDirection(faceDirection);
                 } else if(campType.equals("Monster")) {
-                    monsterFamily.get(creatureId).setFaceDirection(faceDirection);
+                    monsterFamily.get(creatureId).setDirection(faceDirection);
                 }
                 break;
             }

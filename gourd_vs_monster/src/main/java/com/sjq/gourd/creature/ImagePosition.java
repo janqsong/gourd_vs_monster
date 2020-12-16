@@ -5,38 +5,22 @@ import com.sjq.gourd.constant.Constant;
 public class ImagePosition {
     private double layoutX;
     private double layoutY;
-    private double imageWidth;
-    private double imageHeight;
 
     public ImagePosition(double layoutX, double layoutY) {
         this.layoutX = layoutX;
         this.layoutY = layoutY;
     }
 
-    public ImagePosition(double layoutX, double layoutY,
-                         double imageWidth, double imageHeight) {
-        this.layoutX = layoutX;
-        this.layoutY = layoutY;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
+    public double getLayoutX() {
+        return layoutX;
     }
 
     public void setLayoutX(double layoutX) {
-        if(layoutX <= 0) layoutX = 0;
-        if(layoutX >= Constant.FIGHT_PANE_WIDTH - imageWidth)
-            layoutX = Constant.FIGHT_PANE_WIDTH - imageWidth;
         this.layoutX = layoutX;
     }
 
     public void setLayoutY(double layoutY) {
-        if(layoutY <= 0) layoutY = 0;
-        if(layoutY >= Constant.FIGHT_PANE_HEIGHT - imageHeight)
-            layoutY = Constant.FIGHT_PANE_HEIGHT - imageHeight;
         this.layoutY = layoutY;
-    }
-
-    public double getLayoutX() {
-        return layoutX;
     }
 
     public double getLayoutY() {

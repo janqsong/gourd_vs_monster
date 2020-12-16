@@ -19,7 +19,7 @@ import org.json.*;
 
 public class Camp {
     protected SceneController sceneController;
-    protected HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer,CreatureClass>();
+    protected HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer, CreatureClass>();
     protected HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
     protected DataInputStream in;
     protected DataOutputStream out;
@@ -38,7 +38,7 @@ public class Camp {
 
         ImageUrl.initImageUrl();
         //TODO 初始化
-        for(int i = 0; i < gourdInfoArray.length(); i++) {
+        for (int i = 0; i < gourdInfoArray.length(); i++) {
             JSONObject gourdObject = (JSONObject) gourdInfoArray.get(i);
             int creatureId = gourdObject.getInt("creatureId");
             String creatureName = gourdObject.getString("creatureName");
@@ -50,13 +50,14 @@ public class Camp {
             int baseMoveSpeed = gourdObject.getInt("baseMoveSpeed");
             double shootRange = gourdObject.getDouble("shootRange");
             int faceDirection = gourdObject.getInt("faceDirection");
+            double imageWidth = gourdObject.getDouble("imageWidth");
             Image gourdLeftImage = ImageUrl.gourdLeftImageMap.get(creatureId);
             Image gourdLeftSelectImage = ImageUrl.gourdLeftSelectImageMap.get(creatureId);
             Image gourdRightImage = ImageUrl.gourdRightImageMap.get(creatureId);
             Image gourdRightSelectImage = ImageUrl.gourdRightSelectImageMap.get(creatureId);
             GourdClass gourdMember = new GourdClass(in, out, Constant.CampType.GOURD, creatureId, creatureName,
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
-                    gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
+                    imageWidth, gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
             gourdMember.setCreatureImageView();
             sceneController.addProgressBarToMapPane(gourdMember.getHealthProgressBar());
             sceneController.addProgressBarToMapPane(gourdMember.getMagicProgressBar());
@@ -65,7 +66,7 @@ public class Camp {
 
         }
 
-        for(int i = 0; i < monsterInfoArray.length(); i++) {
+        for (int i = 0; i < monsterInfoArray.length(); i++) {
             JSONObject monsterObject = (JSONObject) monsterInfoArray.get(i);
             int creatureId = monsterObject.getInt("creatureId");
             String creatureName = monsterObject.getString("creatureName");
@@ -77,13 +78,14 @@ public class Camp {
             int baseMoveSpeed = monsterObject.getInt("baseMoveSpeed");
             double shootRange = monsterObject.getDouble("shootRange");
             int faceDirection = monsterObject.getInt("faceDirection");
+            double imageWidth = monsterObject.getDouble("imageWidth");
             Image monsterLeftImage = ImageUrl.monsterLeftImageMap.get(creatureId);
             Image monsterLeftSelectImage = ImageUrl.monsterLeftSelectImageMap.get(creatureId);
             Image monsterRightImage = ImageUrl.monsterRightImageMap.get(creatureId);
             Image monsterRightSelectImage = ImageUrl.monsterRightSelectImageMap.get(creatureId);
             MonsterClass monsterMember = new MonsterClass(in, out, Constant.CampType.GOURD, creatureId, creatureName,
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
-                    monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
+                    imageWidth, monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
             monsterMember.setCreatureImageView();
 
             sceneController.addProgressBarToMapPane(monsterMember.getHealthProgressBar());

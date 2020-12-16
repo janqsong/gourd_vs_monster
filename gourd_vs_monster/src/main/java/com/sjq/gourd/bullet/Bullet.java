@@ -85,10 +85,7 @@ public class Bullet {
         imagePosition.setLayoutX(imagePosition.getLayoutX() + cos * SPEED);
         imagePosition.setLayoutY(imagePosition.getLayoutY() + sin * SPEED);
 
-        if (targetPos.getLayoutX() < imagePosition.getLayoutX() &&
-                imagePosition.getLayoutX() <= targetPos.getLayoutX() + targetCreature.getImageWidth() &&
-                targetPos.getLayoutY() <= imagePosition.getLayoutY() &&
-                imagePosition.getLayoutY() <= targetPos.getLayoutY() + targetCreature.getImageHeight()) {
+        if (circleShape.intersects(targetCreature.getCreatureImageView().getBoundsInParent())) {
             valid = false;
             return new Collision(this);
         }

@@ -15,6 +15,7 @@ public class ImageUrl {
     public static HashMap<Integer, Image> monsterRightSelectImageMap = new HashMap<>();
     public static HashMap<Integer, Image> monsterLeftSelectImageMap = new HashMap<>();
 
+
     public static void initImageUrl() {
         gourdRightImageMap.put(CreatureId.FIRST_GOURD_ID, new Image("/images/gourdImages/firstGourdRight.png"));
         gourdRightImageMap.put(CreatureId.SECOND_GOURD_ID, new Image("/images/gourdImages/secondGourdRight.png"));
