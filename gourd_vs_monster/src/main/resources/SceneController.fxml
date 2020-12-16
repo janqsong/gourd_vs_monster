@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.shape.Line?>
-
 
 <Pane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
    <children>
@@ -80,7 +79,7 @@
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="192.168.1.106">
+            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="127.0.0.1">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
@@ -95,12 +94,13 @@
                   <Image url="@images/server_port.png" />
                </image>
             </ImageView>
+            <Button layoutX="611.0" layoutY="120.0" mnemonicParsing="false" onAction="#gourdStartGameButton" prefHeight="106.0" prefWidth="81.0" text="Gourd" />
+            <Button layoutX="611.0" layoutY="415.0" mnemonicParsing="false" onAction="#monsterStartGameButton" prefHeight="132.0" prefWidth="81.0" text="Monster" />
          </children></Pane>
 
         <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
         <children>
-            <Pane fx:id="mapPane" layoutX="140.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0"
-                  style="-fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;"><children>
+            <Pane fx:id="mapPane" layoutX="140.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0" style="-fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;"><children>
             </children></Pane>
         </children></Pane>
    </children>

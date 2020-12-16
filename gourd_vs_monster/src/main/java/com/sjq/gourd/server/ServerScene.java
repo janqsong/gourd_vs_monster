@@ -172,6 +172,13 @@ public class ServerScene {
                 break;
             }
         }
-        System.out.println("开始游戏");
+        startFight();
+    }
+
+    public void startFight() {
+        //TODO
+        while(true) {
+
+        }
     }
 }

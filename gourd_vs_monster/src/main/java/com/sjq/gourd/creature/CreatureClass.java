@@ -61,6 +61,7 @@ public class CreatureClass {
                          int baseMoveSpeed, double shootRange, int faceDirection,
                          Image creatureLeftImage, Image selectCreatureLeftImage,
                          Image creatureRightImage, Image selectCreatureRightImage) {
+        //TODO 这个类里，尽量不要改，改也可以，你可以和我说你下，你要改哪些内容，可以多加函数。
         this.inputStream = in;
         this.outputStream = out;
         this.campType = campType;

@@ -2,28 +2,27 @@ package com.sjq.gourd.stage;
 
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.client.GameClient;
+import com.sjq.gourd.client.GourdCamp;
+import com.sjq.gourd.client.MonsterCamp;
 import com.sjq.gourd.client.MsgController;
 import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
+import com.sjq.gourd.localtest.GameStart;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.protocol.NoParseMsg;
 import com.sjq.gourd.protocol.PositionNotifyMsg;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,13 +33,10 @@ import java.util.Random;
 import java.util.regex.*;
 
 import com.sjq.gourd.server.*;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import org.checkerframework.checker.units.qual.A;
+import javafx.scene.control.Button;
 
 public class SceneController {
     @FXML
@@ -71,6 +67,25 @@ public class SceneController {
     PositionXY beginPosition = new PositionXY(0, 0);
 
     ArrayList<Bullet> bulletList = new ArrayList<>();
+
+    @FXML
+    void gourdStartGameButton(ActionEvent event) {
+        //TODO 这里是从主屏幕进入本地游戏的接口，其他的函数能不动就不动，可以多加函数，如果多加了，尽量写一些标识符。
+        System.out.println("startGame");
+        ConnectScene.setVisible(false);
+        ConnectScene.setDisable(true);
+        fightScene.setVisible(true);
+        fightScene.setDisable(false);
+        mapPane.setVisible(true);
+        mapPane.setDisable(false);
+        new GameStart(gourdFamily, monsterFamily, this).startGame();
+    }
+
+    @FXML
+    void monsterStartGameButton(ActionEvent event) {
+//        MonsterCamp monsterCamp = new MonsterCamp(this, in, out);
+//        monsterCamp.startGame();
+    }
 
     @FXML
     void AboutUsMouseClickEvent(MouseEvent event) {
@@ -275,10 +290,11 @@ public class SceneController {
                 e.printStackTrace();
             }
         }
-//        gourdStartFight();
+        gourdStartFight();
     }
 
     public void gourdStartFight() {
+        //TODO
         while(true) {
 //            try {
 //                for(GourdClass gourdMember : gourdFamily.values()) {
@@ -404,10 +420,11 @@ public class SceneController {
                 e.printStackTrace();
             }
         }
-        System.out.println("fight");
+        monsterStartFight();
     }
 
     public void monsterStartFight() {
+        //TODO monsterStartFight
         while(true) {
             try {
                 for(MonsterClass monsterMember : monsterFamily.values()) {
