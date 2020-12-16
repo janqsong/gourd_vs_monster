@@ -25,7 +25,7 @@ public class ServerScene {
     private DataOutputStream outGourd;
     private DataInputStream inMonster;
     private DataOutputStream outMonster;
-    private MsgController msgController;
+    private ServerMsgController serverMsgController;
 
     boolean gourdFinishFlag = false;
     boolean monsterFinishFlag = false;
@@ -111,7 +111,7 @@ public class ServerScene {
             monsterMember.setCreatureImageView();
             monsterFamily.put(creatureId, monsterMember);
         }
-        msgController = new MsgController(gourdFamily, monsterFamily);
+        serverMsgController = new ServerMsgController(gourdFamily, monsterFamily);
     }
 
     public void startGame(){
@@ -125,7 +125,7 @@ public class ServerScene {
                             gourdFinishFlag = true;
                             break;
                         } else if(gourdMsgType == Msg.POSITION_NOTIFY_MSG) {
-                            msgController.getMsgClass(gourdMsgType, inGourd);
+                            serverMsgController.getMsgClass(gourdMsgType, inGourd);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -143,7 +143,7 @@ public class ServerScene {
                             monsterFinishFlag = true;
                             break;
                         } else if(monsterMsgType == Msg.POSITION_NOTIFY_MSG) {
-                            msgController.getMsgClass(monsterMsgType, inMonster);
+                            serverMsgController.getMsgClass(monsterMsgType, inMonster);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -153,6 +153,17 @@ public class ServerScene {
         }).start();
         while(true) {
             if(gourdFinishFlag && monsterFinishFlag) {
+                for(Map.Entry<Integer, MonsterClass> entry : monsterFamily.entrySet()) {
+                    int key = entry.getKey();
+                    MonsterClass monsterClass = entry.getValue();
+                    int creatureId = monsterClass.getCreatureId();
+                    ImageView imageView = monsterClass.getCreatureImageView();
+                    System.out.println("======monster " + key + "=====");
+                    System.out.println("creatureId " + creatureId);
+                    System.out.println("layoutX " + imageView.getLayoutX());
+                    System.out.println("layoutY " + imageView.getLayoutY());
+                    System.out.println("=============================");
+                }
                 for(Map.Entry<Integer, GourdClass> entry : gourdFamily.entrySet()) {
                     int creatureId = entry.getKey();
                     GourdClass gourdMember = entry.getValue();

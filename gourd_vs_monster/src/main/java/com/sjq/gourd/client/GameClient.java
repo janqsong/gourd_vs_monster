@@ -12,7 +12,7 @@ public class GameClient {
     protected DataInputStream in;
     protected DataOutputStream out;
 
-    private final MsgController msgController = new MsgController();
+    private final ClientMsgController msgController = new ClientMsgController();
     private String campType;
     private final SceneController sceneController;
 
@@ -23,7 +23,7 @@ public class GameClient {
         this.sceneController = sceneController;
     }
 
-    public void run() {
+    public void connectServer() {
         try {
             clientSocket = new Socket(ipServer, portServer);
             in = new DataInputStream(clientSocket.getInputStream());

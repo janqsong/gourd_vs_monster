@@ -94,8 +94,8 @@
                   <Image url="@images/server_port.png" />
                </image>
             </ImageView>
-            <Button layoutX="611.0" layoutY="120.0" mnemonicParsing="false" onAction="#gourdStartGameButton" prefHeight="106.0" prefWidth="81.0" text="Gourd" />
-            <Button layoutX="611.0" layoutY="415.0" mnemonicParsing="false" onAction="#monsterStartGameButton" prefHeight="132.0" prefWidth="81.0" text="Monster" />
+<!--            <Button layoutX="611.0" layoutY="120.0" mnemonicParsing="false" onAction="#gourdStartGameButton" prefHeight="106.0" prefWidth="81.0" text="Gourd" />-->
+<!--            <Button layoutX="611.0" layoutY="415.0" mnemonicParsing="false" onAction="#monsterStartGameButton" prefHeight="132.0" prefWidth="81.0" text="Monster" />-->
          </children></Pane>
 
         <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">

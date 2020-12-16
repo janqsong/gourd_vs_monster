@@ -23,9 +23,6 @@ public class GourdCamp extends Camp{
             sceneController.addImageViewToFightMapPane(gourdMember.getCreatureImageView());
         }
         for(MonsterClass monsterMember : monsterFamily.values()) {
-            monsterMember.setCreatureImagePos(500, 100);
-            monsterMember.getCreatureImageView().setVisible(true);
-            monsterMember.getCreatureImageView().setVisible(false);
             sceneController.addImageViewToMapPane(monsterMember.getCreatureImageView());
         }
     }
@@ -33,6 +30,6 @@ public class GourdCamp extends Camp{
     public void startGame() {
         initGame();
         sceneController.initGameSceneController(in, out, "Gourd", gourdFamily, monsterFamily);
-        sceneController.gourdStartFight();
+        sceneController.waitForAnother();
     }
 }

@@ -11,18 +11,18 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MsgController {
+public class ClientMsgController {
     private String campType;
     private int timeRemaining;
     private HashMap<Integer, GourdClass> gourdFamily = new HashMap<Integer, GourdClass>();
     private HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
 
-    public MsgController() {
+    public ClientMsgController() {
 
     }
 
-    public MsgController(HashMap<Integer, GourdClass> gourdFamily,
-                         HashMap<Integer, MonsterClass> monsterFamily) {
+    public ClientMsgController(HashMap<Integer, GourdClass> gourdFamily,
+                               HashMap<Integer, MonsterClass> monsterFamily) {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
     }
@@ -57,16 +57,16 @@ public class MsgController {
                 int creatureId = positionNotifyMsg.getCreatureId();
                 double layoutX = positionNotifyMsg.getLayoutX();
                 double layoutY = positionNotifyMsg.getLayoutY();
-                System.out.println("=======Msg=========");
-                System.out.println(creatureId + " campType: " + campType);
-                System.out.println(creatureId + " creatureId: " + creatureId);
-                System.out.println(creatureId + " layoutX: " + layoutX);
-                System.out.println(creatureId + " layoutY: " + layoutY);
-                System.out.println("==================");
                 ImageView tempImageView = new ImageView();
                 if(campType.equals("Gourd")) {
                     tempImageView = gourdFamily.get(creatureId).getCreatureImageView();
                 } else if(campType.equals("Monster")) {
+                    System.out.println("=======Msg=========");
+                    System.out.println(creatureId + " campType: " + campType);
+                    System.out.println(creatureId + " creatureId: " + creatureId);
+                    System.out.println(creatureId + " layoutX: " + layoutX);
+                    System.out.println(creatureId + " layoutY: " + layoutY);
+                    System.out.println("==================");
                     tempImageView = monsterFamily.get(creatureId).getCreatureImageView();
                 }
                 tempImageView.setLayoutX(layoutX);

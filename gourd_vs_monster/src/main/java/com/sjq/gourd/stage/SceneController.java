@@ -2,20 +2,16 @@ package com.sjq.gourd.stage;
 
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.client.GameClient;
-import com.sjq.gourd.client.GourdCamp;
-import com.sjq.gourd.client.MonsterCamp;
-import com.sjq.gourd.client.MsgController;
+import com.sjq.gourd.client.ClientMsgController;
 import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
-import com.sjq.gourd.localtest.GameStart;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.protocol.NoParseMsg;
 import com.sjq.gourd.protocol.PositionNotifyMsg;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
@@ -36,7 +32,6 @@ import com.sjq.gourd.server.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.control.Button;
 
 public class SceneController {
     @FXML
@@ -58,7 +53,7 @@ public class SceneController {
     private Text notificationMidText;
     private DataInputStream in;
     private DataOutputStream out;
-    private MsgController msgController;
+    private ClientMsgController msgController;
     private String campType;
     private HashMap<Integer, GourdClass> gourdFamily = new HashMap<Integer, GourdClass>();
     private HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
@@ -68,24 +63,24 @@ public class SceneController {
 
     ArrayList<Bullet> bulletList = new ArrayList<>();
 
-    @FXML
-    void gourdStartGameButton(ActionEvent event) {
-        //TODO 这里是从主屏幕进入本地游戏的接口，其他的函数能不动就不动，可以多加函数，如果多加了，尽量写一些标识符。
-        System.out.println("startGame");
-        ConnectScene.setVisible(false);
-        ConnectScene.setDisable(true);
-        fightScene.setVisible(true);
-        fightScene.setDisable(false);
-        mapPane.setVisible(true);
-        mapPane.setDisable(false);
-        new GameStart(gourdFamily, monsterFamily, this).startGame();
-    }
-
-    @FXML
-    void monsterStartGameButton(ActionEvent event) {
-//        MonsterCamp monsterCamp = new MonsterCamp(this, in, out);
-//        monsterCamp.startGame();
-    }
+//    @FXML
+//    void gourdStartGameButton(ActionEvent event) {
+//        //TODO 这里是从主屏幕进入本地游戏的接口，其他的函数能不动就不动，可以多加函数，如果多加了，尽量写一些标识符。
+//        System.out.println("startGame");
+//        ConnectScene.setVisible(false);
+//        ConnectScene.setDisable(true);
+//        fightScene.setVisible(true);
+//        fightScene.setDisable(false);
+//        mapPane.setVisible(true);
+//        mapPane.setDisable(false);
+//        new GameStart(gourdFamily, monsterFamily, this).startGame();
+//    }
+//
+//    @FXML
+//    void monsterStartGameButton(ActionEvent event) {
+////        MonsterCamp monsterCamp = new MonsterCamp(this, in, out);
+////        monsterCamp.startGame();
+//    }
 
     @FXML
     void AboutUsMouseClickEvent(MouseEvent event) {
@@ -129,7 +124,8 @@ public class SceneController {
             ConnectScene.setDisable(true);
             fightScene.setVisible(true);
             fightScene.setDisable(false);
-            new GameClient(ipString, Integer.parseInt(portString), this).run();
+            System.out.println("===========");
+            new GameClient(ipString, Integer.parseInt(portString), this).connectServer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,7 +163,7 @@ public class SceneController {
         this.campType = campType;
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
-        msgController = new MsgController(gourdFamily, monsterFamily);
+        msgController = new ClientMsgController(gourdFamily, monsterFamily);
         notificationMidText = new Text();
         notificationMidText.setText("等待其他玩家加入");
         notificationMidText.setFont(Font.font("FangSong", 30));
@@ -289,6 +285,27 @@ public class SceneController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        double x = 100;
+        for(Map.Entry<Integer, MonsterClass> entry : monsterFamily.entrySet()) {
+            int key = entry.getKey();
+            MonsterClass monsterClass = entry.getValue();
+            int creatureId = monsterClass.getCreatureId();
+            ImageView imageView = monsterClass.getCreatureImageView();
+            System.out.println("+++++++++++monster " + key + "++++++++++");
+            System.out.println("creatureId " + creatureId);
+            System.out.println("layoutX " + imageView.getLayoutX());
+            System.out.println("layoutY " + imageView.getLayoutY());
+            System.out.println("+++++++++++++++++++++++++++++++");
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            imageView.setLayoutX(x);
+            imageView.setLayoutY(200);
+            x += 100;
+
         }
         gourdStartFight();
     }
@@ -420,7 +437,7 @@ public class SceneController {
                 e.printStackTrace();
             }
         }
-        monsterStartFight();
+//        monsterStartFight();
     }
 
     public void monsterStartFight() {
