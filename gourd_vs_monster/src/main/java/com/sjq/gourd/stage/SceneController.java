@@ -33,6 +33,7 @@ import java.util.Random;
 import java.util.regex.*;
 
 import com.sjq.gourd.server.*;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -60,8 +61,8 @@ public class SceneController {
     private DataOutputStream out;
     private MsgController msgController;
     private String campType;
-    private HashMap<Integer, GourdClass> gourdFamily = new HashMap<Integer, GourdClass>();
-    private HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
+    private HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer, CreatureClass>();
+    private HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
 
     private CreatureClass selectOwnCampCreature;
     PositionXY beginPosition = new PositionXY(0, 0);
@@ -160,8 +161,8 @@ public class SceneController {
     }
 
     public void initGameSceneController(DataInputStream in, DataOutputStream out, String campType,
-                                        HashMap<Integer, GourdClass> gourdFamily,
-                                        HashMap<Integer, MonsterClass> monsterFamily) {
+                                        HashMap<Integer, CreatureClass> gourdFamily,
+                                        HashMap<Integer, CreatureClass> monsterFamily) {
         this.in = in;
         this.out = out;
         this.campType = campType;
@@ -203,7 +204,7 @@ public class SceneController {
     }
 
     public void gourdPrepareForGame() {
-        for (GourdClass gourdMember : gourdFamily.values()) {
+        for (CreatureClass gourdMember : gourdFamily.values()) {
             gourdMember.getCreatureImageView().setVisible(true);
             gourdMember.getCreatureImageView().setDisable(false);
             gourdMember.getCreatureImageView().setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -251,9 +252,9 @@ public class SceneController {
                     System.out.println(width);
                     notificationMidText.setLayoutX(600 - width / 2);
                 } else if (msgType == Msg.START_GAME_MSG) {
-                    for (Map.Entry<Integer, GourdClass> entry : gourdFamily.entrySet()) {
+                    for (Map.Entry<Integer, CreatureClass> entry : gourdFamily.entrySet()) {
                         int creatureId = entry.getKey();
-                        GourdClass gourdMember = entry.getValue();
+                        CreatureClass gourdMember = entry.getValue();
                         ImageView tempImageView = gourdMember.getCreatureImageView();
                         tempImageView.setOnMouseDragged(null);
                         if(tempImageView.getParent() == fightScene) {
@@ -338,7 +339,7 @@ public class SceneController {
     }
 
     public void monsterPrepareForGame() {
-        for (MonsterClass monsterMember : monsterFamily.values()) {
+        for (CreatureClass monsterMember : monsterFamily.values()) {
             monsterMember.getCreatureImageView().setVisible(true);
             monsterMember.getCreatureImageView().setDisable(false);
             monsterMember.getCreatureImageView().setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -380,9 +381,9 @@ public class SceneController {
                     System.out.println(width);
                     notificationMidText.setLayoutX(600 - width / 2);
                 } else if (msgType == Msg.START_GAME_MSG) {
-                    for (Map.Entry<Integer, MonsterClass> entry : monsterFamily.entrySet()) {
+                    for (Map.Entry<Integer, CreatureClass> entry : monsterFamily.entrySet()) {
                         int creatureId = entry.getKey();
-                        MonsterClass monsterMember = entry.getValue();
+                        CreatureClass monsterMember = entry.getValue();
                         ImageView tempImageView = monsterMember.getCreatureImageView();
                         tempImageView.setOnMouseDragged(null);
                         if(tempImageView.getParent() == fightScene) {
@@ -427,7 +428,7 @@ public class SceneController {
         //TODO monsterStartFight
         while(true) {
             try {
-                for(MonsterClass monsterMember : monsterFamily.values()) {
+                for(CreatureClass monsterMember : monsterFamily.values()) {
                     monsterMember.randomMove();
                     monsterMember.draw();
                     Bullet bulletAttack = monsterMember.aiAttack();
@@ -464,6 +465,10 @@ public class SceneController {
 
     public void addProgressBarToMapPane(ProgressBar progressBar) {
         mapPane.getChildren().add(progressBar);
+    }
+
+    public void addShapeToMapPane(Shape shape){
+        mapPane.getChildren().add(shape);
     }
 
 }

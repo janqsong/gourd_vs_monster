@@ -1,5 +1,6 @@
 package com.sjq.gourd.client;
 
+import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.protocol.*;
@@ -14,15 +15,15 @@ import java.util.Map;
 public class MsgController {
     private String campType;
     private int timeRemaining;
-    private HashMap<Integer, GourdClass> gourdFamily = new HashMap<Integer, GourdClass>();
-    private HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
+    private HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer, CreatureClass>();
+    private HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
 
     public MsgController() {
 
     }
 
-    public MsgController(HashMap<Integer, GourdClass> gourdFamily,
-                         HashMap<Integer, MonsterClass> monsterFamily) {
+    public MsgController(HashMap<Integer, CreatureClass> gourdFamily,
+                         HashMap<Integer, CreatureClass> monsterFamily) {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
     }

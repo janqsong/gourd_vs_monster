@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.stage.SceneController;
@@ -18,8 +19,8 @@ import org.json.*;
 
 public class Camp {
     protected SceneController sceneController;
-    protected HashMap<Integer, GourdClass> gourdFamily = new HashMap<Integer, GourdClass>();
-    protected HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
+    protected HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer,CreatureClass>();
+    protected HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
     protected DataInputStream in;
     protected DataOutputStream out;
 

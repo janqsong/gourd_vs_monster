@@ -9,6 +9,7 @@ import java.util.Map;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.stage.SceneController;
@@ -25,12 +26,12 @@ public class MonsterCamp extends Camp{
 
     public void initGame() {
         double layoutX = 160;
-        for(MonsterClass monsterMember : monsterFamily.values()) {
+        for(CreatureClass monsterMember : monsterFamily.values()) {
             monsterMember.setCreatureImagePos(layoutX, Constant.FIGHT_PANE_HEIGHT - 100);
             sceneController.addImageViewToFightMapPane(monsterMember.getCreatureImageView());
             layoutX += 100;
         }
-        for(GourdClass gourdMember : gourdFamily.values()) {
+        for(CreatureClass gourdMember : gourdFamily.values()) {
             sceneController.addImageViewToMapPane(gourdMember.getCreatureImageView());
         }
     }

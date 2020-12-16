@@ -3,6 +3,7 @@ package com.sjq.gourd.creature;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.protocol.PositionNotifyMsg;
 import com.sjq.gourd.bullet.Bullet;
+import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class CreatureClass {
-    protected HashMap<Integer, GourdClass> enemyFamily = new HashMap<Integer, GourdClass>();
+    protected HashMap<Integer, CreatureClass> enemyFamily;
     protected DataInputStream inputStream;
     protected DataOutputStream outputStream;
 
@@ -37,6 +38,8 @@ public class CreatureClass {
     protected double currentDefense;
     protected double currentAttackSpeed;
     protected double currentMoveSpeed;
+
+    protected long lastAttackMillis = System.currentTimeMillis();
 
     protected int direction;
     protected int faceDirection;
@@ -68,12 +71,13 @@ public class CreatureClass {
         this.campType = campType;
         this.creatureId = creatureId;
         this.creatureName = creatureName;
-        this.baseHealth = baseHealth;
+        this.currentHealth = this.baseHealth = baseHealth;
         this.baseMagic = baseMagic;
-        this.baseAttack = baseAttack;
-        this.baseDefense = baseDefense;
-        this.baseAttackSpeed = baseAttackSpeed;
-        this.baseMoveSpeed = baseMoveSpeed;
+        this.currentMagic = 0;
+        this.currentAttack = this.baseAttack = baseAttack;
+        this.currentDefense = this.baseDefense = baseDefense;
+        this.currentAttackSpeed = this.baseAttackSpeed = baseAttackSpeed;
+        this.currentMoveSpeed = this.baseMoveSpeed = baseMoveSpeed;
         this.shootRange = shootRange;
         this.direction = faceDirection;
         this.faceDirection = faceDirection;
@@ -85,25 +89,29 @@ public class CreatureClass {
 
         creatureImageView = new ImageView();
         creatureImageView.setFitWidth(Constant.CREATURE_IMAGE_WIDTH);
+        creatureImageView.setFitHeight(Constant.CREATURE_IMAGE_HEIGHT);
         creatureImageView.setPreserveRatio(true);
         creatureImageView.setVisible(false);
         creatureImageView.setDisable(true);
         imagePosition = new ImagePosition(0, 0,
                 creatureImageView.getFitWidth(), creatureImageView.getFitHeight());
 
+
         healthProgressBar.setPrefWidth(Constant.CREATURE_IMAGE_WIDTH);
         healthProgressBar.setPrefHeight(Constant.BAR_HEIGHT);
+        healthProgressBar.setMinHeight(Constant.BAR_HEIGHT);
         healthProgressBar.setStyle("-fx-accent: red;");
         healthProgressBar.setVisible(false);
 
         magicProgressBar.setPrefWidth(Constant.CREATURE_IMAGE_WIDTH);
         magicProgressBar.setPrefHeight(Constant.BAR_HEIGHT);
+        magicProgressBar.setMinHeight(Constant.BAR_HEIGHT);
         magicProgressBar.setStyle("-fx-accent: blue;");
         magicProgressBar.setVisible(false);
-    }
 
-    public void setEnemyFamily(HashMap<Integer, GourdClass> enemyFamily) {
-        this.enemyFamily = enemyFamily;
+        //debug
+        this.currentAttackSpeed=3;
+        System.out.println(creatureImageView.getFitHeight());
     }
 
     public void setCreatureImageView() {
@@ -132,6 +140,10 @@ public class CreatureClass {
         setCreatureImageView();
     }
 
+    public boolean canAttack() {
+        return (System.currentTimeMillis() - lastAttackMillis >= 1000 / currentAttackSpeed);
+    }
+
     private int observeEnemy() {
         if (isAlive()) {
             int selectEnemyId = 0;
@@ -149,12 +161,13 @@ public class CreatureClass {
     }
 
     public Bullet aiAttack() {
-        if (isAlive()) {
+        if (canAttack() && isAlive()) {
             int targetEnemyId = observeEnemy();
             if (targetEnemyId == -1)
                 return null;
             if (imagePosition.getDistance(enemyFamily.get(targetEnemyId).getImagePos()) > shootRange)
                 return null;
+            lastAttackMillis=System.currentTimeMillis();
             return new Bullet(this, enemyFamily.get(targetEnemyId),
                     new ImagePosition(imagePosition.getLayoutX() + getImageWidth() / 2,
                             imagePosition.getLayoutY() + getImageHeight() / 2), null);
@@ -247,13 +260,15 @@ public class CreatureClass {
         healthProgressBar.setLayoutX(imagePosition.getLayoutX());
         healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
         double progressValue = (double) currentHealth / baseHealth;
-        healthProgressBar.setProgress(progressValue);
+        double finalProgressValue = progressValue;
+        Platform.runLater(()->healthProgressBar.setProgress(finalProgressValue));
 
         magicProgressBar.setVisible(true);
         magicProgressBar.setLayoutX(imagePosition.getLayoutX());
         magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
         progressValue = (double) currentHealth / baseHealth;
-        magicProgressBar.setProgress(progressValue);
+        double finalProgressValue1 = progressValue;
+        Platform.runLater(()->magicProgressBar.setProgress(finalProgressValue1));
     }
 
     public void setCurrentHealth(double healthVal) {
@@ -295,15 +310,14 @@ public class CreatureClass {
     //封装移动方式,画,攻击,返回子弹
     public Bullet update() {
         if (isAlive()) {
-            //移动方式
             randomMove();
-            //画
             draw();
-            //攻击
             Bullet bullet = aiAttack();
             return bullet;
+        } else {
+            draw();
+            return null;
         }
-        return null;
     }
 
     //翻转isControlled状态
@@ -313,5 +327,9 @@ public class CreatureClass {
 
     public boolean isControlled() {
         return isControlled;
+    }
+
+    public void setEnemyFamily(HashMap<Integer, CreatureClass> hashMap) {
+        enemyFamily = hashMap;
     }
 }

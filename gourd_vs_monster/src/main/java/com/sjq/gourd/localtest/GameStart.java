@@ -1,11 +1,14 @@
 package com.sjq.gourd.localtest;
 
 import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
+import com.sjq.gourd.creature.ImagePosition;
 import com.sjq.gourd.creature.MonsterClass;
+import com.sjq.gourd.stage.PositionXY;
 import com.sjq.gourd.stage.SceneController;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -13,6 +16,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
+import org.checkerframework.checker.units.qual.C;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,37 +25,53 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GameStart {
 
-    private HashMap<Integer, GourdClass> gourdFamily = new HashMap<Integer, GourdClass>();
-    private HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
+    private HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer, CreatureClass>();
+    private HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
     private SceneController sceneController;
     private final Random randomNum = new Random(System.currentTimeMillis());
+    //add
+    private List<Bullet> bullets = new ArrayList<>();
 
     //add
     private Lock lock = new ReentrantLock();
     private boolean flag = false;
 
-    public GameStart(HashMap<Integer, GourdClass> gourdFamily,
-                     HashMap<Integer, MonsterClass> monsterFamily,
+    public GameStart(HashMap<Integer, CreatureClass> gourdFamily,
+                     HashMap<Integer, CreatureClass> monsterFamily,
                      SceneController sceneController) {
         //TODO 这个类里，随便改，添加任何需要的东西。
         //TODO client和server那两个包应该都用不到，不用改.
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
         this.sceneController = sceneController;
+
+        for (int i = 0; i < 200; i++){
+            Circle circle=new Circle(Constant.BULLET_CIRCLE_RADIUS);
+            sceneController.addShapeToMapPane(circle);
+            bullets.add(new Bullet(null,null,new ImagePosition(0,0),circle));
+        }
     }
 
     public void startGame() {
         initGame();
+
+        for(CreatureClass creatureClass:gourdFamily.values())
+            creatureClass.setEnemyFamily(monsterFamily);
+        for(CreatureClass creatureClass:monsterFamily.values())
+            creatureClass.setEnemyFamily(gourdFamily);
+
         gourdStartGame();
-        monsterStartGame();
+        //monsterStartGame();
     }
 
     public void gourdStartGame() {
@@ -58,15 +79,16 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (GourdClass gourd : gourdFamily.values()) {
+                for (CreatureClass gourd : gourdFamily.values()) {
                     ImageView imageView = gourd.getCreatureImageView();
                     //点击选中
                     imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
-                            for (GourdClass gourdClass : gourdFamily.values())
+                            for (CreatureClass gourdClass : gourdFamily.values())
                                 if (gourdClass.isControlled()) {
                                     gourdClass.flipControlled();
+                                    gourdClass.setCreatureImageView();
                                     break;
                                 }
                             gourd.setSelectCreatureImageView();
@@ -94,20 +116,34 @@ public class GameStart {
                 }
                 while (true) {
                     try {
-                        if (flag) {
+                        if (true) {
                             System.out.println("GourdStart");
-//                            for (GourdClass gourdMember : gourdFamily.values()) {
-//                                Bullet bullet = gourdMember.update();
-//
-//                            }
-
-
+                            for (CreatureClass gourdMember : gourdFamily.values()) {
+                                Bullet bullet = gourdMember.update();
+                                if (!pushBackBulletList(bullet))
+                                    throw new RuntimeException("子弹过多");
+                            }
+                            for (CreatureClass monsterMember : monsterFamily.values()) {
+                                Bullet bullet = monsterMember.update();
+                                if (!pushBackBulletList(bullet))
+                                    throw new RuntimeException("子弹过多");
+                            }
+                            for (Bullet bullet : bullets) {
+                                if (bullet.isValid()) {
+                                    Collision collision = bullet.update();
+                                    if (collision != null)
+                                        collision.collisionEvent();
+                                }
+                            }
+                            System.out.println("endGourd");
+                            //flag=!flag;
                             Thread.sleep(Constant.FRAME_TIME / 2);
                         }
-                    } catch (InterruptedException e) {
+                    } catch (Exception e){
+                        System.out.println("GourdException");
                         e.printStackTrace();
                     } finally {
-                        flag = !flag;
+                        //flag = !flag;
                     }
                 }
             }
@@ -120,17 +156,66 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (!flag) {
-                        System.out.println("MonsterStart");
+//                for (MonsterClass monsterMember : monsterFamily.values()) {
+//                    ImageView imageView = monsterMember.getCreatureImageView();
+//                    //点击选中
+//                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                        @Override
+//                        public void handle(MouseEvent event) {
+//                            for (MonsterClass monsterClass : monsterFamily.values())
+//                                if (monsterClass.isControlled()) {
+//                                    monsterClass.flipControlled();
+//                                    break;
+//                                }
+//                            monsterMember.setSelectCreatureImageView();
+//                            monsterMember.flipControlled();
+//                        }
+//                    });
+//                    imageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//                        @Override
+//                        public void handle(KeyEvent event) {
+//                            KeyCode keyCode = event.getCode();
+//                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_UP)
+//                                ;
+//                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_DOWN)
+//                                ;
+//                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_LEFT)
+//                                ;
+//                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_RIGHT)
+//                                ;
+//                            else if (keyCode == KeyCode.R)
+//                                ;
+//                        }
+//                    });
+//
+//            }
+                while (true) {
+                    try {
+                        if (!flag) {
 
-
-                        Thread.sleep(Constant.FRAME_TIME / 2);
+                            System.out.println("MonsterStart");
+                            for (CreatureClass monsterMember : monsterFamily.values()) {
+                                Bullet bullet = monsterMember.update();
+                                if (!pushBackBulletList(bullet))
+                                    throw new RuntimeException("子弹过多");
+                            }
+                            for (Bullet bullet : bullets) {
+                                if (bullet.isValid()) {
+                                    Collision collision = bullet.update();
+                                    if (collision != null)
+                                        collision.collisionEvent();
+                                }
+                            }
+                            System.out.println("endMonster");
+                            Thread.sleep(Constant.FRAME_TIME / 2);
+                            flag=!flag;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("MonsterException");
+                        e.printStackTrace();
+                    } finally {
+                        //flag = !flag;
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    flag = !flag;
                 }
             }
         }).start();
@@ -229,5 +314,15 @@ public class GameStart {
         return jsonContent.toString();
     }
 
-
+    private boolean pushBackBulletList(Bullet bullet) {
+        if (bullet == null)
+            return true;
+        for (Bullet bullet1 : bullets) {
+            if (!bullet1.isValid()) {
+                bullet1.changeBullet(bullet);
+                return true;
+            }
+        }
+        return false;
+    }
 }

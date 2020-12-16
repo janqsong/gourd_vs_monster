@@ -7,11 +7,13 @@ public class Constant {
     public static final double FIGHT_PANE_WIDTH = 1200;
     public static final double FIGHT_PANE_HEIGHT = 700;
 
-    public static final int CREATURE_IMAGE_WIDTH = 60;
+    public static final double CREATURE_IMAGE_WIDTH = 60;
+    public static final double CREATURE_IMAGE_HEIGHT = 63;
     public static final int BAR_HEIGHT = 10;
     public static final int FRAME_TIME = 50;
 
     public static final double BULLET_SPEED = 15;
+    public static final double BULLET_CIRCLE_RADIUS = 5;
 
     public static final double START_POSITION_WIDTH = 75;
     public static final double START_POSITION_HEIGHT = 70;

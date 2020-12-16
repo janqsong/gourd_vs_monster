@@ -3,6 +3,7 @@ package com.sjq.gourd.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
+import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.stage.SceneController;
@@ -17,12 +18,12 @@ public class GourdCamp extends Camp{
 
     public void initGame() {
         double layoutY = 10;
-        for(GourdClass gourdMember : gourdFamily.values()) {
+        for(CreatureClass gourdMember : gourdFamily.values()) {
             gourdMember.setCreatureImagePos(40, layoutY);
             layoutY += 80;
             sceneController.addImageViewToFightMapPane(gourdMember.getCreatureImageView());
         }
-        for(MonsterClass monsterMember : monsterFamily.values()) {
+        for(CreatureClass monsterMember : monsterFamily.values()) {
             monsterMember.setCreatureImagePos(500, 100);
             monsterMember.getCreatureImageView().setVisible(true);
             monsterMember.getCreatureImageView().setVisible(false);
