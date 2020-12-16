@@ -16,6 +16,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 public class GameStart {
 
@@ -23,6 +26,10 @@ public class GameStart {
     private HashMap<Integer, MonsterClass> monsterFamily = new HashMap<Integer, MonsterClass>();
     private SceneController sceneController;
     private final Random randomNum = new Random(System.currentTimeMillis());
+
+    //add
+    private Lock lock=new ReentrantLock();
+    private boolean flag=false;
 
     public GameStart(HashMap<Integer, GourdClass> gourdFamily,
                      HashMap<Integer, MonsterClass> monsterFamily,
@@ -46,13 +53,18 @@ public class GameStart {
             @Override
             public void run() {
                 while(true) {
-                    System.out.println("gourdStart");
-                    try {
-                        Thread.sleep(5000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    try{
+                        if(flag){
+                            System.out.println("GourdStart");
 
+
+                            Thread.sleep(Constant.FRAME_TIME/2);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }finally {
+                        flag=false;
+                    }
                 }
             }
         }).start();
@@ -64,11 +76,17 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("monsterStart");
-                try {
-                    Thread.sleep(5000);
-                } catch (Exception e) {
+                try{
+                    if(!flag){
+                        System.out.println("MonsterStart");
+
+
+                        Thread.sleep(Constant.FRAME_TIME/2);
+                    }
+                } catch (InterruptedException e) {
                     e.printStackTrace();
+                }finally {
+                    flag=false;
                 }
             }
         }).start();
