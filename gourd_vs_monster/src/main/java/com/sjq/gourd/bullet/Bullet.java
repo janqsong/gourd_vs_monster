@@ -85,13 +85,19 @@ public class Bullet {
         imagePosition.setLayoutX(imagePosition.getLayoutX() + cos * SPEED);
         imagePosition.setLayoutY(imagePosition.getLayoutY() + sin * SPEED);
 
-        if(targetPos.getLayoutX() < imagePosition.getLayoutX() &&
-            imagePosition.getLayoutX() <= targetPos.getLayoutX() + targetCreature.getImageWidth() &&
-            targetPos.getLayoutY() <= imagePosition.getLayoutY() &&
-            imagePosition.getLayoutY() <= targetPos.getLayoutY() + targetCreature.getImageHeight()) {
+        if (targetPos.getLayoutX() < imagePosition.getLayoutX() &&
+                imagePosition.getLayoutX() <= targetPos.getLayoutX() + targetCreature.getImageWidth() &&
+                targetPos.getLayoutY() <= imagePosition.getLayoutY() &&
+                imagePosition.getLayoutY() <= targetPos.getLayoutY() + targetCreature.getImageHeight()) {
             valid = false;
             return new Collision(this);
         }
         return null;
+    }
+
+    public Collision update() {
+        draw();
+        Collision collision = move();
+        return collision;
     }
 }

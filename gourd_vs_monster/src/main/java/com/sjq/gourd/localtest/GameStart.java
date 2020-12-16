@@ -1,12 +1,18 @@
 package com.sjq.gourd.localtest;
 
+import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.MonsterClass;
 import com.sjq.gourd.stage.SceneController;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,8 +34,8 @@ public class GameStart {
     private final Random randomNum = new Random(System.currentTimeMillis());
 
     //add
-    private Lock lock=new ReentrantLock();
-    private boolean flag=false;
+    private Lock lock = new ReentrantLock();
+    private boolean flag = false;
 
     public GameStart(HashMap<Integer, GourdClass> gourdFamily,
                      HashMap<Integer, MonsterClass> monsterFamily,
@@ -52,18 +58,56 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true) {
-                    try{
-                        if(flag){
+                for (GourdClass gourd : gourdFamily.values()) {
+                    ImageView imageView = gourd.getCreatureImageView();
+                    //点击选中
+                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            for (GourdClass gourdClass : gourdFamily.values())
+                                if (gourdClass.isControlled()) {
+                                    gourdClass.flipControlled();
+                                    break;
+                                }
+                            gourd.setSelectCreatureImageView();
+                            gourd.flipControlled();
+                        }
+                    });
+                    imageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            KeyCode keyCode = event.getCode();
+                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_UP)
+                                ;
+                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_DOWN)
+                                ;
+                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_LEFT)
+                                ;
+                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_RIGHT)
+                                ;
+                            else if (keyCode == KeyCode.R)
+                                ;
+                        }
+                    });
+
+
+                }
+                while (true) {
+                    try {
+                        if (flag) {
                             System.out.println("GourdStart");
+//                            for (GourdClass gourdMember : gourdFamily.values()) {
+//                                Bullet bullet = gourdMember.update();
+//
+//                            }
 
 
-                            Thread.sleep(Constant.FRAME_TIME/2);
+                            Thread.sleep(Constant.FRAME_TIME / 2);
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }finally {
-                        flag=false;
+                    } finally {
+                        flag = !flag;
                     }
                 }
             }
@@ -76,17 +120,17 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
-                    if(!flag){
+                try {
+                    if (!flag) {
                         System.out.println("MonsterStart");
 
 
-                        Thread.sleep(Constant.FRAME_TIME/2);
+                        Thread.sleep(Constant.FRAME_TIME / 2);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
-                    flag=false;
+                } finally {
+                    flag = !flag;
                 }
             }
         }).start();
@@ -134,7 +178,7 @@ public class GameStart {
             gourdFamily.put(creatureId, gourdMember);
         }
 
-        for(int i = 0; i < monsterInfoArray.length(); i++) {
+        for (int i = 0; i < monsterInfoArray.length(); i++) {
             JSONObject monsterObject = (JSONObject) monsterInfoArray.get(i);
             int creatureId = monsterObject.getInt("creatureId");
             String creatureName = monsterObject.getString("creatureName");

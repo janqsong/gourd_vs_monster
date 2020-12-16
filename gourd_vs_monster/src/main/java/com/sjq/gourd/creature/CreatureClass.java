@@ -21,7 +21,7 @@ public class CreatureClass {
     protected final int creatureId;
     protected final String creatureName;
 
-    protected boolean isAlive;
+    //protected boolean isAlive;//删除这个,保留接口判断生死
 
     protected final double baseHealth;
     protected final double baseMagic;
@@ -40,6 +40,7 @@ public class CreatureClass {
 
     protected int direction;
     protected int faceDirection;
+    protected boolean isControlled = false;
     protected ImagePosition imagePosition;
 
     ProgressBar healthProgressBar = new ProgressBar();
@@ -76,7 +77,6 @@ public class CreatureClass {
         this.shootRange = shootRange;
         this.direction = faceDirection;
         this.faceDirection = faceDirection;
-        this.isAlive = true;
 
         this.creatureLeftImage = creatureLeftImage;
         this.selectCreatureLeftImage = selectCreatureLeftImage;
@@ -133,7 +133,7 @@ public class CreatureClass {
     }
 
     private int observeEnemy() {
-        if (isAlive) {
+        if (isAlive()) {
             int selectEnemyId = 0;
             double minDistance = 1400.0;
             for (CreatureClass creatureMember : enemyFamily.values()) {
@@ -149,7 +149,7 @@ public class CreatureClass {
     }
 
     public Bullet aiAttack() {
-        if (isAlive) {
+        if (isAlive()) {
             int targetEnemyId = observeEnemy();
             if (targetEnemyId == -1)
                 return null;
@@ -204,7 +204,7 @@ public class CreatureClass {
     }
 
     public void move() {
-        if (isAlive) {
+        if (isAlive()) {
             switch (direction) {
                 case Constant.Direction.UP: {
                     imagePosition.setLayoutY(imagePosition.getLayoutY() - currentMoveSpeed);
@@ -239,7 +239,7 @@ public class CreatureClass {
     }
 
     public boolean isAlive() {
-        return isAlive;
+        return currentHealth > 0;
     }
 
     public void drawBar() {
@@ -280,7 +280,7 @@ public class CreatureClass {
     }
 
     public void draw() {
-        if (isAlive) {
+        if (isAlive()) {
             drawBar();
             move();
         } else {
@@ -289,5 +289,29 @@ public class CreatureClass {
             healthProgressBar.setVisible(false);
             magicProgressBar.setVisible(false);
         }
+    }
+
+
+    //封装移动方式,画,攻击,返回子弹
+    public Bullet update() {
+        if (isAlive()) {
+            //移动方式
+            randomMove();
+            //画
+            draw();
+            //攻击
+            Bullet bullet = aiAttack();
+            return bullet;
+        }
+        return null;
+    }
+
+    //翻转isControlled状态
+    public void flipControlled() {
+        isControlled = !isControlled;
+    }
+
+    public boolean isControlled() {
+        return isControlled;
     }
 }
