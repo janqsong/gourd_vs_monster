@@ -2,7 +2,7 @@
   "monsterInfo" : [
     {
       "creatureId" : 0,
-      "creatureName" : "snakeGoblin",
+      "creatureName" : "snakeMonster",
       "baseHealth" : 1500,
       "baseMagic" : 100,
       "baseAttack" : 100,
@@ -14,7 +14,7 @@
     },
     {
       "creatureId" : 1,
-      "creatureName" : "scorpionGoblin",
+      "creatureName" : "scorpionMonster",
       "baseHealth" : 1500,
       "baseMagic" : 100,
       "baseAttack" : 100,
@@ -26,7 +26,7 @@
     },
     {
       "creatureId" : 2,
-      "creatureName" : "monster1",
+      "creatureName" : "centipedeMonster",
       "baseHealth" : 1500,
       "baseMagic" : 100,
       "baseAttack" : 100,
@@ -38,7 +38,7 @@
     },
     {
       "creatureId" : 3,
-      "creatureName" : "monster2",
+      "creatureName" : "batMonster",
       "baseHealth" : 1500,
       "baseMagic" : 100,
       "baseAttack" : 100,
@@ -50,7 +50,7 @@
     },
     {
       "creatureId" : 4,
-      "creatureName" : "monster3",
+      "creatureName" : "crocodileMonster",
       "baseHealth" : 1500,
       "baseMagic" : 100,
       "baseAttack" : 100,
@@ -62,7 +62,7 @@
     },
     {
       "creatureId" : 5,
-      "creatureName" : "monster4",
+      "creatureName" : "toadMonster",
       "baseHealth" : 1500,
       "baseMagic" : 100,
       "baseAttack" : 100,

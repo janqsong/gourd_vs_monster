@@ -9,6 +9,7 @@ public class Constant {
 
     public static final int CREATURE_IMAGE_WIDTH = 60;
     public static final int BAR_HEIGHT = 10;
+    public static final int FRAME_TIME = 50;
 
     public static final double BULLET_SPEED = 15;
 
