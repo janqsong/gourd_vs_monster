@@ -4,6 +4,7 @@ import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.ImagePosition;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,6 +18,7 @@ public class Bullet {
     private Circle circleShape;
     private static final double SPEED = Constant.BULLET_SPEED;
     private boolean valid;
+    private int bulletType;
 
     public Bullet(CreatureClass sourceCreature, CreatureClass targetCreature,
                   ImagePosition imagePosition, Circle circleShape) {
@@ -25,12 +27,23 @@ public class Bullet {
         this.imagePosition = imagePosition;
         this.circleShape = circleShape;
         this.valid = false;
+        this.bulletType=Constant.REMOTE_BULLET_TYPE;
+    }
+
+    public Bullet(CreatureClass sourceCreature,CreatureClass targetCreature,
+                  ImagePosition imagePosition){
+        this.sourceCreature = sourceCreature;
+        this.targetCreature = targetCreature;
+        this.imagePosition = imagePosition;
+        this.valid=false;
+        this.bulletType=Constant.CLOSE_BULLET_TYPE;
     }
 
     public void changeBullet(Bullet bullet) {
         this.sourceCreature = bullet.getSourceCreature();
         this.targetCreature = bullet.getTargetCreature();
         this.imagePosition = bullet.getPosXY();
+        this.bulletType=bullet.bulletType;
         this.valid = true;
     }
 
@@ -93,8 +106,17 @@ public class Bullet {
     }
 
     public Collision update() {
-        draw();
-        Collision collision = move();
-        return collision;
+        if(bulletType==Constant.REMOTE_BULLET_TYPE){
+            draw();
+            Collision collision = move();
+            return collision;
+        }
+        else{
+            return new Collision(this);
+        }
+    }
+
+    public int getBulletType() {
+        return bulletType;
     }
 }

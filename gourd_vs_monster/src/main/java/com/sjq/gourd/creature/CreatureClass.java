@@ -1,8 +1,11 @@
 package com.sjq.gourd.creature;
 
+import com.sjq.gourd.ai.AiInterface;
+import com.sjq.gourd.ai.FirstGenerationAi;
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.protocol.PositionNotifyMsg;
+//import com.sjq.gourd.protocol.PositionNotifyMsg;
 import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.constant.ImageUrl;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -41,9 +44,21 @@ public class CreatureClass {
 
     protected long lastAttackMillis = System.currentTimeMillis();
 
+    //上次被近战攻击的时间,注意是被近战攻击,检测到上次被攻击时间到现在的时间,超过一个较短的时间gap就让抓恒消失
+    private long lastCloseAttack = 0;
+    //显示被攻击是图片上的抓痕的控件
+    private ImageView closeAttackImageView;
+    //是否是近战类型
+    private boolean isCloseAttack;
+    //近战类型的抓痕
+    private int clawType = Constant.ClawType.NONE_CLAW;
+
     protected int direction;
     protected boolean isControlled = false;
     protected ImagePosition imagePosition;
+    protected AiInterface aiInterface;
+    //每次攻击回复的蓝量
+    private final double magicIncrementOnce = 10.0;
 
     ProgressBar healthProgressBar = new ProgressBar();
     ProgressBar magicProgressBar = new ProgressBar();
@@ -65,8 +80,9 @@ public class CreatureClass {
     //add 加上width表示图片宽度
     public CreatureClass(DataInputStream in, DataOutputStream out,
                          String campType, int creatureId, String creatureName,
-                         int baseHealth, int baseMagic, int baseAttack, int baseDefense, int baseAttackSpeed,
-                         int baseMoveSpeed, double shootRange, int faceDirection, double width,
+                         double baseHealth, double baseMagic, double baseAttack, double baseDefense, double baseAttackSpeed,
+                         double baseMoveSpeed, double shootRange, int faceDirection, double width, boolean isCloseAttack, int clawType,
+                         ImageView imageView, ImageView closeAttackImageView,
                          Image creatureLeftImage, Image selectCreatureLeftImage,
                          Image creatureRightImage, Image selectCreatureRightImage) {
         //TODO 这个类里，尽量不要改，改也可以，你可以和我说你下，你要改哪些内容，可以多加函数。
@@ -85,17 +101,30 @@ public class CreatureClass {
         this.shootRange = shootRange;
         this.direction = faceDirection;
 
+        this.isCloseAttack = isCloseAttack;
+        this.clawType = clawType;
+
         this.creatureLeftImage = creatureLeftImage;
         this.selectCreatureLeftImage = selectCreatureLeftImage;
         this.creatureRightImage = creatureRightImage;
         this.selectCreatureRightImage = selectCreatureRightImage;
 
-        creatureImageView = new ImageView();
+        //把抓痕的长宽暂时设置为50 50
+        //初始化时抓痕不可见,只有在被近战攻击时,抓痕才可见
+        this.closeAttackImageView = closeAttackImageView;
+        this.closeAttackImageView.setPreserveRatio(true);
+        this.closeAttackImageView.setFitWidth(50);
+        this.closeAttackImageView.setFitHeight(50);
+        closeAttackImageView.setVisible(false);
+
+        creatureImageView = imageView;
 
         creatureImageView.setPreserveRatio(true);
         this.WIDTH = width;
         creatureImageView.setFitWidth(width);
-        this.HEIGHT = creatureImageView.getFitHeight();
+        this.HEIGHT = creatureLeftImage.getHeight() / creatureLeftImage.getWidth() * width;
+        creatureImageView.setFitHeight(HEIGHT);
+        System.out.println(HEIGHT);
 
         if (direction == Constant.Direction.LEFT)
             creatureImageView.setImage(creatureLeftImage);
@@ -119,6 +148,8 @@ public class CreatureClass {
         magicProgressBar.setStyle("-fx-accent: blue;");
         magicProgressBar.setVisible(false);
 
+        //ai
+        aiInterface = new FirstGenerationAi(creatureId + System.currentTimeMillis());
     }
 
     //根据方向设置图片状态
@@ -140,13 +171,13 @@ public class CreatureClass {
     public void setCreatureImagePos(double layoutX, double layoutY) {
         imagePosition.setLayoutX(layoutX);
         imagePosition.setLayoutY(layoutY);
-        if(layoutY>Constant.FIGHT_PANE_HEIGHT-HEIGHT){
+        if (layoutY > Constant.FIGHT_PANE_HEIGHT - HEIGHT) {
             System.out.println(HEIGHT);
             System.out.println(layoutY);
             try {
                 Thread.sleep(100000);
 
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -271,7 +302,7 @@ public class CreatureClass {
         magicProgressBar.setVisible(true);
         magicProgressBar.setLayoutX(imagePosition.getLayoutX());
         magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
-        progressValue = (double) currentHealth / baseHealth;
+        progressValue = (double) currentMagic / baseMagic;
         double finalProgressValue1 = progressValue;
         Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
     }
@@ -300,7 +331,10 @@ public class CreatureClass {
     }
 
     public void draw() {
+        drawCloseAttack();
         if (isAlive()) {
+            creatureImageView.setVisible(true);
+            creatureImageView.setDisable(false);
             drawBar();
             move();
         } else {
@@ -316,9 +350,9 @@ public class CreatureClass {
     public Bullet update() {
         if (!isControlled) {
             if (isAlive()) {
-                randomMove();
+                aiInterface.moveMod(this);
                 draw();
-                Bullet bullet = aiAttack();
+                Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 return bullet;
             } else {
                 draw();
@@ -377,5 +411,75 @@ public class CreatureClass {
 
     public double getCurrentDefense() {
         return currentDefense;
+    }
+
+
+    public double getShootRange() {
+        return shootRange;
+    }
+
+    public void setLastAttackTimeMillis(long currentTimeMillis) {
+        lastAttackMillis = currentTimeMillis;
+    }
+
+    public double getCurrentMoveSpeed() {
+        return currentMoveSpeed;
+    }
+
+    public double getBaseHealth() {
+        return baseHealth;
+    }
+
+
+    public double getCurrentMagic() {
+        return currentMagic;
+    }
+
+    public void setCurrentMagic(double currentMagic) {
+        if (currentMagic < 0)
+            currentMagic = 0;
+        if (currentMagic > baseMagic)
+            currentMagic = baseMagic;
+        this.currentMagic = currentMagic;
+    }
+
+    public double getMagicIncrementOnce() {
+        return magicIncrementOnce;
+    }
+
+    public void setLastCloseAttack(long lastCloseAttack) {
+        this.lastCloseAttack = lastCloseAttack;
+    }
+
+    public void drawCloseAttack() {
+        if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
+            //显示近战攻击图片
+            closeAttackImageView.setLayoutX(imagePosition.getLayoutX());
+            closeAttackImageView.setLayoutY(imagePosition.getLayoutY());
+            closeAttackImageView.setVisible(true);
+        } else {
+            //否则不显示近战图片
+            closeAttackImageView.setVisible(false);
+        }
+    }
+
+    public String getCreatureName() {
+        return creatureName;
+    }
+
+    public HashMap<Integer, CreatureClass> getEnemyFamily() {
+        return enemyFamily;
+    }
+
+    public boolean isCloseAttack() {
+        return isCloseAttack;
+    }
+
+    public int getClawType() {
+        return clawType;
+    }
+
+    public ImageView getCloseAttackImageView() {
+        return closeAttackImageView;
     }
 }

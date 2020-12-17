@@ -5,10 +5,7 @@ import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.CreatureClass;
-import com.sjq.gourd.creature.GourdClass;
 import com.sjq.gourd.creature.ImagePosition;
-import com.sjq.gourd.creature.MonsterClass;
-import com.sjq.gourd.stage.PositionXY;
 import com.sjq.gourd.stage.SceneController;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -17,7 +14,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
-import org.checkerframework.checker.units.qual.C;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,8 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GameStart {
@@ -42,8 +36,6 @@ public class GameStart {
     //add
     private List<Bullet> bullets = new ArrayList<>();
 
-    //add
-    private Lock lock = new ReentrantLock();
     private boolean flag = false;
 
     public GameStart(HashMap<Integer, CreatureClass> gourdFamily,
@@ -92,7 +84,7 @@ public class GameStart {
                                     gourdClass.getCreatureImageView().setFocusTraversable(false);
                                     break;
                                 }
-                            if(!gourd.isControlled()){
+                            if (!gourd.isControlled()) {
                                 gourd.flipControlled();
                                 gourd.getCreatureImageView().setFocusTraversable(true);
                             }
@@ -190,34 +182,34 @@ public class GameStart {
 //                    });
 //
 //            }
-                while (true) {
-                    try {
-                        if (!flag) {
-
-                            System.out.println("MonsterStart");
-                            for (CreatureClass monsterMember : monsterFamily.values()) {
-                                Bullet bullet = monsterMember.update();
-                                if (!pushBackBulletList(bullet))
-                                    throw new RuntimeException("子弹过多");
-                            }
-                            for (Bullet bullet : bullets) {
-                                if (bullet.isValid()) {
-                                    Collision collision = bullet.update();
-                                    if (collision != null)
-                                        collision.collisionEvent();
-                                }
-                            }
-                            System.out.println("endMonster");
-                            Thread.sleep(Constant.FRAME_TIME / 2);
-                            flag = !flag;
-                        }
-                    } catch (Exception e) {
-                        System.out.println("MonsterException");
-                        e.printStackTrace();
-                    } finally {
-                        flag = !flag;
-                    }
-                }
+//                while (true) {
+//                    try {
+//                        if (!flag) {
+//
+//                            System.out.println("MonsterStart");
+//                            for (CreatureClass monsterMember : monsterFamily.values()) {
+//                                Bullet bullet = monsterMember.update();
+//                                if (!pushBackBulletList(bullet))
+//                                    throw new RuntimeException("子弹过多");
+//                            }
+//                            for (Bullet bullet : bullets) {
+//                                if (bullet.isValid()) {
+//                                    Collision collision = bullet.update();
+//                                    if (collision != null)
+//                                        collision.collisionEvent();
+//                                }
+//                            }
+//                            System.out.println("endMonster");
+//                            Thread.sleep(Constant.FRAME_TIME / 2);
+//                            flag = !flag;
+//                        }
+//                    } catch (Exception e) {
+//                        System.out.println("MonsterException");
+//                        e.printStackTrace();
+//                    } finally {
+//                        flag = !flag;
+//                    }
+//                }
             }
         }).start();
     }
@@ -235,33 +227,39 @@ public class GameStart {
             JSONObject gourdObject = (JSONObject) gourdInfoArray.get(i);
             int creatureId = gourdObject.getInt("creatureId");
             String creatureName = gourdObject.getString("creatureName");
-            int baseHealth = gourdObject.getInt("baseHealth");
-            int baseMagic = gourdObject.getInt("baseMagic");
-            int baseAttack = gourdObject.getInt("baseAttack");
-            int baseDefense = gourdObject.getInt("baseDefense");
-            int baseAttackSpeed = gourdObject.getInt("baseAttackSpeed");
-            int baseMoveSpeed = gourdObject.getInt("baseMoveSpeed");
+            double baseHealth = gourdObject.getDouble("baseHealth");
+            double baseMagic = gourdObject.getDouble("baseMagic");
+            double baseAttack = gourdObject.getDouble("baseAttack");
+            double baseDefense = gourdObject.getDouble("baseDefense");
+            double baseAttackSpeed = gourdObject.getDouble("baseAttackSpeed");
+            double baseMoveSpeed = gourdObject.getDouble("baseMoveSpeed");
             double shootRange = gourdObject.getDouble("shootRange");
             int faceDirection = gourdObject.getInt("faceDirection");
             double imageWidth = gourdObject.getDouble("imageWidth");
+            boolean isCloseAttack = gourdObject.getBoolean("isCloseAttack");
+            int clawType = gourdObject.getInt("clawType");
             Image gourdLeftImage = ImageUrl.gourdLeftImageMap.get(creatureId);
             Image gourdLeftSelectImage = ImageUrl.gourdLeftSelectImageMap.get(creatureId);
             Image gourdRightImage = ImageUrl.gourdRightImageMap.get(creatureId);
             Image gourdRightSelectImage = ImageUrl.gourdRightSelectImageMap.get(creatureId);
-            GourdClass gourdMember = new GourdClass(null, null, Constant.CampType.GOURD, creatureId, creatureName,
+            ImageView imageView = new ImageView();
+            ImageView closeAttackImageView = new ImageView();
+            sceneController.addImageViewToMapPane(closeAttackImageView);
+            sceneController.addImageViewToMapPane(imageView);
+
+            CreatureClass gourdMember = new CreatureClass(null, null, Constant.CampType.GOURD, creatureId, creatureName,
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
-                    imageWidth, gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
+                    imageWidth, isCloseAttack, clawType, imageView, closeAttackImageView, gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
             gourdMember.setCreatureImageView();
             ImageView tempImageView = gourdMember.getCreatureImageView();
             gourdMember.setCreatureImagePos(
                     randomNum.nextDouble() * (Constant.FIGHT_PANE_WIDTH / 2 - tempImageView.getFitWidth()),
                     randomNum.nextDouble() * (Constant.FIGHT_PANE_HEIGHT - 100));
-            tempImageView.setVisible(true);
-            tempImageView.setDisable(false);
-            sceneController.addImageViewToMapPane(gourdMember.getCreatureImageView());
+
             sceneController.addProgressBarToMapPane(gourdMember.getHealthProgressBar());
             sceneController.addProgressBarToMapPane(gourdMember.getMagicProgressBar());
 
+            gourdMember.getCreatureImageView().setFitWidth(50);
             gourdFamily.put(creatureId, gourdMember);
         }
 
@@ -278,23 +276,30 @@ public class GameStart {
             double shootRange = monsterObject.getDouble("shootRange");
             int faceDirection = monsterObject.getInt("faceDirection");
             double imageWidth = monsterObject.getDouble("imageWidth");
+            boolean isCloseAttack = monsterObject.getBoolean("isCloseAttack");
+            int clawType = monsterObject.getInt("clawType");
             Image monsterLeftImage = ImageUrl.monsterLeftImageMap.get(creatureId);
             Image monsterLeftSelectImage = ImageUrl.monsterLeftSelectImageMap.get(creatureId);
             Image monsterRightImage = ImageUrl.monsterRightImageMap.get(creatureId);
             Image monsterRightSelectImage = ImageUrl.monsterRightSelectImageMap.get(creatureId);
-            MonsterClass monsterMember = new MonsterClass(null, null, Constant.CampType.MONSTER, creatureId, creatureName,
+            ImageView imageView = new ImageView();
+            sceneController.addImageViewToMapPane(imageView);
+
+            ImageView closeAttackImageView = new ImageView();
+            sceneController.addImageViewToMapPane(closeAttackImageView);
+            CreatureClass monsterMember = new CreatureClass(null, null, Constant.CampType.MONSTER, creatureId, creatureName,
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
-                    imageWidth, monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
+                    imageWidth, isCloseAttack, clawType, imageView, closeAttackImageView, monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
             monsterMember.setCreatureImageView();
             ImageView tempImageView = monsterMember.getCreatureImageView();
             monsterMember.setCreatureImagePos(
                     randomNum.nextDouble() * (Constant.FIGHT_PANE_WIDTH / 2 - tempImageView.getFitWidth()) + Constant.FIGHT_PANE_WIDTH / 2,
                     randomNum.nextDouble() * (Constant.FIGHT_PANE_HEIGHT - 100));
-            tempImageView.setVisible(true);
-            tempImageView.setDisable(false);
-            sceneController.addImageViewToMapPane(monsterMember.getCreatureImageView());
+
+
             sceneController.addProgressBarToMapPane(monsterMember.getHealthProgressBar());
             sceneController.addProgressBarToMapPane(monsterMember.getMagicProgressBar());
+
             monsterFamily.put(creatureId, monsterMember);
         }
     }

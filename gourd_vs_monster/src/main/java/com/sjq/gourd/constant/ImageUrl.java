@@ -15,6 +15,7 @@ public class ImageUrl {
     public static HashMap<Integer, Image> monsterRightSelectImageMap = new HashMap<>();
     public static HashMap<Integer, Image> monsterLeftSelectImageMap = new HashMap<>();
 
+    public static HashMap<Integer, Image> closeAttackImageMap = new HashMap<>();
 
     public static void initImageUrl() {
         gourdRightImageMap.put(CreatureId.FIRST_GOURD_ID, new Image("/images/gourdImages/firstGourdRight.png"));
@@ -96,5 +97,11 @@ public class ImageUrl {
         monsterLeftSelectImageMap.put(CreatureId.MONSTER5_ID, new Image("/images/monsterImages/centipedeMonsterLeftSelect.png"));
         monsterLeftSelectImageMap.put(CreatureId.MONSTER6_ID, new Image("/images/monsterImages/centipedeMonsterLeftSelect.png"));
         monsterLeftSelectImageMap.put(CreatureId.MONSTER7_ID, new Image("/images/monsterImages/centipedeMonsterLeftSelect.png"));
+
+        closeAttackImageMap.put(Constant.ClawType.FIRST_CLAW,new Image("/images/attackImages/firstClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.SECOND_CLAW,new Image("/images/attackImages/secondClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.THIRD_CLAW,new Image("/images/attackImages/thirdClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.FOURTH_CLAW,new Image("/images/attackImages/fourthClaw.png"));
+        //closeAttackImageMap.put(Constant.ClawType.NONE_CLAW,new Image("/images/attackImages/noneClaw.png"));
     }
 }

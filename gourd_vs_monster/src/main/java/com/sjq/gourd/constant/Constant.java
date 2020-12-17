@@ -30,4 +30,20 @@ public class Constant {
         public static final String GOURD = "Gourd";
         public static final String MONSTER = "MONSTER";
     }
+
+    //对第一优先级追杀10s
+    public static final int FIRST_GENERATION_AI_COUNT_TIME = 10;
+
+    public static final int REMOTE_BULLET_TYPE = 0;
+    public static final int CLOSE_BULLET_TYPE = 1;
+
+    public static final class ClawType {
+        public static final int FIRST_CLAW = 0;
+        public static final int SECOND_CLAW = 1;
+        public static final int THIRD_CLAW = 2;
+        public static final int FOURTH_CLAW = 3;
+        public static final int NONE_CLAW = 4;
+    }
+
+    public static int CLAW_IMAGE_EXIST_TIME = 100;
 }

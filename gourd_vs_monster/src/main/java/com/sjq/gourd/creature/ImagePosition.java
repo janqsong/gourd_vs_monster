@@ -56,7 +56,7 @@ public class ImagePosition {
             if (deltaY < 0) return Constant.Direction.DOWN;
             else return Constant.Direction.UP;
         } else {
-            if (deltaY < 0) return Constant.Direction.RIGHT;
+            if (deltaX < 0) return Constant.Direction.RIGHT;
             else return Constant.Direction.LEFT;
         }
     }

@@ -7,11 +7,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 1,
@@ -20,11 +22,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 2,
@@ -33,11 +37,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 3,
@@ -46,11 +52,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 4,
@@ -59,11 +67,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 5,
@@ -72,11 +82,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 6,
@@ -85,11 +97,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 7,
@@ -98,11 +112,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     },
     {
       "creatureId": 8,
@@ -111,11 +127,13 @@
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
-      "baseAttackSpeed": 1,
+      "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 400.0,
       "faceDirection": 3,
-      "imageWidth": 50.0
+      "imageWidth": 50.0,
+      "isCloseAttack": false,
+      "clawType": 0
     }
   ]
 }
