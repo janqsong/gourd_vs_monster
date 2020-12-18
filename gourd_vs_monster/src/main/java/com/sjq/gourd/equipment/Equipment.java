@@ -27,10 +27,15 @@ public abstract class Equipment {
         this.imageView = imageView;
         this.WIDTH = width;
         this.HEIGHT = height;
-        imagePosition = new ImagePosition(random.nextInt((int) (Constant.FIGHT_PANE_WIDTH-width)), random.nextInt(1));
+        this.isFree = true;
+        imagePosition = new ImagePosition(random.nextInt((int) (Constant.FIGHT_PANE_WIDTH - width)),
+                random.nextInt((int) (Constant.FIGHT_PANE_HEIGHT - height)));
+        this.imageView.setImage(image);
+        this.imageView.setFitWidth(width);
+        this.imageView.setFitHeight(height);
     }
 
-    void draw() {
+    public void draw() {
         if (isFree) {
             imageView.setLayoutX(imagePosition.getLayoutX());
             imageView.setLayoutY(imagePosition.getLayoutY());
@@ -48,11 +53,15 @@ public abstract class Equipment {
         this.imagePosition = imagePosition;
     }
 
-    public double getWIDTH(){
+    public double getWIDTH() {
         return WIDTH;
     }
 
-    public double getHEIGHT(){
+    public double getHEIGHT() {
         return HEIGHT;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
     }
 }

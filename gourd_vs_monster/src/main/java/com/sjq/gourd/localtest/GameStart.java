@@ -62,9 +62,10 @@ public class GameStart {
         ArrayList<ImageView> imageViews = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             ImageView imageView = new ImageView();
-            imageView.setVisible(true);
-            imageView.setDisable(false);
+            imageView.setVisible(false);
+            imageView.setDisable(true);
             imageViews.add(imageView);
+            sceneController.addImageViewToMapPane(imageView);
         }
         equipmentFactory = new EquipmentFactory(imageViews);
         initGame();
@@ -159,9 +160,24 @@ public class GameStart {
                                         collision.collisionEvent();
                                 }
                             }
-//                            if (equipmentFactory.hasNext()) {
-//                                Equipment equipment = equipmentFactory.next();
-//                            }
+                            if (equipmentFactory.hasNext()) {
+                                Equipment equipment = equipmentFactory.next();
+                                if (equipment != null)
+                                    equipmentList.add(equipment);
+                            }
+                            for (CreatureClass creatureClass : gourdFamily.values()) {
+                                if (creatureClass.isControlled()) {
+                                    for (Equipment equipment : equipmentList) {
+                                        if (equipment.getImageView().getBoundsInParent().intersects(creatureClass.getCreatureImageView().getBoundsInParent())) {
+                                            creatureClass.pickUpEquipment(equipment);
+                                            equipmentList.remove(equipment);
+                                        }
+                                    }
+                                }
+                            }
+                            for(Equipment equipment:equipmentList){
+                                equipment.draw();
+                            }
                             //flag=!flag;
                             Thread.sleep(Constant.FRAME_TIME);
                         }

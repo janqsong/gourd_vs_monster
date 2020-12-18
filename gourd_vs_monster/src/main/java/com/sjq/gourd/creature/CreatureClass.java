@@ -6,6 +6,7 @@ import com.sjq.gourd.constant.Constant;
 //import com.sjq.gourd.protocol.PositionNotifyMsg;
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.equipment.Equipment;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -15,6 +16,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CreatureClass {
     protected HashMap<Integer, CreatureClass> enemyFamily;
@@ -61,6 +66,7 @@ public class CreatureClass {
     protected AiInterface aiInterface;
     //每次攻击回复的蓝量
     private final double magicIncrementOnce = 10.0;
+    private Equipment equipment = null;
 
     ProgressBar healthProgressBar = new ProgressBar();
     ProgressBar magicProgressBar = new ProgressBar();
@@ -77,6 +83,7 @@ public class CreatureClass {
 
     private final double WIDTH;
     private final double HEIGHT;
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
 
     //add 加上width表示图片宽度
@@ -373,11 +380,21 @@ public class CreatureClass {
 
     //翻转isControlled状态
     public void flipControlled() {
-        isControlled = !isControlled;
+//        readWriteLock.writeLock().lock();
+        try{
+            isControlled = !isControlled;
+        }finally {
+//            readWriteLock.writeLock().lock();
+        }
     }
 
     public boolean isControlled() {
-        return isControlled;
+//        readWriteLock.readLock().lock();
+        try{
+            return isControlled;
+        }finally {
+//            readWriteLock.readLock().unlock();
+        }
     }
 
     public void setEnemyFamily(HashMap<Integer, CreatureClass> hashMap) {
@@ -488,5 +505,10 @@ public class CreatureClass {
 
     public ImageView getCloseAttackImageView() {
         return closeAttackImageView;
+    }
+
+    public void pickUpEquipment(Equipment equipment) {
+        this.equipment = equipment;
+        equipment.takeEffect(this);
     }
 }
