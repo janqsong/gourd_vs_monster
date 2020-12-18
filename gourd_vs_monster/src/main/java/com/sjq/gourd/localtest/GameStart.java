@@ -262,7 +262,7 @@ public class GameStart {
             Image gourdRightSelectImage = ImageUrl.gourdRightSelectImageMap.get(creatureId);
             ImageView imageView = new ImageView();
             ImageView closeAttackImageView = new ImageView();
-            sceneController.addImageViewToMapPane(closeAttackImageView);
+            //sceneController.addImageViewToMapPane(closeAttackImageView);
             sceneController.addImageViewToMapPane(imageView);
 
             CreatureClass gourdMember = new CreatureClass(null, null, Constant.CampType.GOURD, creatureId, creatureName,
@@ -304,7 +304,7 @@ public class GameStart {
             sceneController.addImageViewToMapPane(imageView);
 
             ImageView closeAttackImageView = new ImageView();
-            sceneController.addImageViewToMapPane(closeAttackImageView);
+            //sceneController.addImageViewToMapPane(closeAttackImageView);
             CreatureClass monsterMember = new CreatureClass(null, null, Constant.CampType.MONSTER, creatureId, creatureName,
                     baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
                     imageWidth, isCloseAttack, clawType, imageView, closeAttackImageView, monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
@@ -319,6 +319,13 @@ public class GameStart {
             sceneController.addProgressBarToMapPane(monsterMember.getMagicProgressBar());
 
             monsterFamily.put(creatureId, monsterMember);
+        }
+
+        for (CreatureClass creature : gourdFamily.values()) {
+            sceneController.addImageViewToMapPane(creature.getCloseAttackImageView());
+        }
+        for(CreatureClass creature : monsterFamily.values()){
+            sceneController.addImageViewToMapPane(creature.getCloseAttackImageView());
         }
     }
 

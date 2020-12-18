@@ -9,10 +9,10 @@
       "baseDefense": 30,
       "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
-      "shootRange": 400.0,
+      "shootRange": 80.0,
       "faceDirection": 3,
       "imageWidth": 50.0,
-      "isCloseAttack": false,
+      "isCloseAttack": true,
       "clawType": 0
     },
     {
@@ -36,13 +36,13 @@
       "baseHealth": 1500,
       "baseMagic": 100,
       "baseAttack": 100,
-      "baseDefense": 30,
+      "baseDefense": 50,
       "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
-      "shootRange": 400.0,
+      "shootRange": 80.0,
       "faceDirection": 3,
       "imageWidth": 50.0,
-      "isCloseAttack": false,
+      "isCloseAttack": true,
       "clawType": 0
     },
     {
@@ -108,16 +108,16 @@
     {
       "creatureId": 7,
       "creatureName": "pangolin",
-      "baseHealth": 1500,
+      "baseHealth": 2500,
       "baseMagic": 100,
       "baseAttack": 100,
-      "baseDefense": 30,
+      "baseDefense": 50,
       "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
-      "shootRange": 400.0,
+      "shootRange": 80.0,
       "faceDirection": 3,
       "imageWidth": 50.0,
-      "isCloseAttack": false,
+      "isCloseAttack": true,
       "clawType": 0
     },
     {

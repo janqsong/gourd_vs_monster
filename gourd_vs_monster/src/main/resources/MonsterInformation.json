@@ -28,7 +28,7 @@
       "faceDirection" : 2,
       "imageWidth":100.0,
       "isCloseAttack": true,
-      "clawType": 0
+      "clawType": 3
     },
     {
       "creatureId" : 2,
@@ -43,7 +43,7 @@
       "faceDirection" : 2,
       "imageWidth":60.0,
       "isCloseAttack": true,
-      "clawType": 0
+      "clawType": 1
     },
     {
       "creatureId" : 3,
@@ -54,10 +54,10 @@
       "baseDefense" : 30,
       "baseAttackSpeed" : 0.5,
       "baseMoveSpeed" : 10,
-      "shootRange" : 80.0,
+      "shootRange" : 400.0,
       "faceDirection" : 2,
       "imageWidth":50.0,
-      "isCloseAttack": true,
+      "isCloseAttack": false,
       "clawType": 0
     },
     {
@@ -73,7 +73,7 @@
       "faceDirection" : 2,
       "imageWidth":50.0,
       "isCloseAttack": true,
-      "clawType": 0
+      "clawType": 2
     },
     {
       "creatureId" : 5,
