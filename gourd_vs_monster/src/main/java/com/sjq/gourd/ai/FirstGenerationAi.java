@@ -116,6 +116,7 @@ public class FirstGenerationAi implements AiInterface {
                 return null;
             Bullet bullet = null;
 
+
             if (myCreature.isCloseAttack())
                 bullet = new Bullet(myCreature, target, myCreature.getCenterPos());
             else

@@ -6,6 +6,8 @@ import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.CreatureClass;
 import com.sjq.gourd.creature.ImagePosition;
+import com.sjq.gourd.equipment.Equipment;
+import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.stage.SceneController;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -35,6 +37,8 @@ public class GameStart {
     private final Random randomNum = new Random(System.currentTimeMillis());
     //add
     private List<Bullet> bullets = new ArrayList<>();
+    private List<Equipment> equipmentList = new ArrayList<>();
+    private EquipmentFactory equipmentFactory = null;
 
     private boolean flag = false;
 
@@ -47,7 +51,7 @@ public class GameStart {
         this.monsterFamily = monsterFamily;
         this.sceneController = sceneController;
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 300; i++) {
             Circle circle = new Circle(Constant.BULLET_CIRCLE_RADIUS);
             sceneController.addShapeToMapPane(circle);
             bullets.add(new Bullet(null, null, new ImagePosition(0, 0), circle));
@@ -55,6 +59,14 @@ public class GameStart {
     }
 
     public void startGame() {
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            ImageView imageView = new ImageView();
+            imageView.setVisible(true);
+            imageView.setDisable(false);
+            imageViews.add(imageView);
+        }
+        equipmentFactory = new EquipmentFactory(imageViews);
         initGame();
 
         for (CreatureClass creatureClass : gourdFamily.values())
@@ -71,62 +83,62 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                for (CreatureClass gourd : gourdFamily.values()) {
-//                    ImageView imageView = gourd.getCreatureImageView();
-//                    //点击选中
-//                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                        @Override
-//                        public void handle(MouseEvent event) {
-//                            for (CreatureClass gourdClass : gourdFamily.values())
-//                                if (gourdClass.isControlled() && gourdClass != gourd) {
-//                                    gourdClass.flipControlled();
-//                                    gourdClass.setCreatureImageView();
-//                                    gourdClass.getCreatureImageView().setFocusTraversable(false);
-//                                    break;
-//                                }
-//                            if (!gourd.isControlled()) {
-//                                gourd.flipControlled();
-//                                gourd.setCreatureImageView();
-//                                gourd.getCreatureImageView().setFocusTraversable(true);
-//                            }
-//                        }
-//                    });
-//                    imageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//                        @Override
-//                        public void handle(KeyEvent event) {
-//                            KeyCode keyCode = event.getCode();
-//                            System.out.println(keyCode.getName());
-//                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
-//                                gourd.setDirection(Constant.Direction.LEFT);
-//                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
-//                                gourd.setDirection(Constant.Direction.RIGHT);
-//                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
-//                                gourd.setDirection(Constant.Direction.UP);
-//                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
-//                                gourd.setDirection(Constant.Direction.DOWN);
-//                            else if (keyCode == KeyCode.R)
-//                                ;
-//                        }
-//                    });
-//
-//                    imageView.setOnKeyReleased(new EventHandler<KeyEvent>() {
-//                        @Override
-//                        public void handle(KeyEvent event) {
-//                            KeyCode keyCode = event.getCode();
-//                            System.out.println(keyCode.getName());
-//                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
-//                                gourd.setDirection(Constant.Direction.STOP);
-//                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
-//                                gourd.setDirection(Constant.Direction.STOP);
-//                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
-//                                gourd.setDirection(Constant.Direction.STOP);
-//                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
-//                                gourd.setDirection(Constant.Direction.STOP);
-//                        }
-//                    });
-//
-//
-//                }
+                for (CreatureClass gourd : gourdFamily.values()) {
+                    ImageView imageView = gourd.getCreatureImageView();
+                    //点击选中
+                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            for (CreatureClass gourdClass : gourdFamily.values())
+                                if (gourdClass.isControlled() && gourdClass != gourd) {
+                                    gourdClass.flipControlled();
+                                    gourdClass.setCreatureImageView();
+                                    gourdClass.getCreatureImageView().setFocusTraversable(false);
+                                    break;
+                                }
+                            if (!gourd.isControlled()) {
+                                gourd.flipControlled();
+                                gourd.setCreatureImageView();
+                                gourd.getCreatureImageView().setFocusTraversable(true);
+                            }
+                        }
+                    });
+                    imageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            KeyCode keyCode = event.getCode();
+                            System.out.println(keyCode.getName());
+                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
+                                gourd.setDirection(Constant.Direction.LEFT);
+                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
+                                gourd.setDirection(Constant.Direction.RIGHT);
+                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
+                                gourd.setDirection(Constant.Direction.UP);
+                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
+                                gourd.setDirection(Constant.Direction.DOWN);
+                            else if (keyCode == KeyCode.R)
+                                ;
+                        }
+                    });
+
+                    imageView.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            KeyCode keyCode = event.getCode();
+                            System.out.println(keyCode.getName());
+                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
+                                gourd.setDirection(Constant.Direction.STOP);
+                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
+                                gourd.setDirection(Constant.Direction.STOP);
+                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
+                                gourd.setDirection(Constant.Direction.STOP);
+                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
+                                gourd.setDirection(Constant.Direction.STOP);
+                        }
+                    });
+
+
+                }
                 while (true) {
                     try {
                         if (true) {
@@ -147,6 +159,9 @@ public class GameStart {
                                         collision.collisionEvent();
                                 }
                             }
+//                            if (equipmentFactory.hasNext()) {
+//                                Equipment equipment = equipmentFactory.next();
+//                            }
                             //flag=!flag;
                             Thread.sleep(Constant.FRAME_TIME);
                         }
@@ -324,7 +339,7 @@ public class GameStart {
         for (CreatureClass creature : gourdFamily.values()) {
             sceneController.addImageViewToMapPane(creature.getCloseAttackImageView());
         }
-        for(CreatureClass creature : monsterFamily.values()){
+        for (CreatureClass creature : monsterFamily.values()) {
             sceneController.addImageViewToMapPane(creature.getCloseAttackImageView());
         }
     }

@@ -190,7 +190,7 @@ public class CreatureClass {
     //设置移动方向
     public void setDirection(int direction) {
         if (isControlled) {
-
+            this.direction = direction;
         } else if (System.currentTimeMillis() - lastDirectionSetTime >= Constant.DIRECTION_LOCK_TIME) {
             this.direction = direction;
             lastDirectionSetTime = System.currentTimeMillis();
