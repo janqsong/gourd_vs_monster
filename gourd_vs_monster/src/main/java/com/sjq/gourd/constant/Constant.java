@@ -45,5 +45,13 @@ public class Constant {
         public static final int NONE_CLAW = 4;
     }
 
-    public static int CLAW_IMAGE_EXIST_TIME = 100;
+    public static int CLAW_IMAGE_EXIST_TIME = 200;
+
+    public static final class EquipmentType {
+        public static final int JADE_BAR_ID = 0;
+        public static final int JADE_HAIR_PIN_ID = 1;
+        public static final int MAGIC_MIRROR_ID = 2;
+        public static final int RIGID_SOFT_SWORD_ID = 3;
+        public static final int TREASURE_BAG_ID = 4;
+    }
 }

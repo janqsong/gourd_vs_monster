@@ -3,16 +3,16 @@
     {
       "creatureId" : 0,
       "creatureName" : "snakeMonster",
-      "baseHealth" : 300,
+      "baseHealth" : 3000,
       "baseMagic" : 100,
       "baseAttack" : 100,
       "baseDefense" : 30,
       "baseAttackSpeed" : 0.5,
       "baseMoveSpeed" : 10,
-      "shootRange" : 300,
+      "shootRange" : 500.0,
       "faceDirection" : 2,
       "imageWidth":80.0,
-      "isCloseAttack": true,
+      "isCloseAttack": false,
       "clawType": 0
     },
     {
@@ -24,7 +24,7 @@
       "baseDefense" : 30,
       "baseAttackSpeed" : 0.5,
       "baseMoveSpeed" : 10,
-      "shootRange" : 80.0,
+      "shootRange" : 100.0,
       "faceDirection" : 2,
       "imageWidth":100.0,
       "isCloseAttack": true,

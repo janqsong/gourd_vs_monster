@@ -48,14 +48,14 @@ public class FirstGenerationAi implements AiInterface {
         int direction = myCreature.getImagePos().getRelativePosFar(firstPriority.getImagePos());
         int rand = random.nextInt(10);
 
-        if(myCreature.getCampType()==Constant.CampType.MONSTER){
+        if(myCreature.isCloseAttack()){
             myCreature.setDirection(direction);
             return;
         }
 
         if (0.8 * shootRange > distance) {
             //反向
-            if (rand <= 8)
+            if (rand <= 5)
                 if (direction % 2 == 0)
                     myCreature.setDirection((direction + 1) % 5);
                 else
@@ -63,7 +63,7 @@ public class FirstGenerationAi implements AiInterface {
             else
                 myCreature.setDirection(random.nextInt(5));
         } else {
-            if (rand <= 8)
+            if (rand <= 5)
                 myCreature.setDirection(direction);
             else
                 myCreature.setDirection(random.nextInt());
@@ -86,7 +86,7 @@ public class FirstGenerationAi implements AiInterface {
                 return null;
             if (myCreature.getImagePos().getDistance(target.getImagePos()) > myCreature.getShootRange())
                 return null;
-            Bullet bullet;
+            Bullet bullet = null;
             if (myCreature.isCloseAttack())
                 bullet = new Bullet(myCreature, target, myCreature.getCenterPos());
             else

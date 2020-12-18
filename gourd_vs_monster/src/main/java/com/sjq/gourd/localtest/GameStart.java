@@ -71,45 +71,62 @@ public class GameStart {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (CreatureClass gourd : gourdFamily.values()) {
-                    ImageView imageView = gourd.getCreatureImageView();
-                    //点击选中
-                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            for (CreatureClass gourdClass : gourdFamily.values())
-                                if (gourdClass.isControlled()) {
-                                    gourdClass.flipControlled();
-                                    gourdClass.setCreatureImageView();
-                                    gourdClass.getCreatureImageView().setFocusTraversable(false);
-                                    break;
-                                }
-                            if (!gourd.isControlled()) {
-                                gourd.flipControlled();
-                                gourd.getCreatureImageView().setFocusTraversable(true);
-                            }
-                        }
-                    });
-                    imageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            KeyCode keyCode = event.getCode();
-                            System.out.println(keyCode.getName());
-                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
-                                gourd.setDirection(Constant.Direction.LEFT);
-                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
-                                gourd.setDirection(Constant.Direction.RIGHT);
-                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
-                                gourd.setDirection(Constant.Direction.UP);
-                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
-                                gourd.setDirection(Constant.Direction.DOWN);
-                            else if (keyCode == KeyCode.R)
-                                ;
-                        }
-                    });
-
-
-                }
+//                for (CreatureClass gourd : gourdFamily.values()) {
+//                    ImageView imageView = gourd.getCreatureImageView();
+//                    //点击选中
+//                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                        @Override
+//                        public void handle(MouseEvent event) {
+//                            for (CreatureClass gourdClass : gourdFamily.values())
+//                                if (gourdClass.isControlled() && gourdClass != gourd) {
+//                                    gourdClass.flipControlled();
+//                                    gourdClass.setCreatureImageView();
+//                                    gourdClass.getCreatureImageView().setFocusTraversable(false);
+//                                    break;
+//                                }
+//                            if (!gourd.isControlled()) {
+//                                gourd.flipControlled();
+//                                gourd.setCreatureImageView();
+//                                gourd.getCreatureImageView().setFocusTraversable(true);
+//                            }
+//                        }
+//                    });
+//                    imageView.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//                        @Override
+//                        public void handle(KeyEvent event) {
+//                            KeyCode keyCode = event.getCode();
+//                            System.out.println(keyCode.getName());
+//                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
+//                                gourd.setDirection(Constant.Direction.LEFT);
+//                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
+//                                gourd.setDirection(Constant.Direction.RIGHT);
+//                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
+//                                gourd.setDirection(Constant.Direction.UP);
+//                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
+//                                gourd.setDirection(Constant.Direction.DOWN);
+//                            else if (keyCode == KeyCode.R)
+//                                ;
+//                        }
+//                    });
+//
+//                    imageView.setOnKeyReleased(new EventHandler<KeyEvent>() {
+//                        @Override
+//                        public void handle(KeyEvent event) {
+//                            KeyCode keyCode = event.getCode();
+//                            System.out.println(keyCode.getName());
+//                            if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
+//                                gourd.setDirection(Constant.Direction.STOP);
+//                            else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
+//                                gourd.setDirection(Constant.Direction.STOP);
+//                            else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
+//                                gourd.setDirection(Constant.Direction.STOP);
+//                            else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
+//                                gourd.setDirection(Constant.Direction.STOP);
+//                        }
+//                    });
+//
+//
+//                }
                 while (true) {
                     try {
                         if (true) {
@@ -134,6 +151,7 @@ public class GameStart {
                             Thread.sleep(Constant.FRAME_TIME);
                         }
                     } catch (Exception e) {
+                        System.out.println("while(true)出错");
                         e.printStackTrace();
                     } finally {
                         //flag = !flag;
@@ -271,8 +289,8 @@ public class GameStart {
             int baseMagic = monsterObject.getInt("baseMagic");
             int baseAttack = monsterObject.getInt("baseAttack");
             int baseDefense = monsterObject.getInt("baseDefense");
-            int baseAttackSpeed = monsterObject.getInt("baseAttackSpeed");
-            int baseMoveSpeed = monsterObject.getInt("baseMoveSpeed");
+            double baseAttackSpeed = monsterObject.getDouble("baseAttackSpeed");
+            double baseMoveSpeed = monsterObject.getDouble("baseMoveSpeed");
             double shootRange = monsterObject.getDouble("shootRange");
             int faceDirection = monsterObject.getInt("faceDirection");
             double imageWidth = monsterObject.getDouble("imageWidth");

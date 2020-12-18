@@ -42,7 +42,7 @@ public class CreatureClass {
     protected double currentAttackSpeed;
     protected double currentMoveSpeed;
 
-    protected long lastAttackMillis = System.currentTimeMillis();
+    protected long lastAttackMillis = 0;
 
     //上次被近战攻击的时间,注意是被近战攻击,检测到上次被攻击时间到现在的时间,超过一个较短的时间gap就让抓恒消失
     private long lastCloseAttack = 0;
@@ -193,7 +193,7 @@ public class CreatureClass {
 
     //判断是否下载可以攻击,收到攻速的限制
     public boolean canAttack() {
-        return (System.currentTimeMillis() - lastAttackMillis >= 1000 / currentAttackSpeed);
+        return (System.currentTimeMillis() - lastAttackMillis >= 1000.0 / currentAttackSpeed);
     }
 
     //观测敌人,选取一个敌人下标返回
@@ -292,14 +292,14 @@ public class CreatureClass {
     }
 
     public void drawBar() {
-        healthProgressBar.setVisible(true);
+        Platform.runLater(() -> healthProgressBar.setVisible(true));
         healthProgressBar.setLayoutX(imagePosition.getLayoutX());
         healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
         double progressValue = (double) currentHealth / baseHealth;
         double finalProgressValue = progressValue;
         Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
 
-        magicProgressBar.setVisible(true);
+        Platform.runLater(() -> magicProgressBar.setVisible(true));
         magicProgressBar.setLayoutX(imagePosition.getLayoutX());
         magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
         progressValue = (double) currentMagic / baseMagic;
