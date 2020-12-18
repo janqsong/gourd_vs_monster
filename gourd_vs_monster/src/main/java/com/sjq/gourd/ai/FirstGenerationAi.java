@@ -115,6 +115,7 @@ public class FirstGenerationAi implements AiInterface {
             if (myCreature.getImagePos().getDistance(target.getImagePos()) > myCreature.getShootRange())
                 return null;
             Bullet bullet = null;
+
             if (myCreature.isCloseAttack())
                 bullet = new Bullet(myCreature, target, myCreature.getCenterPos());
             else
