@@ -49,9 +49,11 @@ public class Constant {
 
     public static final class EquipmentType {
         public static final int JADE_BAR_ID = 0;
-        public static final int JADE_HAIR_PIN_ID = 1;
+        public static final int JADE_HAIRPIN_ID = 1;
         public static final int MAGIC_MIRROR_ID = 2;
         public static final int RIGID_SOFT_SWORD_ID = 3;
         public static final int TREASURE_BAG_ID = 4;
     }
+
+    public static final long DIRECTION_LOCK_TIME = 500;//ms
 }

@@ -53,6 +53,8 @@ public class CreatureClass {
     //近战类型的抓痕
     private int clawType = Constant.ClawType.NONE_CLAW;
 
+    private long lastDirectionSetTime = 0;
+
     protected int direction;
     protected boolean isControlled = false;
     protected ImagePosition imagePosition;
@@ -187,8 +189,13 @@ public class CreatureClass {
 
     //设置移动方向
     public void setDirection(int direction) {
-        this.direction = direction;
-        setCreatureImageView();
+        if (isControlled) {
+
+        } else if (System.currentTimeMillis() - lastDirectionSetTime >= Constant.DIRECTION_LOCK_TIME) {
+            this.direction = direction;
+            lastDirectionSetTime = System.currentTimeMillis();
+            setCreatureImageView();
+        }
     }
 
     //判断是否下载可以攻击,收到攻速的限制

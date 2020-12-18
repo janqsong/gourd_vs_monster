@@ -37,19 +37,47 @@ public class FirstGenerationAi implements AiInterface {
     @Override
     public void moveMod(CreatureClass myCreature) {
         if (firstPriority == null || !firstPriority.isAlive()) {
-            firstPriority=observe(myCreature,myCreature.getEnemyFamily());
+            firstPriority = observe(myCreature, myCreature.getEnemyFamily());
             timeCount = (int) (Constant.FIRST_GENERATION_AI_COUNT_TIME * 1000 / Constant.FRAME_TIME);
             myCreature.setDirection(random.nextInt(5));
+            return;
+        }
+
+        double maxX = Constant.FIGHT_PANE_WIDTH - myCreature.getImageWidth();
+        double maxY = Constant.FIGHT_PANE_HEIGHT - myCreature.getImageHeight();
+        double posX = myCreature.getImagePos().getLayoutX();
+        double posY = myCreature.getImagePos().getLayoutY();
+        int rand = random.nextInt(5);
+        if (posX == 0 && posY == 0) {
+            while (rand == Constant.Direction.LEFT || rand == Constant.Direction.UP)
+                rand = random.nextInt(5);
+            myCreature.setDirection(rand);
+            return;
+        } else if (posX == 0 && posY == maxY) {
+            while (rand == Constant.Direction.LEFT || rand == Constant.Direction.DOWN)
+                rand = random.nextInt(5);
+            myCreature.setDirection(rand);
+            return;
+        } else if (posX == maxX && posY == 0) {
+            while (rand == Constant.Direction.RIGHT || rand == Constant.Direction.UP)
+                rand = random.nextInt(5);
+            myCreature.setDirection(rand);
+            return;
+        } else if (posX == maxX && posY == maxY) {
+            while (rand == Constant.Direction.RIGHT || rand == Constant.Direction.DOWN)
+                rand = random.nextInt(5);
+            myCreature.setDirection(rand);
             return;
         }
 
         double distance = myCreature.getImagePos().getDistance(firstPriority.getImagePos());
         double shootRange = myCreature.getShootRange();
         int direction = myCreature.getImagePos().getRelativePosFar(firstPriority.getImagePos());
-        int rand = random.nextInt(10);
+        rand = random.nextInt(10);
 
-        if(myCreature.isCloseAttack()){
-            myCreature.setDirection(direction);
+        if (myCreature.isCloseAttack()) {
+            if (distance > 0.9 * myCreature.getShootRange())
+                myCreature.setDirection(direction);
             return;
         }
 

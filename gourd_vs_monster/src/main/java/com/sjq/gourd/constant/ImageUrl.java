@@ -104,5 +104,11 @@ public class ImageUrl {
         closeAttackImageMap.put(Constant.ClawType.THIRD_CLAW,new Image("/images/attackImages/thirdClaw.png"));
         closeAttackImageMap.put(Constant.ClawType.FOURTH_CLAW,new Image("/images/attackImages/fourthClaw.png"));
         //closeAttackImageMap.put(Constant.ClawType.NONE_CLAW,new Image("/images/attackImages/noneClaw.png"));
+
+        equipmentImageMap.put(Constant.EquipmentType.JADE_BAR_ID,new Image("/images/equipmentImages/jadeBar.png"));
+        equipmentImageMap.put(Constant.EquipmentType.JADE_HAIRPIN_ID,new Image("/images/equipmentImages/jadeHairpin.png"));
+        equipmentImageMap.put(Constant.EquipmentType.MAGIC_MIRROR_ID,new Image("/images/equipmentImages/magicMirror.png"));
+        equipmentImageMap.put(Constant.EquipmentType.RIGID_SOFT_SWORD_ID,new Image("/images/equipmentImages/rigidSoftSword.png"));
+        equipmentImageMap.put(Constant.EquipmentType.TREASURE_BAG_ID,new Image("/images/equipmentImages/treasureBag.png"));
     }
 }

@@ -3,7 +3,7 @@
     {
       "creatureId": 0,
       "creatureName": "firstGourd",
-      "baseHealth": 1500,
+      "baseHealth": 3000,
       "baseMagic": 100,
       "baseAttack": 100,
       "baseDefense": 30,
@@ -33,15 +33,15 @@
     {
       "creatureId": 2,
       "creatureName": "thirdGourd",
-      "baseHealth": 1500,
+      "baseHealth": 2500,
       "baseMagic": 100,
       "baseAttack": 100,
-      "baseDefense": 50,
+      "baseDefense": 70,
       "baseAttackSpeed": 0.5,
       "baseMoveSpeed": 10,
       "shootRange": 80.0,
       "faceDirection": 3,
-      "imageWidth": 50.0,
+      "imageWidth": 60.0,
       "isCloseAttack": true,
       "clawType": 0
     },
