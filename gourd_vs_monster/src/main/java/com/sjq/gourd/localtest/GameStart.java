@@ -195,7 +195,7 @@ public class GameStart {
         System.out.println(camp);
         int idOffset = 0;
         if (!camp.equals(Constant.CampType.GOURD))
-            idOffset = CreatureId.MIN_MONSTER_ID ;
+            idOffset = CreatureId.MIN_MONSTER_ID;
         for (Creature creature : myFamily.values()) {
             ImageView imageView = creature.getCreatureImageView();
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -251,7 +251,7 @@ public class GameStart {
                 if (keyCode.isDigitKey()) {
                     int num = keyCode.ordinal() - 25;
                     System.out.println(num);
-                    if (1 <= num && num <= 9) {
+                    if (0 <= num && num <= 8) {
                         Creature creature = myFamily.get(finalIdOffset + num);
                         if (myCreature != creature) {
                             if (creature != null && creature.isAlive()) {
