@@ -14,9 +14,9 @@ public class SnakeMonster extends Creature {
         super(in, out, Constant.CampType.MONSTER, CreatureId.SNAKE_MONSTER_ID, CreatureId.SNAKE_MONSTER_NAME,
                 4000, 200, 120, 30, 0.7, 15, 500.0,
                 faceDirection, 90.0, false, Constant.ClawType.NONE_CLAW,
-                imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.SNAKE_MONSTER_ID),
-                ImageUrl.gourdLeftSelectImageMap.get(CreatureId.SNAKE_MONSTER_ID),
-                ImageUrl.gourdRightImageMap.get(CreatureId.SNAKE_MONSTER_ID),
-                ImageUrl.gourdRightSelectImageMap.get(CreatureId.SNAKE_MONSTER_ID));
+                imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SNAKE_MONSTER_ID),
+                ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SNAKE_MONSTER_ID),
+                ImageUrl.monsterRightImageMap.get(CreatureId.SNAKE_MONSTER_ID),
+                ImageUrl.monsterRightSelectImageMap.get(CreatureId.SNAKE_MONSTER_ID));
     }
 }

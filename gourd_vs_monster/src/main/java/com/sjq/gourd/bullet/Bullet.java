@@ -21,25 +21,26 @@ public class Bullet {
         this.sourceCreature = sourceCreature;
         this.targetCreature = targetCreature;
         this.imagePosition = imagePosition;
-        this.circleShape = circleShape;
-        this.valid = false;
-        this.bulletType=Constant.REMOTE_BULLET_TYPE;
+        this.circleShape = new Circle(sourceCreature.getCenterPos().getLayoutX(), sourceCreature.getCenterPos().getLayoutY(), 5);
+        this.circleShape.setVisible(false);
+        this.valid = true;
+        this.bulletType = Constant.REMOTE_BULLET_TYPE;
     }
 
-    public Bullet(Creature sourceCreature,Creature targetCreature,
-                  ImagePosition imagePosition){
+    public Bullet(Creature sourceCreature, Creature targetCreature,
+                  ImagePosition imagePosition) {
         this.sourceCreature = sourceCreature;
         this.targetCreature = targetCreature;
         this.imagePosition = imagePosition;
-        this.valid=false;
-        this.bulletType=Constant.CLOSE_BULLET_TYPE;
+        this.valid = true;
+        this.bulletType = Constant.CLOSE_BULLET_TYPE;
     }
 
     public void changeBullet(Bullet bullet) {
         this.sourceCreature = bullet.getSourceCreature();
         this.targetCreature = bullet.getTargetCreature();
         this.imagePosition = bullet.getPosXY();
-        this.bulletType=bullet.bulletType;
+        this.bulletType = bullet.bulletType;
         this.valid = true;
     }
 
@@ -68,7 +69,9 @@ public class Bullet {
     }
 
     public void setVisible(boolean visible) {
-        circleShape.setVisible(visible);
+       if(circleShape!=null){
+           circleShape.setVisible(visible);
+       }
     }
 
     public void draw() {
@@ -106,12 +109,11 @@ public class Bullet {
     }
 
     public Collision update() {
-        if(bulletType==Constant.REMOTE_BULLET_TYPE){
+        if (bulletType == Constant.REMOTE_BULLET_TYPE) {
             draw();
             Collision collision = move();
             return collision;
-        }
-        else{
+        } else {
             return new Collision(this);
         }
     }

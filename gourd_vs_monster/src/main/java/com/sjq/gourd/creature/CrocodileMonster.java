@@ -13,9 +13,9 @@ public class CrocodileMonster extends Creature{
         super(in, out, Constant.CampType.MONSTER, CreatureId.MONSTER3_ID, CreatureId.MONSTER3_NAME,
                 3500, 100, 100, 40, 0.5, 8, 80.0,
                 faceDirection, 80.0, true, Constant.ClawType.SECOND_CLAW,
-                imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.MONSTER3_ID),
-                ImageUrl.gourdLeftSelectImageMap.get(CreatureId.MONSTER3_ID),
-                ImageUrl.gourdRightImageMap.get(CreatureId.MONSTER3_ID),
-                ImageUrl.gourdRightSelectImageMap.get(CreatureId.MONSTER3_ID));
+                imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.MONSTER3_ID),
+                ImageUrl.monsterLeftSelectImageMap.get(CreatureId.MONSTER3_ID),
+                ImageUrl.monsterRightImageMap.get(CreatureId.MONSTER3_ID),
+                ImageUrl.monsterRightSelectImageMap.get(CreatureId.MONSTER3_ID));
     }
 }

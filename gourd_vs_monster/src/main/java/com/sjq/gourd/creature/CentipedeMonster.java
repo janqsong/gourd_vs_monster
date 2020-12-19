@@ -13,9 +13,9 @@ public class CentipedeMonster extends Creature{
         super(in, out, Constant.CampType.MONSTER, CreatureId.MONSTER1_ID, CreatureId.MONSTER1_NAME,
                 3000, 100, 75, 20, 0.5, 8, 80.0,
                 faceDirection, 90.0, true, Constant.ClawType.FOURTH_CLAW,
-                imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.MONSTER1_ID),
-                ImageUrl.gourdLeftSelectImageMap.get(CreatureId.MONSTER1_ID),
-                ImageUrl.gourdRightImageMap.get(CreatureId.MONSTER1_ID),
-                ImageUrl.gourdRightSelectImageMap.get(CreatureId.MONSTER1_ID));
+                imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.MONSTER1_ID),
+                ImageUrl.monsterLeftSelectImageMap.get(CreatureId.MONSTER1_ID),
+                ImageUrl.monsterRightImageMap.get(CreatureId.MONSTER1_ID),
+                ImageUrl.monsterRightSelectImageMap.get(CreatureId.MONSTER1_ID));
     }
 }

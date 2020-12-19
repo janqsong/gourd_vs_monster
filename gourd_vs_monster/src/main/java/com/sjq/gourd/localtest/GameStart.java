@@ -11,6 +11,7 @@ import com.sjq.gourd.creature.ImagePosition;
 import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.stage.SceneController;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -151,6 +152,8 @@ public class GameStart {
                 creature.setCreatureImagePos(
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_WIDTH / 2 - creature.getWIDTH()),
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_HEIGHT - creature.getHEIGHT()));
+                sceneController.getMapPane().getChildren().add(creature.getHealthProgressBar());
+                sceneController.getMapPane().getChildren().add(creature.getMagicProgressBar());
             }
             for (Creature creature : monsterFamily.values()) {
                 creature.setEnemyFamily(gourdFamily);
@@ -158,6 +161,8 @@ public class GameStart {
                 creature.setCreatureImagePos(
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_WIDTH / 2 - creature.getWIDTH()) + Constant.FIGHT_PANE_WIDTH / 2,
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_HEIGHT - creature.getHEIGHT()));
+                sceneController.getMapPane().getChildren().add(creature.getHealthProgressBar());
+                sceneController.getMapPane().getChildren().add(creature.getMagicProgressBar());
             }
         } else {
             for (Creature creature : gourdFamily.values()) {
@@ -166,6 +171,8 @@ public class GameStart {
                 creature.setCreatureImagePos(
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_WIDTH / 2 - creature.getWIDTH()) + Constant.FIGHT_PANE_WIDTH / 2,
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_HEIGHT - creature.getHEIGHT()));
+                sceneController.getMapPane().getChildren().add(creature.getHealthProgressBar());
+                sceneController.getMapPane().getChildren().add(creature.getMagicProgressBar());
             }
             for (Creature creature : monsterFamily.values()) {
                 creature.setEnemyFamily(gourdFamily);
@@ -173,16 +180,21 @@ public class GameStart {
                 creature.setCreatureImagePos(
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_WIDTH / 2 - creature.getWIDTH()),
                         randomNum.nextDouble() * (Constant.FIGHT_PANE_HEIGHT - creature.getHEIGHT()));
+                sceneController.getMapPane().getChildren().add(creature.getHealthProgressBar());
+                sceneController.getMapPane().getChildren().add(creature.getMagicProgressBar());
             }
         }
 
         if (camp == Constant.CampType.GOURD)
-            myGameStart(gourdFamily, monsterFamily);
+            myGameStart(camp, gourdFamily, monsterFamily);
         else
-            myGameStart(monsterFamily, gourdFamily);
+            myGameStart(camp, monsterFamily, gourdFamily);
     }
 
-    public void myGameStart(HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+    public void myGameStart(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+        int idOffset = -1;
+        if (!camp.equals(Constant.CampType.GOURD))
+            idOffset = CreatureId.MIN_MONSTER_ID - 1;
         for (Creature creature : myFamily.values()) {
             ImageView imageView = creature.getCreatureImageView();
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -208,10 +220,12 @@ public class GameStart {
         final boolean[] isLeftPressOn = {false};
         final boolean[] isRightPressOn = {false};
         final int[] lastPressOn = {Constant.Direction.STOP};
+        int finalIdOffset = idOffset;
         sceneController.getMapPane().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 KeyCode keyCode = event.getCode();
+                System.out.println(keyCode.getName());
                 if (keyCode == KeyCode.W) {
                     isUpPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.UP;
@@ -228,10 +242,26 @@ public class GameStart {
                     isRightPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.RIGHT;
                 }
-                if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
-                    myCreature.setDirection(lastPressOn[0]);
-                else
-                    myCreature.setDirection(Constant.Direction.STOP);
+                if (myCreature != null) {
+                    if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
+                        myCreature.setDirection(lastPressOn[0]);
+                    else
+                        myCreature.setDirection(Constant.Direction.STOP);
+                }
+//                if (keyCode.isDigitKey()) {
+//                    int num = keyCode.ordinal() - 25;
+//                    System.out.println(num);
+//                    if (1 <= num && num <= 9) {
+//                        Creature creature = myFamily.get(finalIdOffset + num);
+//                        if (myCreature != creature) {
+//                            if (creature != null && creature.isAlive()) {
+//                                if (myCreature != null && myCreature.isAlive() && myCreature.isControlled())
+//                                    myCreature.flipControlled();
+//                                myCreature = creature;
+//                            }
+//                        }
+//                    }
+//                }
             }
         });
 
@@ -239,14 +269,21 @@ public class GameStart {
             @Override
             public void handle(KeyEvent event) {
                 KeyCode keyCode = event.getCode();
+                System.out.println(keyCode.getName()+"DOWN");
                 if (keyCode == KeyCode.W)
                     isUpPressOn[0] = false;
-                if (keyCode == KeyCode.S)
+                else if (keyCode == KeyCode.S)
                     isDownPressOn[0] = false;
-                if (keyCode == KeyCode.A)
+                else if (keyCode == KeyCode.A)
                     isLeftPressOn[0] = false;
-                if (keyCode == KeyCode.D)
+                else if (keyCode == KeyCode.D)
                     isRightPressOn[0] = false;
+                if (myCreature != null) {
+                    if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
+                        myCreature.setDirection(lastPressOn[0]);
+                    else
+                        myCreature.setDirection(Constant.Direction.STOP);
+                }
             }
         });
 
@@ -260,7 +297,12 @@ public class GameStart {
                             if (bullet != null) {
                                 bullets.add(bullet);
                                 if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-                                    sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                        }
+                                    });
                             }
                         }
                         for (Creature enemyMember : enemyFamily.values()) {
@@ -268,7 +310,12 @@ public class GameStart {
                             if (bullet != null) {
                                 bullets.add(bullet);
                                 if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-                                    sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                        }
+                                    });
                             }
                         }
                         Iterator<Bullet> bulletIterator = bullets.listIterator();

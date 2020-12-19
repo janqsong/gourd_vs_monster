@@ -562,7 +562,6 @@ public class Creature {
                     new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
         }
 
-
 //        if (isAlive() || attackTarget == null || !attackTarget.isAlive())
 //            return null;
 //        if (!canAttack())
@@ -574,4 +573,5 @@ public class Creature {
 //        else
 //            return new Bullet(this, attackTarget, new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
     }
+
 }

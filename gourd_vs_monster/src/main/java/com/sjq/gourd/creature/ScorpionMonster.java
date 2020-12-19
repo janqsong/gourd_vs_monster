@@ -14,9 +14,9 @@ public class ScorpionMonster extends Creature {
         super(in, out, Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
                 5000, 100, 150, 55, 0.5, 8, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
-                imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.SCORPION_MONSTER_ID),
-                ImageUrl.gourdLeftSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID),
-                ImageUrl.gourdRightImageMap.get(CreatureId.SCORPION_MONSTER_ID),
-                ImageUrl.gourdRightSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID));
+                imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SCORPION_MONSTER_ID),
+                ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID),
+                ImageUrl.monsterRightImageMap.get(CreatureId.SCORPION_MONSTER_ID),
+                ImageUrl.monsterRightSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID));
     }
 }
