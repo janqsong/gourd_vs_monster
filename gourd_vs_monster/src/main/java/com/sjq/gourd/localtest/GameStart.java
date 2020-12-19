@@ -134,7 +134,6 @@ public class GameStart {
                             try {
                                 if(myGourd!=null&& myGourd.isAlive()){
                                     KeyCode keyCode = event.getCode();
-                                    System.out.println(keyCode.getName());
                                     if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
                                         myGourd.setDirection(Constant.Direction.LEFT);
                                     else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)

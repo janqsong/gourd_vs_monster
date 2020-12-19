@@ -134,7 +134,6 @@ public class CreatureClass {
         creatureImageView.setFitWidth(width);
         this.HEIGHT = creatureLeftImage.getHeight() / creatureLeftImage.getWidth() * width;
         creatureImageView.setFitHeight(HEIGHT);
-        System.out.println(HEIGHT);
 
         if (direction == Constant.Direction.LEFT)
             creatureImageView.setImage(creatureLeftImage);
@@ -312,14 +311,14 @@ public class CreatureClass {
         healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
         double progressValue = (double) currentHealth / baseHealth;
         double finalProgressValue = progressValue;
-        Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
+//        Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
 
         Platform.runLater(() -> magicProgressBar.setVisible(true));
         magicProgressBar.setLayoutX(imagePosition.getLayoutX());
         magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
         progressValue = (double) currentMagic / baseMagic;
         double finalProgressValue1 = progressValue;
-        Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
+//        Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
     }
 
     public void setCurrentHealth(double healthVal) {
@@ -512,21 +511,22 @@ public class CreatureClass {
 
     private Bullet playerAttack() {
         if (!isAlive()) {
-            System.out.println("你已死亡");
+//            System.out.println("你已死亡");
             return null;
         }
-        if (attackTarget == null) {
-            System.out.println("没有目标");
+        if (attackTarget == null)
             return null;
-        }
+//            System.out.println("没有目标");
         if (!attackTarget.isAlive()) {
-            System.out.println("目标已死亡");
+//            System.out.println("目标已死亡");
+            return null;
         }
         if (!canAttack()) {
-            System.out.println("攻速过慢,还不能攻击");
+//            System.out.println("攻速过慢,还不能攻击");
+            return null;
         }
         if (getImagePos().getDistance(attackTarget.getImagePos()) > shootRange) {
-            System.out.println("攻击距离不够");
+//            System.out.println("攻击距离不够");
             return null;
         }
 
