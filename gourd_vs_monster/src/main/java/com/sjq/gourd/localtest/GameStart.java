@@ -84,96 +84,98 @@ public class GameStart {
 
     public void gourdStartGame() {
         //TODO 葫芦娃的游戏接口一定要在这个线程里写。
+
+        for (CreatureClass gourd : gourdFamily.values()) {
+            ImageView imageView = gourd.getCreatureImageView();
+            //点击选中
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        for (CreatureClass gourdClass : gourdFamily.values())
+                            if (gourdClass.isControlled() && gourdClass != gourd) {
+                                gourdClass.flipControlled();
+                                gourdClass.setCreatureImageView();
+                                break;
+                            }
+                        if (!gourd.isControlled()) {
+                            myGourd = gourd;
+                            gourd.flipControlled();
+                            gourd.setCreatureImageView();
+                            gourd.getCreatureImageView().setFocusTraversable(true);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("clickWrong");
+                        e.printStackTrace();
+                    }
+                }
+
+            });
+        }
+
+        for(CreatureClass monster: monsterFamily.values()){
+            ImageView imageView= monster.getCreatureImageView();
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if(myGourd!=null&& myGourd.isAlive()){
+                        myGourd.setAttackTarget(monster);
+                    }
+                }
+            });
+        }
+
+        sceneController.getMapPane().setFocusTraversable(true);
+        sceneController.getMapPane().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                try {
+                    if(myGourd!=null&& myGourd.isAlive()){
+                        KeyCode keyCode = event.getCode();
+                        if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
+                            myGourd.setDirection(Constant.Direction.LEFT);
+                        else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
+                            myGourd.setDirection(Constant.Direction.RIGHT);
+                        else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
+                            myGourd.setDirection(Constant.Direction.UP);
+                        else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
+                            myGourd.setDirection(Constant.Direction.DOWN);
+                        else if (keyCode == KeyCode.R)
+                            ;
+                    }
+                } catch (Exception e) {
+                    System.out.println("pressWrong");
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        sceneController.getMapPane().setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                try {
+                    if(myGourd!=null){
+                        KeyCode keyCode = event.getCode();
+                        System.out.println(keyCode.getName());
+                        if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
+                            myGourd.setDirection(Constant.Direction.STOP);
+                        else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
+                            myGourd.setDirection(Constant.Direction.STOP);
+                        else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
+                            myGourd.setDirection(Constant.Direction.STOP);
+                        else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
+                            myGourd.setDirection(Constant.Direction.STOP);
+                    }
+                } catch (Exception e) {
+                    System.out.println("releasedWrong");
+                    e.printStackTrace();
+                }
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (CreatureClass gourd : gourdFamily.values()) {
-                    ImageView imageView = gourd.getCreatureImageView();
-                    //点击选中
-                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            try {
-                                for (CreatureClass gourdClass : gourdFamily.values())
-                                    if (gourdClass.isControlled() && gourdClass != gourd) {
-                                        gourdClass.flipControlled();
-                                        gourdClass.setCreatureImageView();
-                                        break;
-                                    }
-                                if (!gourd.isControlled()) {
-                                    myGourd = gourd;
-                                    gourd.flipControlled();
-                                    gourd.setCreatureImageView();
-                                    gourd.getCreatureImageView().setFocusTraversable(true);
-                                }
-                            } catch (Exception e) {
-                                System.out.println("clickWrong");
-                                e.printStackTrace();
-                            }
-                        }
-
-                    });
-                }
-
-                for(CreatureClass monster: monsterFamily.values()){
-                    ImageView imageView= monster.getCreatureImageView();
-                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            if(myGourd!=null&& myGourd.isAlive()){
-                                myGourd.setAttackTarget(monster);
-                            }
-                        }
-                    });
-                }
-
-                sceneController.getMapPane().setFocusTraversable(true);
-                sceneController.getMapPane().setOnKeyPressed(new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            try {
-                                if(myGourd!=null&& myGourd.isAlive()){
-                                    KeyCode keyCode = event.getCode();
-                                    if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
-                                        myGourd.setDirection(Constant.Direction.LEFT);
-                                    else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
-                                        myGourd.setDirection(Constant.Direction.RIGHT);
-                                    else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
-                                        myGourd.setDirection(Constant.Direction.UP);
-                                    else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
-                                        myGourd.setDirection(Constant.Direction.DOWN);
-                                    else if (keyCode == KeyCode.R)
-                                        ;
-                                }
-                            } catch (Exception e) {
-                                System.out.println("pressWrong");
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                sceneController.getMapPane().setOnKeyReleased(new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            try {
-                                if(myGourd!=null){
-                                    KeyCode keyCode = event.getCode();
-                                    System.out.println(keyCode.getName());
-                                    if (keyCode == KeyCode.A || keyCode == KeyCode.KP_LEFT)
-                                        myGourd.setDirection(Constant.Direction.STOP);
-                                    else if (keyCode == KeyCode.D || keyCode == KeyCode.KP_RIGHT)
-                                        myGourd.setDirection(Constant.Direction.STOP);
-                                    else if (keyCode == KeyCode.W || keyCode == KeyCode.KP_UP)
-                                        myGourd.setDirection(Constant.Direction.STOP);
-                                    else if (keyCode == KeyCode.S || keyCode == KeyCode.KP_DOWN)
-                                        myGourd.setDirection(Constant.Direction.STOP);
-                                }
-                            } catch (Exception e) {
-                                System.out.println("releasedWrong");
-                                e.printStackTrace();
-                            }
-                        }
-                    });
 
                 while (true) {
                     try {
@@ -216,6 +218,7 @@ public class GameStart {
                                 equipment.draw();
                             }
                             //flag=!flag;
+                            Thread.yield();
                             Thread.sleep(Constant.FRAME_TIME);
                         }
                     } catch (Exception e) {

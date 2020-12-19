@@ -311,14 +311,14 @@ public class CreatureClass {
         healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
         double progressValue = (double) currentHealth / baseHealth;
         double finalProgressValue = progressValue;
-//        Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
+        Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
 
         Platform.runLater(() -> magicProgressBar.setVisible(true));
         magicProgressBar.setLayoutX(imagePosition.getLayoutX());
         magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
         progressValue = (double) currentMagic / baseMagic;
         double finalProgressValue1 = progressValue;
-//        Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
+        Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
     }
 
     public void setCurrentHealth(double healthVal) {
