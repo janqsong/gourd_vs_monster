@@ -192,9 +192,10 @@ public class GameStart {
     }
 
     public void myGameStart(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
-        int idOffset = -1;
+        System.out.println(camp);
+        int idOffset = 0;
         if (!camp.equals(Constant.CampType.GOURD))
-            idOffset = CreatureId.MIN_MONSTER_ID - 1;
+            idOffset = CreatureId.MIN_MONSTER_ID ;
         for (Creature creature : myFamily.values()) {
             ImageView imageView = creature.getCreatureImageView();
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -225,7 +226,6 @@ public class GameStart {
             @Override
             public void handle(KeyEvent event) {
                 KeyCode keyCode = event.getCode();
-                System.out.println(keyCode.getName());
                 if (keyCode == KeyCode.W) {
                     isUpPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.UP;
@@ -248,20 +248,22 @@ public class GameStart {
                     else
                         myCreature.setDirection(Constant.Direction.STOP);
                 }
-//                if (keyCode.isDigitKey()) {
-//                    int num = keyCode.ordinal() - 25;
-//                    System.out.println(num);
-//                    if (1 <= num && num <= 9) {
-//                        Creature creature = myFamily.get(finalIdOffset + num);
-//                        if (myCreature != creature) {
-//                            if (creature != null && creature.isAlive()) {
-//                                if (myCreature != null && myCreature.isAlive() && myCreature.isControlled())
-//                                    myCreature.flipControlled();
-//                                myCreature = creature;
-//                            }
-//                        }
-//                    }
-//                }
+                if (keyCode.isDigitKey()) {
+                    int num = keyCode.ordinal() - 25;
+                    System.out.println(num);
+                    if (1 <= num && num <= 9) {
+                        Creature creature = myFamily.get(finalIdOffset + num);
+                        if (myCreature != creature) {
+                            if (creature != null && creature.isAlive()) {
+                                if (myCreature != null && myCreature.isAlive() && myCreature.isControlled())
+                                    myCreature.flipControlled();
+                                if (!creature.isControlled())
+                                    creature.flipControlled();
+                                myCreature = creature;
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -269,7 +271,6 @@ public class GameStart {
             @Override
             public void handle(KeyEvent event) {
                 KeyCode keyCode = event.getCode();
-                System.out.println(keyCode.getName()+"DOWN");
                 if (keyCode == KeyCode.W)
                     isUpPressOn[0] = false;
                 else if (keyCode == KeyCode.S)
