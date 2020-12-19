@@ -3,7 +3,7 @@ package com.sjq.gourd.collision;
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 
 public class Collision {
     private Bullet bullet;
@@ -12,8 +12,8 @@ public class Collision {
     }
 
     public void collisionEvent() {
-        CreatureClass targetCreature = bullet.getTargetCreature();
-        CreatureClass sourceCreature = bullet.getSourceCreature();
+        Creature targetCreature = bullet.getTargetCreature();
+        Creature sourceCreature = bullet.getSourceCreature();
 
         double targetHealth = targetCreature.getCurrentHealth();
         double sourceAttack = sourceCreature.getCurrentAttack();

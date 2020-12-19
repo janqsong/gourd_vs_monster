@@ -2,25 +2,21 @@ package com.sjq.gourd.bullet;
 
 import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.ImagePosition;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.checkerframework.checker.units.qual.C;
 
 public class Bullet {
-    private CreatureClass sourceCreature;
-    private CreatureClass targetCreature;
+    private Creature sourceCreature;
+    private Creature targetCreature;
     private ImagePosition imagePosition;
     private Circle circleShape;
     private static final double SPEED = Constant.BULLET_SPEED;
     private boolean valid;
     private int bulletType;
 
-    public Bullet(CreatureClass sourceCreature, CreatureClass targetCreature,
+    public Bullet(Creature sourceCreature, Creature targetCreature,
                   ImagePosition imagePosition, Circle circleShape) {
         this.sourceCreature = sourceCreature;
         this.targetCreature = targetCreature;
@@ -30,7 +26,7 @@ public class Bullet {
         this.bulletType=Constant.REMOTE_BULLET_TYPE;
     }
 
-    public Bullet(CreatureClass sourceCreature,CreatureClass targetCreature,
+    public Bullet(Creature sourceCreature,Creature targetCreature,
                   ImagePosition imagePosition){
         this.sourceCreature = sourceCreature;
         this.targetCreature = targetCreature;
@@ -47,11 +43,15 @@ public class Bullet {
         this.valid = true;
     }
 
-    public CreatureClass getSourceCreature() {
+    public Circle getCircleShape() {
+        return circleShape;
+    }
+
+    public Creature getSourceCreature() {
         return sourceCreature;
     }
 
-    public CreatureClass getTargetCreature() {
+    public Creature getTargetCreature() {
         return targetCreature;
     }
 

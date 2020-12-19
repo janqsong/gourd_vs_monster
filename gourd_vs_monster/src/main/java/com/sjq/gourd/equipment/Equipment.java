@@ -1,7 +1,7 @@
 package com.sjq.gourd.equipment;
 
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.ImagePosition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,7 +15,7 @@ public abstract class Equipment {
     protected Image equipmentImage = null;
     protected int id;
     protected ImageView imageView;
-    protected CreatureClass myCreature = null;
+    protected Creature myCreature = null;
     protected boolean isFree = false;
     private final double WIDTH, HEIGHT;
     private Random random = new Random(System.currentTimeMillis());
@@ -52,7 +52,7 @@ public abstract class Equipment {
         imageView.setDisable(true);
     }
 
-    public abstract void takeEffect(CreatureClass creatureClass);
+    public abstract void takeEffect(Creature creature);
 
     public void setImagePosition(ImagePosition imagePosition) {
         this.imagePosition = imagePosition;

@@ -1,6 +1,6 @@
 package com.sjq.gourd.equipment;
 
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -13,7 +13,7 @@ public class TreasureBag extends Equipment {
     }
 
     @Override
-    public void takeEffect(CreatureClass creatureClass) {
-        creatureClass.setCurrentHealth(creatureClass.getCurrentHealth() + 500);
+    public void takeEffect(Creature creature) {
+        creature.setCurrentHealth(creature.getCurrentHealth() + 500);
     }
 }

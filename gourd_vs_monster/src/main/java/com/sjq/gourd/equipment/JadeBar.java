@@ -1,6 +1,6 @@
 package com.sjq.gourd.equipment;
 
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,7 +11,7 @@ public class JadeBar extends Equipment{
     }
 
     @Override
-    public void takeEffect(CreatureClass creatureClass) {
+    public void takeEffect(Creature creature) {
 
     }
 }

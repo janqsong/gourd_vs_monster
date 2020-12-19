@@ -2,14 +2,14 @@ package com.sjq.gourd.ai;
 
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 
 import java.util.HashMap;
 import java.util.Random;
 
 public class FirstGenerationAi implements AiInterface {
     Random random;
-    private CreatureClass firstPriority = null;
+    private Creature firstPriority = null;
     //对第一优先级追杀时间
     private int timeCount = (int) (Constant.FIRST_GENERATION_AI_COUNT_TIME * 1000 / Constant.FRAME_TIME);
     private double bloodPriority = 0.1, distancePriority = 0.1;
@@ -19,10 +19,10 @@ public class FirstGenerationAi implements AiInterface {
     }
 
     @Override
-    public CreatureClass observe(CreatureClass myCreature, HashMap<Integer, CreatureClass> enemies) {
+    public Creature observe(Creature myCreature, HashMap<Integer, Creature> enemies) {
         int id = -1;
         double priority = -99999;
-        for (CreatureClass creature : enemies.values()) {
+        for (Creature creature : enemies.values()) {
             double p = calculatePriority(myCreature, creature);
             if (p > priority) {
                 id = creature.getCreatureId();
@@ -35,45 +35,37 @@ public class FirstGenerationAi implements AiInterface {
     }
 
     @Override
-    public void moveMod(CreatureClass myCreature) {
+    public void moveMod(Creature myCreature) {
         if (firstPriority == null || !firstPriority.isAlive()) {
             firstPriority = observe(myCreature, myCreature.getEnemyFamily());
             timeCount = (int) (Constant.FIRST_GENERATION_AI_COUNT_TIME * 1000 / Constant.FRAME_TIME);
             myCreature.setDirection(random.nextInt(5));
             return;
         }
+        if (!myCreature.canChangeDirection()) return;
 
-        double maxX = Constant.FIGHT_PANE_WIDTH - myCreature.getImageWidth();
-        double maxY = Constant.FIGHT_PANE_HEIGHT - myCreature.getImageHeight();
-        double posX = myCreature.getImagePos().getLayoutX();
-        double posY = myCreature.getImagePos().getLayoutY();
-        int rand = random.nextInt(5);
-        if (posX == 0 && posY == 0) {
-            while (rand == Constant.Direction.LEFT || rand == Constant.Direction.UP)
-                rand = random.nextInt(5);
-            myCreature.setDirection(rand);
-            return;
-        } else if (posX == 0 && posY == maxY) {
-            while (rand == Constant.Direction.LEFT || rand == Constant.Direction.DOWN)
-                rand = random.nextInt(5);
-            myCreature.setDirection(rand);
-            return;
-        } else if (posX == maxX && posY == 0) {
-            while (rand == Constant.Direction.RIGHT || rand == Constant.Direction.UP)
-                rand = random.nextInt(5);
-            myCreature.setDirection(rand);
-            return;
-        } else if (posX == maxX && posY == maxY) {
-            while (rand == Constant.Direction.RIGHT || rand == Constant.Direction.DOWN)
-                rand = random.nextInt(5);
-            myCreature.setDirection(rand);
+        int a = Constant.Direction.LEFT, b = Constant.Direction.RIGHT,
+                c = Constant.Direction.UP, d = Constant.Direction.DOWN, e = Constant.Direction.STOP;
+        boolean left = myCreature.isLeftMost(), right = myCreature.isRightMost(),
+                up = myCreature.isHighest(), down = myCreature.isLowest();
+        int direction = -1;
+        if (left && up) direction = randDirection(b, d, e);
+        else if (left && down) direction = randDirection(b, c, e);
+        else if (right && up) direction = randDirection(a, d, e);
+        else if (right && down) direction = randDirection(a, c, e);
+        else if (left) direction = randDirection(b, c, d, e);
+        else if (right) direction = randDirection(a, c, d, e);
+        else if (up) direction = randDirection(a, b, d, e);
+        else if (down) direction = randDirection(a, b, c, e);
+        if (direction != -1) {
+            myCreature.setDirection(direction);
             return;
         }
 
         double distance = myCreature.getImagePos().getDistance(firstPriority.getImagePos());
         double shootRange = myCreature.getShootRange();
-        int direction = myCreature.getImagePos().getRelativePosFar(firstPriority.getImagePos());
-        rand = random.nextInt(10);
+        direction = myCreature.getImagePos().getRelativePosFar(firstPriority.getImagePos());
+        int rand = random.nextInt(10);
 
         if (myCreature.isCloseAttack()) {
             if (distance > 0.9 * myCreature.getShootRange())
@@ -100,11 +92,11 @@ public class FirstGenerationAi implements AiInterface {
     }
 
     @Override
-    public Bullet aiAttack(CreatureClass myCreature, HashMap<Integer, CreatureClass> enemies) {
+    public Bullet aiAttack(Creature myCreature, HashMap<Integer, Creature> enemies) {
         if (myCreature == null || !myCreature.isAlive())
             return null;
         if (myCreature.canAttack()) {
-            CreatureClass target = firstPriority;
+            Creature target = firstPriority;
             if (timeCount <= 0 || target == null || !target.isAlive()) {
                 target = observe(myCreature, enemies);
                 firstPriority = target;
@@ -127,7 +119,7 @@ public class FirstGenerationAi implements AiInterface {
         return null;
     }
 
-    private double calculatePriority(CreatureClass myCreature, CreatureClass enemy) {
+    private double calculatePriority(Creature myCreature, Creature enemy) {
         if (enemy == null || !enemy.isAlive())
             return -9999999;
         double bloodPriorityCoefficient = 0.1, disPriorityCoefficient = 0.1;
@@ -171,5 +163,10 @@ public class FirstGenerationAi implements AiInterface {
         answer += bloodPriorityCoefficient * (enemy.getBaseHealth() - enemy.getCurrentHealth());
 
         return answer;
+    }
+
+    private int randDirection(int... list) {
+        int rand = random.nextInt(list.length);
+        return list[rand];
     }
 }

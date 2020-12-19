@@ -27,7 +27,7 @@ public class Constant {
     }
 
     public static final class CampType {
-        public static final String GOURD = "Gourd";
+        public static final String GOURD = "GOURD";
         public static final String MONSTER = "MONSTER";
     }
 
@@ -56,4 +56,8 @@ public class Constant {
     }
 
     public static final long DIRECTION_LOCK_TIME = 500;//ms
+
+    public static final class CreatureState {
+        public static final int NONE_STATE = 0;
+    }
 }

@@ -5,7 +5,7 @@ import com.sjq.gourd.bullet.Bullet;
 //import com.sjq.gourd.client.GourdCamp;
 //import com.sjq.gourd.client.MonsterCamp;
 //import com.sjq.gourd.client.MsgController;
-import com.sjq.gourd.creature.CreatureClass;
+import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.localtest.GameStart;
 //import com.sjq.gourd.protocol.Msg;
 //import com.sjq.gourd.protocol.NoParseMsg;
@@ -49,10 +49,10 @@ public class SceneController {
     private DataOutputStream out;
 //    private MsgController msgController;
     private String campType;
-    private HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer, CreatureClass>();
-    private HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
+    private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
+    private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
 
-    private CreatureClass selectOwnCampCreature;
+    private Creature selectOwnCampCreature;
     PositionXY beginPosition = new PositionXY(0, 0);
 
     ArrayList<Bullet> bulletList = new ArrayList<>();
