@@ -459,4 +459,7 @@ public class SceneController {
         mapPane.getChildren().add(shape);
     }
 
+    public Pane getMapPane() {
+        return mapPane;
+    }
 }

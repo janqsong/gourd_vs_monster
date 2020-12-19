@@ -83,7 +83,8 @@ public class CreatureClass {
 
     private final double WIDTH;
     private final double HEIGHT;
-    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private CreatureClass attackTarget = null;
 
 
     //add 加上width表示图片宽度
@@ -163,7 +164,7 @@ public class CreatureClass {
 
     //根据方向设置图片状态
     public void setCreatureImageView() {
-        if (isControlled) {
+        if (isControlled()) {
             if (direction == Constant.Direction.LEFT)
                 this.creatureImageView.setImage(selectCreatureLeftImage);
             else
@@ -196,7 +197,7 @@ public class CreatureClass {
 
     //设置移动方向
     public void setDirection(int direction) {
-        if (isControlled) {
+        if (isControlled()) {
             this.direction = direction;
         } else if (System.currentTimeMillis() - lastDirectionSetTime >= Constant.DIRECTION_LOCK_TIME) {
             this.direction = direction;
@@ -283,7 +284,7 @@ public class CreatureClass {
             y = 0;
         if (y > Constant.FIGHT_PANE_HEIGHT - HEIGHT)
             y = Constant.FIGHT_PANE_HEIGHT - HEIGHT;
-        if (isControlled) {
+        if (isControlled()) {
             if (creatureImageView.getImage() != selectCreatureLeftImage
                     && direction == Constant.Direction.LEFT)
                 creatureImageView.setImage(selectCreatureLeftImage);
@@ -362,7 +363,7 @@ public class CreatureClass {
 
     //封装移动方式,画,攻击,返回子弹
     public Bullet update() {
-        if (!isControlled) {
+        if (!isControlled()) {
             if (isAlive()) {
                 aiInterface.moveMod(this);
                 draw();
@@ -374,27 +375,19 @@ public class CreatureClass {
             }
         } else {
             draw();
-            return null;
+            Bullet bullet = playerAttack();
+            setAttackTarget(null);
+            return bullet;
         }
     }
 
     //翻转isControlled状态
     public void flipControlled() {
-//        readWriteLock.writeLock().lock();
-        try{
-            isControlled = !isControlled;
-        }finally {
-//            readWriteLock.writeLock().lock();
-        }
+        isControlled = !isControlled;
     }
 
     public boolean isControlled() {
-//        readWriteLock.readLock().lock();
-        try{
-            return isControlled;
-        }finally {
-//            readWriteLock.readLock().unlock();
-        }
+        return isControlled;
     }
 
     public void setEnemyFamily(HashMap<Integer, CreatureClass> hashMap) {
@@ -509,6 +502,55 @@ public class CreatureClass {
 
     public void pickUpEquipment(Equipment equipment) {
         this.equipment = equipment;
+        equipment.dispose();
         equipment.takeEffect(this);
+    }
+
+    public void setAttackTarget(CreatureClass attackTarget) {
+        this.attackTarget = attackTarget;
+    }
+
+    private Bullet playerAttack() {
+        if (!isAlive()) {
+            System.out.println("你已死亡");
+            return null;
+        }
+        if (attackTarget == null) {
+            System.out.println("没有目标");
+            return null;
+        }
+        if (!attackTarget.isAlive()) {
+            System.out.println("目标已死亡");
+        }
+        if (!canAttack()) {
+            System.out.println("攻速过慢,还不能攻击");
+        }
+        if (getImagePos().getDistance(attackTarget.getImagePos()) > shootRange) {
+            System.out.println("攻击距离不够");
+            return null;
+        }
+
+        setLastAttackTimeMillis(System.currentTimeMillis());
+        if (isCloseAttack()) {
+            System.out.println("我方近战已攻击");
+            return new Bullet(this, attackTarget,
+                    new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
+        } else {
+            System.out.println("我方远程已攻击");
+            return new Bullet(this, attackTarget,
+                    new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
+        }
+
+
+//        if (isAlive() || attackTarget == null || !attackTarget.isAlive())
+//            return null;
+//        if (!canAttack())
+//            return null;
+//        if (getImagePos().getDistance(attackTarget.getImagePos()) > shootRange)
+//            return null;
+//        if (isCloseAttack())
+//            return new Bullet(this, attackTarget, new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
+//        else
+//            return new Bullet(this, attackTarget, new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
     }
 }

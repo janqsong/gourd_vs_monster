@@ -47,6 +47,11 @@ public abstract class Equipment {
         }
     }
 
+    public void dispose(){
+        imageView.setVisible(false);
+        imageView.setDisable(true);
+    }
+
     public abstract void takeEffect(CreatureClass creatureClass);
 
     public void setImagePosition(ImagePosition imagePosition) {
