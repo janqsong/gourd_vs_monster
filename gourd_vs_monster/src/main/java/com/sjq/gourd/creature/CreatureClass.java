@@ -211,38 +211,38 @@ public class CreatureClass {
         return (System.currentTimeMillis() - lastAttackMillis >= 1000.0 / currentAttackSpeed);
     }
 
-    //观测敌人,选取一个敌人下标返回
-    private int observeEnemy() {
-        if (isAlive()) {
-            int selectEnemyId = 0;
-            double minDistance = 1400.0;
-            for (CreatureClass creatureMember : enemyFamily.values()) {
-                double distance = imagePosition.getDistance(creatureMember.getImagePos());
-                if (distance < minDistance) {
-                    selectEnemyId = creatureMember.getCreatureId();
-                    minDistance = distance;
-                }
-            }
-            return selectEnemyId;
-        }
-        return -1;
-    }
+//    //观测敌人,选取一个敌人下标返回
+//    private int observeEnemy() {
+//        if (isAlive()) {
+//            int selectEnemyId = 0;
+//            double minDistance = 1400.0;
+//            for (CreatureClass creatureMember : enemyFamily.values()) {
+//                double distance = imagePosition.getDistance(creatureMember.getImagePos());
+//                if (distance < minDistance) {
+//                    selectEnemyId = creatureMember.getCreatureId();
+//                    minDistance = distance;
+//                }
+//            }
+//            return selectEnemyId;
+//        }
+//        return -1;
+//    }
 
-    //ai攻击,返回一颗子弹
-    public Bullet aiAttack() {
-        if (canAttack() && isAlive()) {
-            int targetEnemyId = observeEnemy();
-            if (targetEnemyId == -1)
-                return null;
-            if (imagePosition.getDistance(enemyFamily.get(targetEnemyId).getImagePos()) > shootRange)
-                return null;
-            lastAttackMillis = System.currentTimeMillis();
-            return new Bullet(this, enemyFamily.get(targetEnemyId),
-                    new ImagePosition(imagePosition.getLayoutX() + getImageWidth() / 2,
-                            imagePosition.getLayoutY() + getImageHeight() / 2), null);
-        }
-        return null;
-    }
+//    //ai攻击,返回一颗子弹
+//    public Bullet aiAttack() {
+//        if (canAttack() && isAlive()) {
+//            int targetEnemyId = observeEnemy();
+//            if (targetEnemyId == -1)
+//                return null;
+//            if (imagePosition.getDistance(enemyFamily.get(targetEnemyId).getImagePos()) > shootRange)
+//                return null;
+//            lastAttackMillis = System.currentTimeMillis();
+//            return new Bullet(this, enemyFamily.get(targetEnemyId),
+//                    new ImagePosition(imagePosition.getLayoutX() + getImageWidth() / 2,
+//                            imagePosition.getLayoutY() + getImageHeight() / 2), null);
+//        }
+//        return null;
+//    }
 
     //一种移动方式,这里是随机移动
     public void randomMove() {
