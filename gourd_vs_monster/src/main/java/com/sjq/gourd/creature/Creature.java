@@ -12,8 +12,10 @@ import javafx.scene.image.ImageView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 
 public class Creature {
     //敌方和己方阵营,需要传参初始化
@@ -101,8 +103,7 @@ public class Creature {
 
     //四大标记位置,表示图片是否到了边缘
     protected boolean isHighest = false, isLowest = false, isLeftMost = false, isRightMost = false;
-    //四大标记位置,表示被控制时,四个方向是否被按住
-    protected boolean isUpPressOn = false, isDownPressOn = false, isLeftPressOn = false, isRightPressOn = false;
+    Set<CreatureState> stateSet;
 
     public Creature(DataInputStream in, DataOutputStream out,
                     String campType, int creatureId, String creatureName,
@@ -359,23 +360,33 @@ public class Creature {
         }
     }
 
+    //状态标记函数,每回合更新,主要给每个人物的技能定时钟,只要没死就要执行
+    void setCreatureState() {
+        //todo 这里不要写任何代码,每个子类根据需求写代码
+    }
+
     //封装移动方式,画,攻击,返回子弹
-    public Bullet update() {
+    public ArrayList<Bullet> update() {
+        ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-                aiInterface.moveMod(this);
+                setCreatureState();
+                aiInterface.moveMod(this, enemyFamily);
                 draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
-                return bullet;
+                if (bullet != null)
+                    bullets.add(bullet);
             } else {
                 draw();
-                return null;
             }
         } else {
+            setCreatureState();
             draw();
             Bullet bullet = playerAttack();
-            return bullet;
+            if (bullet != null)
+                bullets.add(bullet);
         }
+        return bullets;
     }
 
     //翻转isControlled状态
@@ -539,37 +550,33 @@ public class Creature {
         return WIDTH;
     }
 
-    private Bullet playerAttack() {
-        if (!isAlive()) {
-//            System.out.println("你已死亡");
-            return null;
-        }
+    protected Bullet playerAttack() {
         if (playerAttackTarget == null)
             return null;
-//            System.out.println("没有目标");
-        if (!playerAttackTarget.isAlive()) {
-//            System.out.println("目标已死亡");
-            return null;
-        }
-        if (!canAttack()) {
-//            System.out.println("攻速过慢,还不能攻击");
-            return null;
-        }
-        if (getImagePos().getDistance(playerAttackTarget.getImagePos()) > shootRange) {
-//            System.out.println("攻击距离不够");
-            return null;
-        }
+        if (!campType.equals(playerAttackTarget.campType)) {
+            if (!isAlive())
+                return null;
+            if (playerAttackTarget == null)
+                return null;
+            if (!playerAttackTarget.isAlive())
+                return null;
+            if (!canAttack())
+                return null;
+            if (getImagePos().getDistance(playerAttackTarget.getImagePos()) > shootRange)
+                return null;
 
-        setLastAttackTimeMillis(System.currentTimeMillis());
-        if (isCloseAttack()) {
-            System.out.println("我方近战已攻击");
-            return new Bullet(this, playerAttackTarget,
-                    new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
-        } else {
-            System.out.println("我方远程已攻击");
-            return new Bullet(this, playerAttackTarget,
-                    new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
+            setLastAttackTimeMillis(System.currentTimeMillis());
+            if (isCloseAttack()) {
+                System.out.println("我方近战已攻击");
+                return new Bullet(this, playerAttackTarget,
+                        new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
+            } else {
+                System.out.println("我方远程已攻击");
+                return new Bullet(this, playerAttackTarget,
+                        new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
+            }
         }
+        return null;
     }
 
     public void setCurrentMoveSpeed(double currentMoveSpeed) {
@@ -598,5 +605,13 @@ public class Creature {
 
     public double getCurrentAttackSpeed() {
         return currentAttackSpeed;
+    }
+
+    public void qAction() {
+
+    }
+
+    public void eAction() {
+
     }
 }

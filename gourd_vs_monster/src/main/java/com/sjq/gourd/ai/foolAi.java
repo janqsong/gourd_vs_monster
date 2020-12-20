@@ -31,7 +31,7 @@ public class FoolAi implements AiInterface {
     }
 
     @Override
-    public void moveMod(Creature myCreature) {
+    public void moveMod(Creature myCreature, HashMap<Integer, Creature> enemies) {
         int x = random.nextInt();
         myCreature.setDirection(x);
     }

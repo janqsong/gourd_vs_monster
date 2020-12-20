@@ -1,8 +1,11 @@
 package com.sjq.gourd.ai;
 
 import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
+import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.creature.Creature;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -22,11 +25,23 @@ public class FirstGenerationAi implements AiInterface {
     public Creature observe(Creature myCreature, HashMap<Integer, Creature> enemies) {
         int id = -1;
         double priority = -99999;
-        for (Creature creature : enemies.values()) {
-            double p = calculatePriority(myCreature, creature);
-            if (p > priority) {
-                id = creature.getCreatureId();
-                priority = p;
+        if (myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
+            for (Creature creature : enemies.values()) {
+                if (myCreature != creature) {
+                    double p = calculatePriority(myCreature, creature);
+                    if (p > priority) {
+                        id = creature.getCreatureId();
+                        priority = p;
+                    }
+                }
+            }
+        } else {
+            for (Creature creature : enemies.values()) {
+                double p = calculatePriority(myCreature, creature);
+                if (p > priority) {
+                    id = creature.getCreatureId();
+                    priority = p;
+                }
             }
         }
         if (id == -1)
@@ -35,9 +50,9 @@ public class FirstGenerationAi implements AiInterface {
     }
 
     @Override
-    public void moveMod(Creature myCreature) {
+    public void moveMod(Creature myCreature, HashMap<Integer, Creature> enemies) {
         if (firstPriority == null || !firstPriority.isAlive()) {
-            firstPriority = observe(myCreature, myCreature.getEnemyFamily());
+            firstPriority = observe(myCreature, enemies);
             timeCount = (int) (Constant.FIRST_GENERATION_AI_COUNT_TIME * 1000 / Constant.FRAME_TIME);
             myCreature.setDirection(random.nextInt(5));
             return;
@@ -111,8 +126,12 @@ public class FirstGenerationAi implements AiInterface {
 
             if (myCreature.isCloseAttack())
                 bullet = new Bullet(myCreature, target, myCreature.getCenterPos());
-            else
-                bullet = new Bullet(myCreature, target, myCreature.getCenterPos(), null);
+            else {
+                if (myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
+                    bullet = new Bullet(myCreature, target, 5, Color.GREEN, BulletState.THE_GOD_OF_HEALING);
+                } else
+                    bullet = new Bullet(myCreature, target, myCreature.getCenterPos(), null);
+            }
             myCreature.setLastAttackTimeMillis(System.currentTimeMillis());
             return bullet;
         }

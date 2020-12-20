@@ -10,7 +10,7 @@ public interface AiInterface {
     //观测
     public Creature observe(Creature myCreature, HashMap<Integer,Creature> enemies);
     //移动方式
-    public void moveMod(Creature myCreature);
+    public void moveMod(Creature myCreature, HashMap<Integer,Creature> enemies);
     //攻击模式
     public Bullet aiAttack(Creature myCreature, HashMap<Integer,Creature> enemies);
 }

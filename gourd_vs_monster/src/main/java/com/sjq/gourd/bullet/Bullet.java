@@ -2,10 +2,13 @@ package com.sjq.gourd.bullet;
 
 import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
+import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.ImagePosition;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import org.checkerframework.checker.units.qual.C;
 
 public class Bullet {
     private Creature sourceCreature;
@@ -15,6 +18,7 @@ public class Bullet {
     private static final double SPEED = Constant.BULLET_SPEED;
     private boolean valid;
     private int bulletType;
+    private BulletState bulletState;
 
     public Bullet(Creature sourceCreature, Creature targetCreature,
                   ImagePosition imagePosition, Circle circleShape) {
@@ -25,6 +29,40 @@ public class Bullet {
         this.circleShape.setVisible(false);
         this.valid = true;
         this.bulletType = Constant.REMOTE_BULLET_TYPE;
+        if (sourceCreature.getCampType().equals(Constant.CampType.GOURD))
+            this.circleShape.setFill(Color.DODGERBLUE);
+        else
+            this.circleShape.setFill(Color.RED);
+
+        int id = sourceCreature.getCreatureId();
+        if (id == CreatureId.SNAKE_MONSTER_ID) {
+            this.circleShape.setFill(Color.BLACK);
+            this.circleShape.setRadius(7);
+        } else if (id == CreatureId.MONSTER2_ID) {
+            //蝙蝠的
+            this.circleShape.setFill(Color.ROSYBROWN);
+            this.circleShape.setRadius(6);
+        } else if (id == CreatureId.SECOND_GOURD_ID)
+            this.circleShape.setFill(Color.ORANGE);
+        else if (id == CreatureId.FOURTH_GOURD_ID)
+            this.circleShape.setFill(Color.BLUE);
+        else if (id == CreatureId.FIFTH_GOURD_ID)
+            this.circleShape.setFill(Color.DARKRED);
+        else if (id == CreatureId.SEVENTH_GOURD_ID)
+            this.circleShape.setFill(Color.PURPLE);
+        else if (id == CreatureId.GRANDPA_ID)
+            this.circleShape.setFill(Color.GREEN);
+    }
+
+    public Bullet(Creature sourceCreature, Creature targetCreature, double radius, Paint value, BulletState bulletState) {
+        this.sourceCreature = sourceCreature;
+        this.targetCreature = targetCreature;
+        imagePosition = sourceCreature.getCenterPos();
+        this.circleShape = new Circle(imagePosition.getLayoutX(), imagePosition.getLayoutY(), radius);
+        circleShape.setFill(value);
+        this.bulletState = bulletState;
+        this.bulletType = Constant.REMOTE_BULLET_TYPE;
+        this.valid=true;
     }
 
     public Bullet(Creature sourceCreature, Creature targetCreature,
@@ -34,14 +72,6 @@ public class Bullet {
         this.imagePosition = imagePosition;
         this.valid = true;
         this.bulletType = Constant.CLOSE_BULLET_TYPE;
-    }
-
-    public void changeBullet(Bullet bullet) {
-        this.sourceCreature = bullet.getSourceCreature();
-        this.targetCreature = bullet.getTargetCreature();
-        this.imagePosition = bullet.getPosXY();
-        this.bulletType = bullet.bulletType;
-        this.valid = true;
     }
 
     public Circle getCircleShape() {
@@ -56,10 +86,6 @@ public class Bullet {
         return targetCreature;
     }
 
-    public ImagePosition getPosXY() {
-        return imagePosition;
-    }
-
     public boolean isValid() {
         return valid;
     }
@@ -69,9 +95,9 @@ public class Bullet {
     }
 
     public void setVisible(boolean visible) {
-       if(circleShape!=null){
-           circleShape.setVisible(visible);
-       }
+        if (circleShape != null) {
+            circleShape.setVisible(visible);
+        }
     }
 
     public void draw() {
@@ -84,14 +110,10 @@ public class Bullet {
             circleShape.setVisible(true);
             circleShape.setCenterX(imagePosition.getLayoutX());
             circleShape.setCenterY(imagePosition.getLayoutY());
-            if (sourceCreature.getCampType().equals(Constant.CampType.MONSTER))
-                circleShape.setFill(Color.RED);
-            else
-                circleShape.setFill(Color.DODGERBLUE);
         }
     }
 
-    public Collision move() {
+    private Collision move() {
         ImagePosition targetPos = targetCreature.getCenterPos();
         double deltaX = targetPos.getLayoutX() - imagePosition.getLayoutX();
         double deltaY = targetPos.getLayoutY() - imagePosition.getLayoutY();
@@ -120,5 +142,9 @@ public class Bullet {
 
     public int getBulletType() {
         return bulletType;
+    }
+
+    public BulletState getBulletState() {
+        return bulletState;
     }
 }

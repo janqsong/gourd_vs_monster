@@ -197,31 +197,44 @@ public class GameStart {
         int idOffset = 0;
         if (!camp.equals(Constant.CampType.GOURD))
             idOffset = CreatureId.MIN_MONSTER_ID;
+//        for (Creature creature : myFamily.values()) {
+//            ImageView imageView = creature.getCreatureImageView();
+//            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    if (myCreature == null || !myCreature.isAlive()) {
+//                        myCreature = creature;
+//                        myCreature.flipControlled();
+//                    } else if (myCreature != creature) {
+//                        myCreature.flipControlled();
+//                        myCreature = creature;
+//                        myCreature.flipControlled();
+//                    } else if (!myCreature.isControlled()) {
+//                        myCreature.flipControlled();
+//                    }
+//                }
+//            });
+//        }
         for (Creature creature : myFamily.values()) {
             ImageView imageView = creature.getCreatureImageView();
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (myCreature == null || !myCreature.isAlive()) {
-                        myCreature = creature;
-                        myCreature.flipControlled();
-                    } else if (myCreature != creature) {
-                        myCreature.flipControlled();
-                        myCreature = creature;
-                        myCreature.flipControlled();
-                    } else if (!myCreature.isControlled()) {
-                        myCreature.flipControlled();
+                    System.out.println("clickMine");
+                    if (enemyCreature != creature) {
+                        enemyCreature = creature;
+                        if (myCreature != null && myCreature.isAlive())
+                            myCreature.setPlayerAttackTarget(enemyCreature);
                     }
                 }
             });
         }
-
         for (Creature creature : enemyFamily.values()) {
             ImageView imageView = creature.getCreatureImageView();
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    System.out.println("click");
+                    System.out.println("clickHis");
                     if (enemyCreature != creature) {
                         enemyCreature = creature;
                         if (myCreature != null && myCreature.isAlive())
@@ -312,29 +325,37 @@ public class GameStart {
                 while (true) {
                     try {
                         for (Creature myMember : myFamily.values()) {
-                            Bullet bullet = myMember.update();
-                            if (bullet != null) {
-                                bullets.add(bullet);
-                                if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
-                                        }
-                                    });
+                            ArrayList<Bullet> tempBullet = myMember.update();
+                            if (tempBullet.size() != 0) {
+                                bullets.addAll(tempBullet);
+                                Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+                                while (bulletIterator.hasNext()) {
+                                    Bullet bullet = bulletIterator.next();
+                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                            }
+                                        });
+                                }
                             }
                         }
                         for (Creature enemyMember : enemyFamily.values()) {
-                            Bullet bullet = enemyMember.update();
-                            if (bullet != null) {
-                                bullets.add(bullet);
-                                if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
-                                        }
-                                    });
+                            ArrayList<Bullet> tempBullet = enemyMember.update();
+                            if (tempBullet.size() != 0) {
+                                bullets.addAll(tempBullet);
+                                Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+                                while (bulletIterator.hasNext()) {
+                                    Bullet bullet = bulletIterator.next();
+                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                            }
+                                        });
+                                }
                             }
                         }
                         Iterator<Bullet> bulletIterator = bullets.listIterator();
@@ -345,6 +366,14 @@ public class GameStart {
                                 if (collision != null) {
                                     collision.collisionEvent();
                                     bulletIterator.remove();
+                                    if(bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE){
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         }
