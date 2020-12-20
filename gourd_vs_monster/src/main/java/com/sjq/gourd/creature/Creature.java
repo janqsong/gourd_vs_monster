@@ -374,7 +374,6 @@ public class Creature {
         } else {
             draw();
             Bullet bullet = playerAttack();
-            setPlayerAttackTarget(null);
             return bullet;
         }
     }
@@ -571,17 +570,6 @@ public class Creature {
             return new Bullet(this, playerAttackTarget,
                     new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
         }
-
-//        if (isAlive() || attackTarget == null || !attackTarget.isAlive())
-//            return null;
-//        if (!canAttack())
-//            return null;
-//        if (getImagePos().getDistance(attackTarget.getImagePos()) > shootRange)
-//            return null;
-//        if (isCloseAttack())
-//            return new Bullet(this, attackTarget, new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
-//        else
-//            return new Bullet(this, attackTarget, new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
     }
 
     public void setCurrentMoveSpeed(double currentMoveSpeed) {

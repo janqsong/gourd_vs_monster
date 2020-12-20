@@ -40,6 +40,7 @@ public class GameStart {
     private List<Equipment> equipmentList = new ArrayList<>();
     private EquipmentFactory equipmentFactory = null;
     private Creature myCreature = null;
+    private Creature enemyCreature = null;
 
     private boolean flag = false;
 
@@ -214,6 +215,23 @@ public class GameStart {
                 }
             });
         }
+
+        for (Creature creature : enemyFamily.values()) {
+            ImageView imageView = creature.getCreatureImageView();
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    System.out.println("click");
+                    if (enemyCreature != creature) {
+                        enemyCreature = creature;
+                        if (myCreature != null && myCreature.isAlive())
+                            myCreature.setPlayerAttackTarget(enemyCreature);
+                    }
+                }
+            });
+        }
+
+
         sceneController.getMapPane().setFocusTraversable(true);
 
         final boolean[] isUpPressOn = {false};
