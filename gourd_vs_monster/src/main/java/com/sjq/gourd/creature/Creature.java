@@ -9,7 +9,6 @@ import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import sun.security.mscapi.CPublicKey;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -38,7 +37,7 @@ public class Creature {
     protected final double baseDefense;
     protected final double baseAttackSpeed;
     protected final double baseMoveSpeed;
-    protected final double shootRange;
+    double shootRange;
 
     //六大现有状态
     protected double currentHealth;
@@ -513,9 +512,20 @@ public class Creature {
     }
 
     public void pickUpEquipment(Equipment equipment) {
-        this.equipment = equipment;
+        if (!equipment.getName().equals("TreasureBag")) {
+            giveUpEquipment();
+            this.equipment = equipment;
+        }
         equipment.dispose();
         equipment.takeEffect(this);
+    }
+
+    private void giveUpEquipment() {
+        //舍弃原来的装备
+        if (equipment != null) {
+            equipment.giveUpTakeEffect(this);
+            equipment = null;
+        }
     }
 
     public void setPlayerAttackTarget(Creature playerAttackTarget) {
@@ -574,4 +584,31 @@ public class Creature {
 //            return new Bullet(this, attackTarget, new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
     }
 
+    public void setCurrentMoveSpeed(double currentMoveSpeed) {
+        this.currentMoveSpeed = currentMoveSpeed;
+    }
+
+    public void setCurrentAttack(double currentAttack) {
+        this.currentAttack = currentAttack;
+    }
+
+    public void setCurrentDefense(double currentDefense) {
+        this.currentDefense = currentDefense;
+    }
+
+    public void setCurrentAttackSpeed(double currentAttackSpeed) {
+        this.currentAttackSpeed = currentAttackSpeed;
+    }
+
+    public void setShootRange(double shootRange) {
+        this.shootRange = shootRange;
+    }
+
+    public double getBaseAttackSpeed() {
+        return baseAttackSpeed;
+    }
+
+    public double getCurrentAttackSpeed() {
+        return currentAttackSpeed;
+    }
 }

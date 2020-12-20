@@ -47,12 +47,14 @@ public abstract class Equipment {
         }
     }
 
-    public void dispose(){
+    public void dispose() {
         imageView.setVisible(false);
         imageView.setDisable(true);
     }
 
     public abstract void takeEffect(Creature creature);
+
+    public abstract void giveUpTakeEffect(Creature creature);
 
     public void setImagePosition(ImagePosition imagePosition) {
         this.imagePosition = imagePosition;
@@ -68,5 +70,9 @@ public abstract class Equipment {
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+    public String getName() {
+        return name;
     }
 }
