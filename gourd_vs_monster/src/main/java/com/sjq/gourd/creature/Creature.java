@@ -12,10 +12,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Creature {
     //敌方和己方阵营,需要传参初始化
@@ -95,15 +92,18 @@ public class Creature {
     private final Random randomNum = new Random(System.currentTimeMillis());
 
     //图片的宽度和高度
-    private final double WIDTH;
-    private final double HEIGHT;
+    protected double WIDTH;
+    protected double HEIGHT;
 
     //玩家的攻击目标
     protected Creature playerAttackTarget = null;
 
     //四大标记位置,表示图片是否到了边缘
     protected boolean isHighest = false, isLowest = false, isLeftMost = false, isRightMost = false;
-    Set<CreatureState> stateSet;
+    protected Set<CreatureStateWithClock> stateSet = new HashSet<>();
+    protected boolean qFlag = false;
+    protected boolean eFlag = false;
+
 
     public Creature(DataInputStream in, DataOutputStream out,
                     String campType, int creatureId, String creatureName,
@@ -149,9 +149,11 @@ public class Creature {
 
         creatureImageView.setPreserveRatio(true);
         this.WIDTH = width;
+        creatureImageView.setPreserveRatio(true);
         creatureImageView.setFitWidth(width);
-        this.HEIGHT = creatureLeftImage.getHeight() / creatureLeftImage.getWidth() * width;
-        creatureImageView.setFitHeight(HEIGHT);
+        double h = creatureLeftImage.getHeight() / creatureLeftImage.getWidth() * width;
+        creatureImageView.setFitHeight(h);
+        this.HEIGHT = creatureImageView.getFitHeight();
 
         if (direction == Constant.Direction.LEFT)
             creatureImageView.setImage(creatureLeftImage);
@@ -219,30 +221,54 @@ public class Creature {
     }
 
     //这个函数是发生位移的函数,每一帧只要没死,就发生一次位移
-    public void move() {
+    private void move() {
         //死则返回
         if (!isAlive())
             return;
+        setCreatureState();
+        double speed = currentMoveSpeed;
+        boolean notMoveFlag = false, speedCutFlag = false, speedAddFlag = false;
+        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
+        while (creatureStateWithClockIterator.hasNext()) {
+            CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
+            CreatureState creatureState = creatureStateWithClock.getCreatureState();
+            if (creatureState == CreatureState.FROZEN || creatureState == CreatureState.IMPRISONMENT)
+                notMoveFlag = true;//被禁锢或者冰冻,直接不用移动了
+            else if (creatureState == CreatureState.SPEED_CUT)
+                speedCutFlag = true;//减速buff,减50%基础移速,如果变成负数,就得0
+            else if (creatureState == CreatureState.STIMULATED)
+                speedAddFlag = true;//振奋buff,增加50%基础移速
+            else if (creatureState == CreatureState.CURE)
+                setCurrentHealth(currentHealth + 10);//爷爷治愈buff,大概每次回血10点
+            else if (creatureState == CreatureState.FIRING)
+                setCurrentHealth(currentHealth - 10);//火娃灼烧buff,每次掉血10点
+        }
+        if (notMoveFlag) return;
+        if (speedAddFlag) speed += 0.5 * baseMoveSpeed;
+        if (speedCutFlag) {
+            speed -= 0.5 * baseMoveSpeed;
+            if (speed <= 0) return;
+        }
+
         //获取当前位置
         double x = imagePosition.getLayoutX();
         double y = imagePosition.getLayoutY();
-
         //根据方向进行位移
         switch (direction) {
             case Constant.Direction.UP: {
-                y -= currentMoveSpeed;
+                y -= speed;
                 break;
             }
             case Constant.Direction.DOWN: {
-                y += currentMoveSpeed;
+                y += speed;
                 break;
             }
             case Constant.Direction.LEFT: {
-                x -= currentMoveSpeed;
+                x -= speed;
                 break;
             }
             case Constant.Direction.RIGHT: {
-                x += currentMoveSpeed;
+                x += speed;
                 break;
             }
             default: {
@@ -313,12 +339,21 @@ public class Creature {
 
     //根据新的生命值信息更新当前生命值,如果生命值<=0,则=0,如果超出最大生命值,则等于最大生命值
     public void setCurrentHealth(double healthVal) {
-        if (healthVal > baseHealth)
-            currentHealth = baseHealth;
-        else if (healthVal < 0)
-            currentHealth = 0;
-        else
-            currentHealth = healthVal;
+        double delta = healthVal - currentHealth;
+        if (delta < 0) {
+            if (healthVal < 0)
+                currentHealth = 0;
+            else
+                currentHealth = healthVal;
+        } else {
+            //加血要算重伤buff
+            if (containState(CreatureState.SERIOUS_INJURY))
+                currentHealth += delta * 0.1;
+            else
+                currentHealth = healthVal;
+            if (currentHealth > baseHealth)
+                currentHealth = baseHealth;
+        }
     }
 
     //获得图片正中心
@@ -363,6 +398,15 @@ public class Creature {
     //状态标记函数,每回合更新,主要给每个人物的技能定时钟,只要没死就要执行
     void setCreatureState() {
         //todo 这里不要写任何代码,每个子类根据需求写代码
+        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
+        while (creatureStateWithClockIterator.hasNext()) {
+            CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
+            creatureStateWithClock.update();
+            if (creatureStateWithClock.isOver()) {
+                creatureStateWithClock.dispose();
+                creatureStateWithClockIterator.remove();
+            }
+        }
     }
 
     //封装移动方式,画,攻击,返回子弹
@@ -370,7 +414,7 @@ public class Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-                setCreatureState();
+//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
                 draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
@@ -380,11 +424,20 @@ public class Creature {
                 draw();
             }
         } else {
-            setCreatureState();
             draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
+            if (qFlag) {
+                ArrayList<Bullet> bullets1 = qAction();
+                if (bullets1.size() > 0)
+                    bullets.addAll(bullets1);
+                qFlag = false;
+            }
+            if (eFlag) {
+                eAction();
+                eFlag = false;
+            }
         }
         return bullets;
     }
@@ -607,11 +660,46 @@ public class Creature {
         return currentAttackSpeed;
     }
 
-    public void qAction() {
-
+    public ArrayList<Bullet> qAction() {
+        //技能扣篮在这个位置扣,蓝不够直接返回一个size=0的list,一定不要返回null
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        return bullets;
     }
 
     public void eAction() {
 
+    }
+
+    public Set<CreatureStateWithClock> getStateSet() {
+        return stateSet;
+    }
+
+    public void setQFlag(boolean qFlag) {
+        this.qFlag = qFlag;
+    }
+
+    public void setEFlag(boolean eFlag) {
+        this.eFlag = eFlag;
+    }
+
+    public void addState(CreatureStateWithClock creatureStateWithClock) {
+        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
+        boolean flag = false;//集合里有没有
+        while (creatureStateWithClockIterator.hasNext()) {
+            CreatureStateWithClock creatureStateWithClock1 = creatureStateWithClockIterator.next();
+            if (creatureStateWithClock.getCreatureState() == creatureStateWithClock1.getCreatureState())
+                flag = true;
+        }
+        if (!flag) stateSet.add(creatureStateWithClock);
+    }
+
+    public boolean containState(CreatureState creatureState) {
+        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
+        while (creatureStateWithClockIterator.hasNext()) {
+            CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
+            if (creatureStateWithClock.getCreatureState() == creatureState)
+                return true;
+        }
+        return false;
     }
 }

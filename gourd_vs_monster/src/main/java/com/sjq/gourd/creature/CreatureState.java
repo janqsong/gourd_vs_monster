@@ -5,6 +5,9 @@ public enum CreatureState {
     STIMULATED, CURE,
 }
 
+
+
+
 // SPEED_CUT 减速50%
 // FROZEN 完全暂停1s
 // FIRING 灼烧,持续每一帧掉血50

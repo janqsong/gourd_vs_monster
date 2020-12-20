@@ -260,18 +260,22 @@ public class GameStart {
                 if (keyCode == KeyCode.W) {
                     isUpPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.UP;
-                }
-                if (keyCode == KeyCode.S) {
+                } else if (keyCode == KeyCode.S) {
                     isDownPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.DOWN;
-                }
-                if (keyCode == KeyCode.A) {
+                } else if (keyCode == KeyCode.A) {
                     isLeftPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.LEFT;
-                }
-                if (keyCode == KeyCode.D) {
+                } else if (keyCode == KeyCode.D) {
                     isRightPressOn[0] = true;
                     lastPressOn[0] = Constant.Direction.RIGHT;
+                } else if (keyCode == KeyCode.Q) {
+                    if (myCreature != null && myCreature.isAlive()) {
+                        myCreature.setQFlag(true);
+                    }
+                } else if (keyCode == KeyCode.E) {
+                    if (myCreature != null && myCreature.isAlive())
+                        myCreature.setEFlag(true);
                 }
                 if (myCreature != null) {
                     if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
@@ -366,7 +370,7 @@ public class GameStart {
                                 if (collision != null) {
                                     collision.collisionEvent();
                                     bulletIterator.remove();
-                                    if(bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE){
+                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {

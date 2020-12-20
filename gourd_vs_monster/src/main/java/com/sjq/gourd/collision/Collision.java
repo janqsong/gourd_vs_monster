@@ -5,6 +5,8 @@ import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
+import com.sjq.gourd.creature.CreatureState;
+import com.sjq.gourd.creature.CreatureStateWithClock;
 
 public class Collision {
     private Bullet bullet;
@@ -17,12 +19,15 @@ public class Collision {
         Creature targetCreature = bullet.getTargetCreature();
         Creature sourceCreature = bullet.getSourceCreature();
         if (bullet.getBulletState() == BulletState.THE_GOD_OF_HEALING) {
-            System.out.println("子弹命中,加血了吗？");
-            System.out.println(targetCreature.getCreatureName()+"原来血量为:"+targetCreature.getCurrentHealth());
-            targetCreature.setCurrentHealth(targetCreature.getCurrentHealth() + sourceCreature.getCurrentAttack() + 1000);
-            System.out.println(targetCreature.getCreatureName()+"现在血量为:"+targetCreature.getCurrentHealth());
+            targetCreature.setCurrentHealth(targetCreature.getCurrentHealth() + sourceCreature.getCurrentAttack());
             bullet.setValid(false);
             bullet.setVisible(false);
+            sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
+            return;
+        } else if (bullet.getBulletState() == BulletState.THE_GOD_OF_HEALING_MAX) {
+            targetCreature.setCurrentHealth(targetCreature.getCurrentHealth() + 1000);
+            sourceCreature.getStateSet().add(new CreatureStateWithClock(CreatureState.CURE, 5000));
+            //5s的治愈效果
             return;
         }
 

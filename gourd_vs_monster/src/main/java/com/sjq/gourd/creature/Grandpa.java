@@ -25,31 +25,36 @@ public class Grandpa extends Creature {
     }
 
 
-    @Override
-    public ArrayList<Bullet> update() {
-        ArrayList<Bullet> bullets = new ArrayList<>();
-        if (!isControlled()) {
-            if (isAlive()) {
-                setCreatureState();
-                aiInterface.moveMod(this, myFamily);
-                draw();
-                Bullet bullet = aiInterface.aiAttack(this, myFamily);
-                if (bullet != null) {
-                    bullets.add(bullet);
-                    System.out.println("ai爷爷开炮了,目标是" + bullet.getTargetCreature().getCreatureName());
-                }
-            } else {
-                draw();
-            }
-        } else {
-            setCreatureState();
-            draw();
-            Bullet bullet = playerAttack();
-            if (bullet != null)
-                bullets.add(bullet);
-        }
-        return bullets;
-    }
+//    @Override
+//    public ArrayList<Bullet> update() {
+//        ArrayList<Bullet> bullets = new ArrayList<>();
+//        if (!isControlled()) {
+//            if (isAlive()) {
+//                aiInterface.moveMod(this, myFamily);
+//                draw();
+//                Bullet bullet = aiInterface.aiAttack(this, myFamily);
+//                if (bullet != null) {
+//                    bullets.add(bullet);
+//                    System.out.println("ai爷爷开炮了,目标是" + bullet.getTargetCreature().getCreatureName());
+//                }
+//            } else {
+//                draw();
+//            }
+//        } else {
+//            draw();
+//            Bullet bullet = playerAttack();
+//            if (bullet != null)
+//                bullets.add(bullet);
+//            if (qFlag && currentMagic >= baseMagic) {
+//                ArrayList<Bullet> bullets1 = qAction();
+//                currentMagic = 0;
+//                if (bullets1.size() > 0)
+//                    bullets.addAll(bullets1);
+//            }
+//            qFlag = false;
+//        }
+//        return bullets;
+//    }
 
     @Override
     protected Bullet playerAttack() {
@@ -70,5 +75,19 @@ public class Grandpa extends Creature {
             return new Bullet(this, playerAttackTarget, 5, Color.GREEN, BulletState.THE_GOD_OF_HEALING);
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<Bullet> qAction() {
+        ArrayList<Bullet> bulletArrayList = new ArrayList<>();
+        if (currentMagic < baseMagic)
+            return bulletArrayList;
+        currentMagic = 0;
+        for (Creature creature : myFamily.values()) {
+            if (creature.isAlive() && imagePosition.getDistance(creature.imagePosition) <= 1.5 * shootRange) {
+                bulletArrayList.add(new Bullet(this, creature, 10, Color.GREEN, BulletState.THE_GOD_OF_HEALING_MAX));
+            }
+        }
+        return bulletArrayList;
     }
 }
