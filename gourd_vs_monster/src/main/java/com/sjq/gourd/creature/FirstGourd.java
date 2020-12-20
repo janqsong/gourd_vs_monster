@@ -53,8 +53,8 @@ public class FirstGourd extends Creature {
             if (qFlag && !inQAction) {
                 //保证两次技能不重叠
                 qAction();
-                qFlag = false;
             }
+            qFlag = false;
             if (inQAction && (double) System.currentTimeMillis() - lastTransfigurationMillis > gap)
                 disposeQAction();
         }
