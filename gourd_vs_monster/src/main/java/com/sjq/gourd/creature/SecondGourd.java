@@ -20,4 +20,6 @@ public class SecondGourd extends Creature {
                 ImageUrl.gourdRightImageMap.get(CreatureId.SECOND_GOURD_ID),
                 ImageUrl.gourdRightSelectImageMap.get(CreatureId.SECOND_GOURD_ID));
     }
+
+
 }

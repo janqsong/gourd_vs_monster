@@ -40,6 +40,8 @@ public class FirstGourd extends Creature {
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
+                if (inQAction && (double) System.currentTimeMillis() - lastTransfigurationMillis > gap)
+                    disposeQAction();
             } else {
                 draw();
             }
