@@ -129,8 +129,11 @@ public class FirstGenerationAi implements AiInterface {
             else {
                 if (myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
                     bullet = new Bullet(myCreature, target, 5, Color.GREEN, BulletState.THE_GOD_OF_HEALING);
-                } else
+                } else if (myCreature.getEquipment() != null && myCreature.getEquipment().getName().equals("magicMirror")) {
+                    bullet = new Bullet(myCreature, target, 5, Color.YELLOW, BulletState.GAZE_OF_MAGIC_MIRROR);
+                } else {
                     bullet = new Bullet(myCreature, target, myCreature.getCenterPos(), null);
+                }
             }
             myCreature.setLastAttackTimeMillis(System.currentTimeMillis());
             return bullet;

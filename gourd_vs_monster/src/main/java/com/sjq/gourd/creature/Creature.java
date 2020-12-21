@@ -717,4 +717,8 @@ public class Creature {
         }
         return false;
     }
+
+    public Equipment getEquipment() {
+        return equipment;
+    }
 }

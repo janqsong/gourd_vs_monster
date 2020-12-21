@@ -45,9 +45,9 @@ public class Bullet {
         } else if (id == CreatureId.SECOND_GOURD_ID)
             this.circleShape.setFill(Color.ORANGE);
         else if (id == CreatureId.FOURTH_GOURD_ID)
-            this.circleShape.setFill(Color.BLUE);
-        else if (id == CreatureId.FIFTH_GOURD_ID)
             this.circleShape.setFill(Color.RED);
+        else if (id == CreatureId.FIFTH_GOURD_ID)
+            this.circleShape.setFill(Color.BLUE);
         else if (id == CreatureId.SEVENTH_GOURD_ID)
             this.circleShape.setFill(Color.PURPLE);
         else if (id == CreatureId.GRANDPA_ID)

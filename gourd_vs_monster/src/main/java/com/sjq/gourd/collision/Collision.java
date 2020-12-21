@@ -45,11 +45,11 @@ public class Collision {
         bullet.setVisible(false);
 
         if (bullet.getBulletState() == BulletState.THE_HEART_OF_ICE) {
-            targetCreature.addState(new CreatureStateWithClock(CreatureState.FROZEN, 1000));
+            targetCreature.addState(new CreatureStateWithClock(CreatureState.FROZEN, 2000));
             return;
         } else if (bullet.getBulletState() == BulletState.THE_SON_OF_FLAME) {
             targetCreature.addState(new CreatureStateWithClock(CreatureState.FIRING, 3000));
-        } else if (bullet.getBulletState() == BulletState.THE_TEETH_OF_POISONOUS) {
+        } else if (bullet.getBulletState() == BulletState.THE_TEETH_OF_POISONOUS || bullet.getBulletState() == BulletState.GAZE_OF_MAGIC_MIRROR) {
             targetCreature.addState(new CreatureStateWithClock(CreatureState.SERIOUS_INJURY, 5000));
         } else if (bullet.getBulletState() == BulletState.SPEED_CUT_CLAW) {
             targetCreature.addState(new CreatureStateWithClock(CreatureState.SPEED_CUT, 5000));

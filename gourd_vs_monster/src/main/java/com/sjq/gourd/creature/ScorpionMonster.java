@@ -6,14 +6,10 @@ import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import sun.security.mscapi.CPublicKey;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class ScorpionMonster extends Creature {
 
@@ -21,9 +17,11 @@ public class ScorpionMonster extends Creature {
     private long lastQActionMillis = 0, qGap = 5000;
     private long lastEActionMillis = 0, eGap = 5000;
     private long lastRActionMillis = 0, rGap = 10000;
-    private final double moveSpeedIncrement = 4;
+    private final double moveSpeedIncrement = 10;
     private final double defenseIncrement = 20;
     private final double attackIncrement = 30;
+    private final double attackSpeedIncrement = 0.5;
+    private final double shootRangeIncrement = 80.0;
     private final double healthIncrement = 1000;
     private Creature[] creatures = new Creature[3];
 
@@ -109,7 +107,7 @@ public class ScorpionMonster extends Creature {
 
     @Override
     public void eAction() {
-        //狂暴之心,移速加快,攻击力加强,防御力提高,加一定血量
+        //狂暴之心,移速加快,攻击力加强,防御力提高,加一定攻速,加一定血量
         if (currentMagic < 0.5 * baseMagic)
             return;
         setCurrentMagic(currentMagic - 0.5 * baseMagic);
@@ -117,6 +115,8 @@ public class ScorpionMonster extends Creature {
         setCurrentHealth(currentHealth + healthIncrement);
         setCurrentAttack(currentAttack + attackIncrement);
         setCurrentDefense(currentDefense + defenseIncrement);
+        setCurrentAttackSpeed(currentAttackSpeed + attackSpeedIncrement);
+        setShootRange(shootRange + shootRangeIncrement);
         setCurrentMoveSpeed(currentMoveSpeed + moveSpeedIncrement);
     }
 
@@ -151,6 +151,8 @@ public class ScorpionMonster extends Creature {
         setCurrentAttack(currentAttack - attackIncrement);
         setCurrentDefense(currentDefense - defenseIncrement);
         setCurrentMoveSpeed(currentMoveSpeed - moveSpeedIncrement);
+        setCurrentAttackSpeed(currentAttackSpeed - attackSpeedIncrement);
+        setShootRange(shootRange - shootRangeIncrement);
     }
 
     private void disposeRAction() {
