@@ -27,7 +27,7 @@ public class ScorpionMonster extends Creature {
 
     public ScorpionMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(in, out, Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
-                5000, 100, 150, 55, 0.5, 8, 100.0,
+                10000, 100, 150, 55, 0.5, 8, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SCORPION_MONSTER_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID),
@@ -82,9 +82,9 @@ public class ScorpionMonster extends Creature {
         long sys = System.currentTimeMillis();
         if (inQAction && sys - lastQActionMillis > qGap)
             disposeQAction();
-        if (inEAction && sys - lastQActionMillis > eGap)
+        if (inEAction && sys - lastEActionMillis > eGap)
             disposeEAction();
-        if (inRAction && sys - lastQActionMillis > rGap)
+        if (inRAction && sys - lastRActionMillis > rGap)
             disposeRAction();
     }
 
@@ -118,6 +118,7 @@ public class ScorpionMonster extends Creature {
         setCurrentAttackSpeed(currentAttackSpeed + attackSpeedIncrement);
         setShootRange(shootRange + shootRangeIncrement);
         setCurrentMoveSpeed(currentMoveSpeed + moveSpeedIncrement);
+        lastEActionMillis = System.currentTimeMillis();
     }
 
     @Override
@@ -128,6 +129,7 @@ public class ScorpionMonster extends Creature {
         currentMagic = 0;
         inRAction = true;
         selectThree();
+        lastRActionMillis = System.currentTimeMillis();
     }
 
     @Override

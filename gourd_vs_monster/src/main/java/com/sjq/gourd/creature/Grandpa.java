@@ -35,7 +35,6 @@ public class Grandpa extends Creature {
                 Bullet bullet = aiInterface.aiAttack(this, myFamily);
                 if (bullet != null) {
                     bullets.add(bullet);
-                    System.out.println("ai爷爷开炮了,目标是" + bullet.getTargetCreature().getCreatureName());
                 }
             } else {
                 draw();
