@@ -218,6 +218,8 @@ public class Creature {
 
     //判断是否下载可以攻击,收到攻速的限制
     public boolean canAttack() {
+        if (currentAttackSpeed <= 0)
+            return false;
         return (System.currentTimeMillis() - lastAttackMillis >= 1000.0 / currentAttackSpeed);
     }
 
@@ -610,6 +612,7 @@ public class Creature {
         return WIDTH;
     }
 
+    //这个函数存在一定问题,对于子弹的选取还没有完全搞定
     protected Bullet playerAttack() {
         if (playerAttackTarget == null)
             return null;
@@ -627,11 +630,9 @@ public class Creature {
 
             setLastAttackTimeMillis(System.currentTimeMillis());
             if (isCloseAttack()) {
-                System.out.println("我方近战已攻击");
                 return new Bullet(this, playerAttackTarget,
                         new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
             } else {
-                System.out.println("我方远程已攻击");
                 return new Bullet(this, playerAttackTarget,
                         new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
             }

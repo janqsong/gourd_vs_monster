@@ -15,18 +15,19 @@ public class JadeHairpin extends Equipment {
 
     private static Image image = new Image("/images/equipmentImages/jadeHairpin.png");
     private static final double width = 50, height = 50;
-    JadeHairpin(int id,ImageView imageView) {
+
+    JadeHairpin(int id, ImageView imageView) {
         super("jadeHairpin", id, image, imageView, width, height);
     }
 
 
     //只有蛇精捡才有效,其他生物可以捡,但是无法装备
-    //蛇精捡了回复1500血,增加移速,攻速50%基础攻速,防御力,攻击力
+    //蛇精捡了回复1500血,增加移速,攻速200%基础攻速,防御力,攻击力
     @Override
     public void takeEffect(Creature creature) {
         if (creature.getCreatureId() == CreatureId.SNAKE_MONSTER_ID) {
             creature.setCurrentMoveSpeed(creature.getCurrentMoveSpeed() + moveSpeedIncrement);
-            attackSpeed = 0.5 * creature.getBaseAttackSpeed();
+            attackSpeed = 2.0 * creature.getBaseAttackSpeed();
             creature.setCurrentAttackSpeed(creature.getCurrentAttackSpeed() + attackSpeed);
             creature.setCurrentDefense(creature.getCurrentDefense() + defenseIncrement);
             creature.setCurrentAttack(creature.getCurrentAttack() + attackIncrement);
@@ -37,7 +38,7 @@ public class JadeHairpin extends Equipment {
     public void giveUpTakeEffect(Creature creature) {
         if (creature.getCreatureId() == CreatureId.SNAKE_MONSTER_ID) {
             creature.setCurrentMoveSpeed(creature.getCurrentMoveSpeed() - moveSpeedIncrement);
-            attackSpeed = 0.5 * creature.getBaseAttackSpeed();
+            attackSpeed = 2.0 * creature.getBaseAttackSpeed();
             creature.setCurrentAttackSpeed(creature.getCurrentAttackSpeed() - attackSpeed);
             creature.setCurrentDefense(creature.getCurrentDefense() - defenseIncrement);
             creature.setCurrentAttack(creature.getCurrentAttack() - attackIncrement);

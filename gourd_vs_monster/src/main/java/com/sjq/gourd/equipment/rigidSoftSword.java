@@ -16,17 +16,17 @@ public class RigidSoftSword extends Equipment {
     }
 
 
-    //增加50%基础攻速,增加攻击力
+    //增加100%基础攻速,增加攻击力
     @Override
     public void takeEffect(Creature creature) {
-        attackSpeedIncrement = 0.5 * creature.getBaseAttackSpeed();
-        creature.setCurrentAttackSpeed(creature.getCurrentMoveSpeed() + attackSpeedIncrement);
+        attackSpeedIncrement = 1.0 * creature.getBaseAttackSpeed();
+        creature.setCurrentAttackSpeed(creature.getCurrentAttackSpeed() + attackSpeedIncrement);
         creature.setCurrentAttack(creature.getCurrentAttack() + attackIncrement);
     }
 
     @Override
     public void giveUpTakeEffect(Creature creature) {
-        creature.setCurrentAttackSpeed(creature.getCurrentMoveSpeed() - attackSpeedIncrement);
+        creature.setCurrentAttackSpeed(creature.getCurrentAttackSpeed() - attackSpeedIncrement);
         creature.setCurrentAttack(creature.getCurrentAttack() - attackIncrement);
     }
 }

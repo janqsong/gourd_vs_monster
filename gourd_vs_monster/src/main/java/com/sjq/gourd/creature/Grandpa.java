@@ -71,6 +71,7 @@ public class Grandpa extends Creature {
             if (getImagePos().getDistance(playerAttackTarget.getImagePos()) > shootRange)
                 return null;
             setLastAttackTimeMillis(System.currentTimeMillis());
+
             return new Bullet(this, playerAttackTarget, 5, Color.GREEN, BulletState.THE_GOD_OF_HEALING);
         }
         return null;

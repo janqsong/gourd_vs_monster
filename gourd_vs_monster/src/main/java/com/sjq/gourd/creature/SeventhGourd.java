@@ -55,7 +55,7 @@ public class SeventhGourd extends Creature {
                 qAction();
             }
             qFlag = false;
-            if (inQAction && (double) System.currentTimeMillis() - lastQAction > gap)
+            if (inQAction && System.currentTimeMillis() - lastQAction > gap)
                 disposeQAction();
         }
         return bullets;
@@ -64,22 +64,25 @@ public class SeventhGourd extends Creature {
 
     @Override
     public ArrayList<Bullet> qAction() {
-        //看我法宝,攻速5s内攻速提升基础攻速50%,射程提升400.0
+        //看我法宝,攻速5s内攻速提升基础攻速的300%,射程提升400.0
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (currentMagic < baseMagic)
             return bullets;
 
         inQAction = true;
         currentMagic = 0;
-        currentAttackSpeed += 0.5 * baseAttackSpeed;
+        currentAttackSpeed += 3.0 * baseAttackSpeed;
         shootRange += shootRangeIncrement;
+        lastQAction = System.currentTimeMillis();
         return bullets;
     }
 
 
     private void disposeQAction() {
         inQAction = false;
-        currentAttackSpeed -= 0.5 * baseAttackSpeed;
+        currentAttackSpeed -= 3.0 * baseAttackSpeed;
+        if (currentAttackSpeed <= 0)
+            currentAttackSpeed = 0.01;
         shootRange -= shootRangeIncrement;
     }
 }

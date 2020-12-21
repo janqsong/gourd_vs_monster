@@ -223,8 +223,18 @@ public class GameStart {
                     System.out.println("clickMine");
                     if (enemyCreature != creature) {
                         enemyCreature = creature;
-                        if (myCreature != null && myCreature.isAlive())
+                        if (myCreature != null && myCreature.isAlive() && myCreature.getCreatureId() == CreatureId.GRANDPA_ID)
                             myCreature.setPlayerAttackTarget(enemyCreature);
+                    }
+                    if (myCreature == null || !myCreature.isAlive()) {
+                        myCreature = creature;
+                        myCreature.flipControlled();
+                    } else if (myCreature != creature) {
+                        myCreature.flipControlled();
+                        myCreature = creature;
+                        myCreature.flipControlled();
+                    } else if (!myCreature.isControlled()) {
+                        myCreature.flipControlled();
                     }
                 }
             });
@@ -276,7 +286,7 @@ public class GameStart {
                 } else if (keyCode == KeyCode.E) {
                     if (myCreature != null && myCreature.isAlive())
                         myCreature.setEFlag(true);
-                }else if(keyCode == KeyCode.R){
+                } else if (keyCode == KeyCode.R) {
                     if (myCreature != null && myCreature.isAlive())
                         myCreature.setRFlag(true);
                 }

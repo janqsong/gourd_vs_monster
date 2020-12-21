@@ -17,8 +17,8 @@ public class JadeBar extends Equipment {
         super("JadeBar", id, image, imageView, width, height);
     }
 
-    //如意的效果葫芦娃和蛇精都可以使用,对葫芦娃的作用是增加移速,增加攻击力
-    //对蛇精的作用是增加防御力,并在拾取瞬间加大管血
+    //如意的效果葫芦娃和妖精都可以使用,对葫芦娃的作用是增加移速,增加攻击力
+    //对妖精的作用是增加防御力,并在拾取瞬间加大管血
     @Override
     public void takeEffect(Creature creature) {
         if (creature.getCampType().equals(Constant.CampType.GOURD)) {
