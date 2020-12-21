@@ -103,7 +103,7 @@ public class Creature {
     protected Set<CreatureStateWithClock> stateSet = new HashSet<>();
     protected boolean qFlag = false;
     protected boolean eFlag = false;
-
+    protected boolean rFlag = false;
 
     public Creature(DataInputStream in, DataOutputStream out,
                     String campType, int creatureId, String creatureName,
@@ -182,6 +182,7 @@ public class Creature {
     }
 
 
+    //todo 千万别改这个
     public void setCreatureImageView() {
         if (isControlled()) {
             if (direction == Constant.Direction.LEFT)
@@ -296,20 +297,22 @@ public class Creature {
             isLowest = true;
         } else isLowest = false;
         //立即根据方向和控制人更新图片状态
+
+        //todo 千万别修改这里！！！
         if (isControlled()) {
             if (creatureImageView.getImage() != selectCreatureLeftImage
                     && direction == Constant.Direction.LEFT)
-                creatureImageView.setImage(selectCreatureLeftImage);
+                setCreatureImageView();
             else if (creatureImageView.getImage() != selectCreatureRightImage
                     && direction == Constant.Direction.RIGHT)
-                creatureImageView.setImage(selectCreatureRightImage);
+                setCreatureImageView();
         } else {
             if (creatureImageView.getImage() != creatureLeftImage
                     && direction == Constant.Direction.LEFT)
-                creatureImageView.setImage(creatureLeftImage);
+                setCreatureImageView();
             else if (creatureImageView.getImage() != creatureRightImage
                     && direction == Constant.Direction.RIGHT)
-                creatureImageView.setImage(creatureRightImage);
+                setCreatureImageView();
         }
         //最终
         setCreatureImagePos(x, y);
@@ -437,6 +440,10 @@ public class Creature {
             if (eFlag) {
                 eAction();
                 eFlag = false;
+            }
+            if (rFlag) {
+                rAction();
+                rFlag = false;
             }
         }
         return bullets;
@@ -670,6 +677,10 @@ public class Creature {
 
     }
 
+    public void rAction() {
+
+    }
+
     public Set<CreatureStateWithClock> getStateSet() {
         return stateSet;
     }
@@ -680,6 +691,10 @@ public class Creature {
 
     public void setEFlag(boolean eFlag) {
         this.eFlag = eFlag;
+    }
+
+    public void setRFlag(boolean rFlag) {
+        this.rFlag = rFlag;
     }
 
     public void addState(CreatureStateWithClock creatureStateWithClock) {

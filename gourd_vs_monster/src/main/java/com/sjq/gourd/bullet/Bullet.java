@@ -18,7 +18,7 @@ public class Bullet {
     private static final double SPEED = Constant.BULLET_SPEED;
     private boolean valid;
     private int bulletType;
-    private BulletState bulletState;
+    private BulletState bulletState = BulletState.NONE;
 
     public Bullet(Creature sourceCreature, Creature targetCreature,
                   ImagePosition imagePosition, Circle circleShape) {
@@ -47,7 +47,7 @@ public class Bullet {
         else if (id == CreatureId.FOURTH_GOURD_ID)
             this.circleShape.setFill(Color.BLUE);
         else if (id == CreatureId.FIFTH_GOURD_ID)
-            this.circleShape.setFill(Color.DARKRED);
+            this.circleShape.setFill(Color.RED);
         else if (id == CreatureId.SEVENTH_GOURD_ID)
             this.circleShape.setFill(Color.PURPLE);
         else if (id == CreatureId.GRANDPA_ID)
@@ -62,7 +62,7 @@ public class Bullet {
         circleShape.setFill(value);
         this.bulletState = bulletState;
         this.bulletType = Constant.REMOTE_BULLET_TYPE;
-        this.valid=true;
+        this.valid = true;
     }
 
     public Bullet(Creature sourceCreature, Creature targetCreature,
@@ -72,6 +72,16 @@ public class Bullet {
         this.imagePosition = imagePosition;
         this.valid = true;
         this.bulletType = Constant.CLOSE_BULLET_TYPE;
+    }
+
+    //用于蝎子生成致残之爪
+    public Bullet(Creature sourceCreature, Creature targetCreature, BulletState bulletState, int bulletType) {
+        this.sourceCreature = sourceCreature;
+        this.targetCreature = targetCreature;
+        imagePosition = sourceCreature.getCenterPos();
+        this.bulletState = bulletState;
+        this.bulletType = bulletType;
+        this.valid = true;
     }
 
     public Circle getCircleShape() {

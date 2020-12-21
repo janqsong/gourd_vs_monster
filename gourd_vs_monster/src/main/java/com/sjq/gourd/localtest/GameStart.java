@@ -276,6 +276,9 @@ public class GameStart {
                 } else if (keyCode == KeyCode.E) {
                     if (myCreature != null && myCreature.isAlive())
                         myCreature.setEFlag(true);
+                }else if(keyCode == KeyCode.R){
+                    if (myCreature != null && myCreature.isAlive())
+                        myCreature.setRFlag(true);
                 }
                 if (myCreature != null) {
                     if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
@@ -328,77 +331,82 @@ public class GameStart {
             public void run() {
                 while (true) {
                     try {
-                        for (Creature myMember : myFamily.values()) {
-                            ArrayList<Bullet> tempBullet = myMember.update();
-                            if (tempBullet.size() != 0) {
-                                bullets.addAll(tempBullet);
-                                Iterator<Bullet> bulletIterator = tempBullet.listIterator();
-                                while (bulletIterator.hasNext()) {
-                                    Bullet bullet = bulletIterator.next();
-                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
-                                            }
-                                        });
-                                }
-                            }
-                        }
-                        for (Creature enemyMember : enemyFamily.values()) {
-                            ArrayList<Bullet> tempBullet = enemyMember.update();
-                            if (tempBullet.size() != 0) {
-                                bullets.addAll(tempBullet);
-                                Iterator<Bullet> bulletIterator = tempBullet.listIterator();
-                                while (bulletIterator.hasNext()) {
-                                    Bullet bullet = bulletIterator.next();
-                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
-                                            }
-                                        });
-                                }
-                            }
-                        }
-                        Iterator<Bullet> bulletIterator = bullets.listIterator();
-                        while (bulletIterator.hasNext()) {
-                            Bullet bullet = bulletIterator.next();
-                            if (bullet.isValid()) {
-                                Collision collision = bullet.update();
-                                if (collision != null) {
-                                    collision.collisionEvent();
-                                    bulletIterator.remove();
-                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
-                                            }
-                                        });
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (Creature myMember : myFamily.values()) {
+                                    ArrayList<Bullet> tempBullet = myMember.update();
+                                    if (tempBullet.size() != 0) {
+                                        bullets.addAll(tempBullet);
+                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+                                        while (bulletIterator.hasNext()) {
+                                            Bullet bullet = bulletIterator.next();
+                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
+                                                Platform.runLater(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                                    }
+                                                });
+                                        }
                                     }
                                 }
-                            }
-                        }
-                        if (equipmentFactory.hasNext()) {
-                            Equipment equipment = equipmentFactory.next();
-                            if (equipment != null)
-                                equipmentList.add(equipment);
-                        }
-                        if (myCreature != null && myCreature.isAlive()) {
-                            Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
-                            while (equipmentIterator.hasNext()) {
-                                Equipment equipment = equipmentIterator.next();
-                                if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
-                                    myCreature.pickUpEquipment(equipment);
-                                    equipmentIterator.remove();
+                                for (Creature enemyMember : enemyFamily.values()) {
+                                    ArrayList<Bullet> tempBullet = enemyMember.update();
+                                    if (tempBullet.size() != 0) {
+                                        bullets.addAll(tempBullet);
+                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+                                        while (bulletIterator.hasNext()) {
+                                            Bullet bullet = bulletIterator.next();
+                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
+                                                Platform.runLater(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                                    }
+                                                });
+                                        }
+                                    }
+                                }
+                                Iterator<Bullet> bulletIterator = bullets.listIterator();
+                                while (bulletIterator.hasNext()) {
+                                    Bullet bullet = bulletIterator.next();
+                                    if (bullet.isValid()) {
+                                        Collision collision = bullet.update();
+                                        if (collision != null) {
+                                            collision.collisionEvent();
+                                            bulletIterator.remove();
+                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                                Platform.runLater(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                                if (equipmentFactory.hasNext()) {
+                                    Equipment equipment = equipmentFactory.next();
+                                    if (equipment != null)
+                                        equipmentList.add(equipment);
+                                }
+                                if (myCreature != null && myCreature.isAlive()) {
+                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
+                                    while (equipmentIterator.hasNext()) {
+                                        Equipment equipment = equipmentIterator.next();
+                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
+                                            myCreature.pickUpEquipment(equipment);
+                                            equipmentIterator.remove();
+                                        }
+                                    }
+                                }
+                                for (Equipment equipment : equipmentList) {
+                                    equipment.draw();
                                 }
                             }
-                        }
-                        for (Equipment equipment : equipmentList) {
-                            equipment.draw();
-                        }
+                        });
                         //flag=!flag;
                         Thread.yield();
                         Thread.sleep(Constant.FRAME_TIME);

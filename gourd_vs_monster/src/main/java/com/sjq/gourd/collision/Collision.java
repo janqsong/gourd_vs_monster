@@ -43,11 +43,24 @@ public class Collision {
         sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
         bullet.setValid(false);
         bullet.setVisible(false);
+
+        if (bullet.getBulletState() == BulletState.THE_HEART_OF_ICE) {
+            targetCreature.addState(new CreatureStateWithClock(CreatureState.FROZEN, 1000));
+            return;
+        } else if (bullet.getBulletState() == BulletState.THE_SON_OF_FLAME) {
+            targetCreature.addState(new CreatureStateWithClock(CreatureState.FIRING, 3000));
+        } else if (bullet.getBulletState() == BulletState.THE_TEETH_OF_POISONOUS) {
+            targetCreature.addState(new CreatureStateWithClock(CreatureState.SERIOUS_INJURY, 5000));
+        } else if (bullet.getBulletState() == BulletState.SPEED_CUT_CLAW) {
+            targetCreature.addState(new CreatureStateWithClock(CreatureState.SPEED_CUT, 5000));
+        }
+
+
         if (bullet.getBulletType() == Constant.CLOSE_BULLET_TYPE) {
-            if (sourceCreature.getClawType() != Constant.ClawType.NONE_CLAW) {
+            if (sourceCreature.getClawType() != Constant.ClawType.NONE_CLAW && targetCreature.isAlive()) {
                 targetCreature.getCloseAttackImageView().setImage(ImageUrl.closeAttackImageMap.get(sourceCreature.getClawType()));
+                bullet.getTargetCreature().setLastCloseAttack(System.currentTimeMillis());
             }
-            bullet.getTargetCreature().setLastCloseAttack(System.currentTimeMillis());
         } else {
 
         }
