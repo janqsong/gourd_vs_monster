@@ -24,7 +24,7 @@ public class SnakeMonster extends Creature {
     public SnakeMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(in, out, Constant.CampType.MONSTER, CreatureId.SNAKE_MONSTER_ID, CreatureId.SNAKE_MONSTER_NAME,
                 4000, 200, 120, 30, 0.7, 15, 500.0,
-                faceDirection, 90.0, false, Constant.ClawType.NONE_CLAW,
+                faceDirection, 100.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SNAKE_MONSTER_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SNAKE_MONSTER_ID),
                 ImageUrl.monsterRightImageMap.get(CreatureId.SNAKE_MONSTER_ID),
