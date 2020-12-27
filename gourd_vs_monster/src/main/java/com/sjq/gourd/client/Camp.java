@@ -1,114 +1,129 @@
 package com.sjq.gourd.client;
-//
-//import java.io.*;
-//import java.nio.charset.StandardCharsets;
-//import java.util.HashMap;
-//import java.util.Map;
-//
-//import com.sjq.gourd.constant.Constant;
-//import com.sjq.gourd.constant.ImageUrl;
-//import com.sjq.gourd.creature.CreatureClass;
-//import com.sjq.gourd.creature.GourdClass;
-//import com.sjq.gourd.creature.MonsterClass;
-//import com.sjq.gourd.stage.SceneController;
-//
-//import javafx.scene.image.Image;
-//import javafx.scene.image.ImageView;
-//
-//import org.json.*;
-//
-//public class Camp {
-//    protected SceneController sceneController;
-//    protected HashMap<Integer, CreatureClass> gourdFamily = new HashMap<Integer, CreatureClass>();
-//    protected HashMap<Integer, CreatureClass> monsterFamily = new HashMap<Integer, CreatureClass>();
-//    protected DataInputStream in;
-//    protected DataOutputStream out;
-//
-//    public Camp(SceneController sceneController,
-//                DataInputStream in, DataOutputStream out) {
-//        this.sceneController = sceneController;
-//        this.in = in;
-//        this.out = out;
-//
-//        JSONObject gourdJSONObject = new JSONObject(getJsonContentText("GourdInformation.json"));
-//        JSONArray gourdInfoArray = (JSONArray) gourdJSONObject.get("gourdInfo");
-//
-//        JSONObject monsterJSONObject = new JSONObject(getJsonContentText("MonsterInformation.json"));
-//        JSONArray monsterInfoArray = (JSONArray) monsterJSONObject.get("monsterInfo");
-//
-//        ImageUrl.initImageUrl();
-//        //TODO 初始化
-//        for (int i = 0; i < gourdInfoArray.length(); i++) {
-//            JSONObject gourdObject = (JSONObject) gourdInfoArray.get(i);
-//            int creatureId = gourdObject.getInt("creatureId");
-//            String creatureName = gourdObject.getString("creatureName");
-//            int baseHealth = gourdObject.getInt("baseHealth");
-//            int baseMagic = gourdObject.getInt("baseMagic");
-//            int baseAttack = gourdObject.getInt("baseAttack");
-//            int baseDefense = gourdObject.getInt("baseDefense");
-//            int baseAttackSpeed = gourdObject.getInt("baseAttackSpeed");
-//            int baseMoveSpeed = gourdObject.getInt("baseMoveSpeed");
-//            double shootRange = gourdObject.getDouble("shootRange");
-//            int faceDirection = gourdObject.getInt("faceDirection");
-//            double imageWidth = gourdObject.getDouble("imageWidth");
-//            Image gourdLeftImage = ImageUrl.gourdLeftImageMap.get(creatureId);
-//            Image gourdLeftSelectImage = ImageUrl.gourdLeftSelectImageMap.get(creatureId);
-//            Image gourdRightImage = ImageUrl.gourdRightImageMap.get(creatureId);
-//            Image gourdRightSelectImage = ImageUrl.gourdRightSelectImageMap.get(creatureId);
-//            GourdClass gourdMember = new GourdClass(in, out, Constant.CampType.GOURD, creatureId, creatureName,
-//                    baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
-//                    imageWidth, gourdLeftImage, gourdLeftSelectImage, gourdRightImage, gourdRightSelectImage);
-//            gourdMember.setCreatureImageView();
-//            sceneController.addProgressBarToMapPane(gourdMember.getHealthProgressBar());
-//            sceneController.addProgressBarToMapPane(gourdMember.getMagicProgressBar());
-//
-//            gourdFamily.put(creatureId, gourdMember);
-//
-//        }
-//
-//        for (int i = 0; i < monsterInfoArray.length(); i++) {
-//            JSONObject monsterObject = (JSONObject) monsterInfoArray.get(i);
-//            int creatureId = monsterObject.getInt("creatureId");
-//            String creatureName = monsterObject.getString("creatureName");
-//            int baseHealth = monsterObject.getInt("baseHealth");
-//            int baseMagic = monsterObject.getInt("baseMagic");
-//            int baseAttack = monsterObject.getInt("baseAttack");
-//            int baseDefense = monsterObject.getInt("baseDefense");
-//            int baseAttackSpeed = monsterObject.getInt("baseAttackSpeed");
-//            int baseMoveSpeed = monsterObject.getInt("baseMoveSpeed");
-//            double shootRange = monsterObject.getDouble("shootRange");
-//            int faceDirection = monsterObject.getInt("faceDirection");
-//            double imageWidth = monsterObject.getDouble("imageWidth");
-//            Image monsterLeftImage = ImageUrl.monsterLeftImageMap.get(creatureId);
-//            Image monsterLeftSelectImage = ImageUrl.monsterLeftSelectImageMap.get(creatureId);
-//            Image monsterRightImage = ImageUrl.monsterRightImageMap.get(creatureId);
-//            Image monsterRightSelectImage = ImageUrl.monsterRightSelectImageMap.get(creatureId);
-//            MonsterClass monsterMember = new MonsterClass(in, out, Constant.CampType.GOURD, creatureId, creatureName,
-//                    baseHealth, baseMagic, baseAttack, baseDefense, baseAttackSpeed, baseMoveSpeed, shootRange, faceDirection,
-//                    imageWidth, monsterLeftImage, monsterLeftSelectImage, monsterRightImage, monsterRightSelectImage);
-//            monsterMember.setCreatureImageView();
-//
-//            sceneController.addProgressBarToMapPane(monsterMember.getHealthProgressBar());
-//            sceneController.addProgressBarToMapPane(monsterMember.getMagicProgressBar());
-//            monsterFamily.put(creatureId, monsterMember);
-//        }
-//    }
-//
-//    public String getJsonContentText(String path) {
-//        StringBuilder jsonContent = new StringBuilder();
-//        BufferedReader reader = null;
-//        try {
-//            InputStream in = getClass().getClassLoader().getResourceAsStream(path);
-//            assert in != null;
-//            reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-//            String tempString = null;
-//            while ((tempString = reader.readLine()) != null) {
-//                jsonContent.append(tempString);
-//            }
-//            reader.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return jsonContent.toString();
-//    }
-//}
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.collision.Collision;
+import com.sjq.gourd.constant.Constant;
+import com.sjq.gourd.constant.CreatureId;
+import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.creature.Creature;
+import com.sjq.gourd.equipment.Equipment;
+import com.sjq.gourd.equipment.EquipmentFactory;
+import com.sjq.gourd.protocol.Msg;
+import com.sjq.gourd.protocol.NoParseMsg;
+import com.sjq.gourd.stage.SceneController;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import org.json.*;
+
+public class Camp {
+    protected HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
+    protected HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
+
+    protected SceneController sceneController;
+    protected DataInputStream in;
+    protected DataOutputStream out;
+
+    protected EquipmentFactory equipmentFactory = null;
+    MsgController msgController = null;
+
+    protected final Random randomNum = new Random(System.currentTimeMillis());
+
+    public Camp(SceneController sceneController,
+                DataInputStream in, DataOutputStream out) {
+        this.sceneController = sceneController;
+        this.in = in;
+        this.out = out;
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            ImageView imageView = new ImageView();
+            imageView.setVisible(false);
+            imageView.setDisable(true);
+            imageViews.add(imageView);
+            sceneController.addImageViewToMapPane(imageView);
+        }
+        equipmentFactory = new EquipmentFactory(imageViews);
+    }
+
+    public void prepareForGame() {
+        Button button = new Button();
+        button.setPrefHeight(10);
+        button.setPrefHeight(30);
+        button.setText("准备开始");
+        button.setLayoutX(Constant.FIGHT_PANE_WIDTH / 2 - 15);
+        button.setLayoutY(Constant.FIGHT_PANE_HEIGHT / 2);
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(out);
+                button.setVisible(false);
+                button.setDisable(true);
+                prepareCountDown();
+            }
+        });
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sceneController.getMapPane().getChildren().add(button);
+            }
+        });
+    }
+
+    public void prepareCountDown() {
+        Text text = new Text();
+        text.setFont(Font.font("FangSong", 30));
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setLayoutX(Constant.FIGHT_PANE_WIDTH / 2 - 15);
+        text.setLayoutY(Constant.FIGHT_PANE_HEIGHT / 2);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sceneController.getMapPane().getChildren().add(text);
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bindDragEvent();
+                while (true) {
+                    try {
+                        int msgType = in.readInt();
+                        if (msgType == Msg.COUNT_DOWN_MSG) {
+                            msgController.getMsgClass(msgType, in);
+                            int timeRemaining = msgController.getTimeRemaining();
+                            text.setText(String.valueOf(timeRemaining));
+                        } else if (msgType == Msg.START_GAME_MSG) {
+                            notifyServerImagePosition();
+                            break;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public void bindDragEvent() {
+        System.out.println("Camp Event");
+    }
+
+    public void notifyServerImagePosition() {
+        System.out.println("notify server image position");
+    }
+}

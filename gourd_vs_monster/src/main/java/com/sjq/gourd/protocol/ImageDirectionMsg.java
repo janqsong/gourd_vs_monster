@@ -3,22 +3,19 @@ package com.sjq.gourd.protocol;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public class PositionNotifyMsg implements Msg{
-    private static final int msgType = Msg.POSITION_NOTIFY_MSG;
+public class ImageDirectionMsg implements Msg{
+    private static final int msgType = Msg.IMAGE_DIRECTION_MSG;
     private String campType;
     private int creatureId;
-    private double layoutX;
-    private double layoutY;
+    private int direction;
 
-    public PositionNotifyMsg() {
+    public ImageDirectionMsg() {
     }
 
-    public PositionNotifyMsg(String campType, int creatureId,
-                             double layoutX, double layoutY) {
+    public ImageDirectionMsg(String campType, int creatureId, int direction) {
         this.campType = campType;
         this.creatureId = creatureId;
-        this.layoutX = layoutX;
-        this.layoutY = layoutY;
+        this.direction = direction;
     }
 
     @Override
@@ -27,8 +24,7 @@ public class PositionNotifyMsg implements Msg{
             outStream.writeInt(msgType);
             outStream.writeUTF(campType);
             outStream.writeInt(creatureId);
-            outStream.writeDouble(layoutX);
-            outStream.writeDouble(layoutY);
+            outStream.writeInt(direction);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,8 +35,7 @@ public class PositionNotifyMsg implements Msg{
         try {
             campType = inStream.readUTF();
             creatureId = inStream.readInt();
-            layoutX = inStream.readDouble();
-            layoutY = inStream.readDouble();
+            direction = inStream.readInt();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,6 +43,8 @@ public class PositionNotifyMsg implements Msg{
 
     public String getCampType() {return campType;}
     public int getCreatureId() {return creatureId;}
-    public double getLayoutX() {return layoutX;}
-    public double getLayoutY() {return layoutY;}
+
+    public int getDirection() {
+        return direction;
+    }
 }

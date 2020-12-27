@@ -7,6 +7,9 @@ public class Constant {
     public static final double FIGHT_PANE_WIDTH = 1200;
     public static final double FIGHT_PANE_HEIGHT = 700;
 
+    public static final double SCENE_MARGIN_SIZE = 20;
+    public static final double FIGHT_INFO_MARGIN_SIZE = STAGE_WIDTH - FIGHT_PANE_WIDTH - SCENE_MARGIN_SIZE;
+
     public static final double CREATURE_IMAGE_WIDTH = 60;
     public static final double CREATURE_IMAGE_HEIGHT = 63;
     public static final int BAR_HEIGHT = 10;

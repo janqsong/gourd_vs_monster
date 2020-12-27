@@ -1,4 +1,4 @@
-package com.sjq.gourd.stage;
+package com.sjq.gourd.tool;
 
 public class PositionXY {
     public double X;

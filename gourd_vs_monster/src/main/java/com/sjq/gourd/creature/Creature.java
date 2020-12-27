@@ -5,7 +5,9 @@ import com.sjq.gourd.ai.FirstGenerationAi;
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.equipment.Equipment;
+import com.sjq.gourd.protocol.*;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -112,7 +114,6 @@ public class Creature {
                     ImageView imageView, ImageView closeAttackImageView,
                     Image creatureLeftImage, Image selectCreatureLeftImage,
                     Image creatureRightImage, Image selectCreatureRightImage) {
-        //TODO 这个类里，尽量不要改，改也可以，你可以和我说你下，你要改哪些内容，可以多加函数。
         this.inputStream = in;
         this.outputStream = out;
         this.campType = campType;
@@ -421,6 +422,7 @@ public class Creature {
             if (isAlive()) {
 //                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
+
                 draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
@@ -449,6 +451,13 @@ public class Creature {
             }
         }
         return bullets;
+    }
+
+    public void sendAllAttribute() {
+        new ImageDirectionMsg(campType, creatureId, direction).sendMsg(outputStream);
+        new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(),
+                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(outputStream);
+        new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(outputStream);
     }
 
     //翻转isControlled状态

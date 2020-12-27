@@ -9,7 +9,7 @@
 
 <Pane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
    <children>
-      <Pane fx:id="StartScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
+      <Pane fx:id="StartScene" prefHeight="740" prefWidth="1360" visible="false" disable="true">
         <children>
             <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
                 <image>
@@ -94,11 +94,9 @@
                   <Image url="@images/server_port.png" />
                </image>
             </ImageView>
-            <Button layoutX="611.0" layoutY="120.0" mnemonicParsing="false" onAction="#gourdStartGameButton" prefHeight="106.0" prefWidth="81.0" text="Gourd" />
-            <Button layoutX="611.0" layoutY="415.0" mnemonicParsing="false" onAction="#monsterStartGameButton" prefHeight="132.0" prefWidth="81.0" text="Monster" />
-         </children></Pane>
+            </children></Pane>
 
-        <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
+        <Pane fx:id="fightScene" prefHeight="740" prefWidth="1360" visible="false" disable="true">
         <children>
             <Pane fx:id="mapPane" layoutX="140.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0" style="-fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;"><children>
             </children></Pane>

@@ -9,8 +9,8 @@ public class CreatureId {
     public static final int FIFTH_GOURD_ID = 4;
     public static final int SIXTH_GOURD_ID = 5;
     public static final int SEVENTH_GOURD_ID = 6;
-    public static final int PANGOLIN_ID = 7;
-    public static final int GRANDPA_ID = 8;
+    public static final int GRANDPA_ID = 7;
+    public static final int PANGOLIN_ID = 8;
     public static final int MAX_GOURD_ID = 8;
 
     public static final String FIRST_GOURD_NAME = "firstGourd";
