@@ -184,17 +184,22 @@ public class Creature {
 
     //todo 千万别改这个
     public void setCreatureImageView() {
-        if (isControlled()) {
-            if (direction == Constant.Direction.LEFT)
-                this.creatureImageView.setImage(selectCreatureLeftImage);
-            else
-                this.creatureImageView.setImage(selectCreatureRightImage);
-        } else {
-            if (direction == Constant.Direction.LEFT)
-                this.creatureImageView.setImage(creatureLeftImage);
-            else
-                this.creatureImageView.setImage(creatureRightImage);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isControlled()) {
+                    if (direction == Constant.Direction.LEFT)
+                        creatureImageView.setImage(selectCreatureLeftImage);
+                    else
+                        creatureImageView.setImage(selectCreatureRightImage);
+                } else {
+                    if (direction == Constant.Direction.LEFT)
+                        creatureImageView.setImage(creatureLeftImage);
+                    else
+                        creatureImageView.setImage(creatureRightImage);
+                }
+            }
+        });
     }
 
     //设置position并更新控件位置
@@ -221,15 +226,6 @@ public class Creature {
             lastDirectionSetTime = System.currentTimeMillis();
             setCreatureImageView();
         }
-    }
-
-    public void updateView() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
     //判断是否下载可以攻击,收到攻速的限制
@@ -343,19 +339,24 @@ public class Creature {
 
     //画血条
     public void drawBar() {
-        healthProgressBar.setVisible(true);
-        healthProgressBar.setLayoutX(imagePosition.getLayoutX());
-        healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
-        double progressValue = (double) currentHealth / baseHealth;
-        double finalProgressValue = progressValue;
-        healthProgressBar.setProgress(finalProgressValue);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                healthProgressBar.setVisible(true);
+                healthProgressBar.setLayoutX(imagePosition.getLayoutX());
+                healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
+                double progressValue = (double) currentHealth / baseHealth;
+                double finalProgressValue = progressValue;
+                healthProgressBar.setProgress(finalProgressValue);
 
-        magicProgressBar.setVisible(true);
-        magicProgressBar.setLayoutX(imagePosition.getLayoutX());
-        magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
-        progressValue = (double) currentMagic / baseMagic;
-        double finalProgressValue1 = progressValue;
-        magicProgressBar.setProgress(finalProgressValue1);
+                magicProgressBar.setVisible(true);
+                magicProgressBar.setLayoutX(imagePosition.getLayoutX());
+                magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
+                progressValue = (double) currentMagic / baseMagic;
+                double finalProgressValue1 = progressValue;
+                magicProgressBar.setProgress(finalProgressValue1);
+            }
+        });
     }
 
     //根据新的生命值信息更新当前生命值,如果生命值<=0,则=0,如果超出最大生命值,则等于最大生命值
@@ -385,35 +386,45 @@ public class Creature {
     }
 
     public void drawCloseAttack() {
-        if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
-            //显示近战攻击图片
-            //正中心对齐
-            ImagePosition pos = getCenterPos();
-            double x = pos.getLayoutX() - closeAttackImageWidth / 2;
-            double y = pos.getLayoutY() - closeAttackImageHeight / 2;
-            closeAttackImageView.setLayoutX(x);
-            closeAttackImageView.setLayoutY(y);
-            closeAttackImageView.setVisible(true);
-        } else {
-            //否则不显示近战图片
-            closeAttackImageView.setVisible(false);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
+                    //显示近战攻击图片
+                    //正中心对齐
+                    ImagePosition pos = getCenterPos();
+                    double x = pos.getLayoutX() - closeAttackImageWidth / 2;
+                    double y = pos.getLayoutY() - closeAttackImageHeight / 2;
+                    closeAttackImageView.setLayoutX(x);
+                    closeAttackImageView.setLayoutY(y);
+                    closeAttackImageView.setVisible(true);
+                } else {
+                    //否则不显示近战图片
+                    closeAttackImageView.setVisible(false);
+                }
+            }
+        });
     }
 
     //每回合不管死没死都要调用draw
     public void draw() {
         drawCloseAttack();
-        if (isAlive()) {
-            creatureImageView.setVisible(true);
-            creatureImageView.setDisable(false);
-            drawBar();
-            move();
-        } else {
-            creatureImageView.setVisible(false);
-            creatureImageView.setDisable(true);
-            healthProgressBar.setVisible(false);
-            magicProgressBar.setVisible(false);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isAlive()) {
+                    creatureImageView.setVisible(true);
+                    creatureImageView.setDisable(false);
+                    drawBar();
+                    move();
+                } else {
+                    creatureImageView.setVisible(false);
+                    creatureImageView.setDisable(true);
+                    healthProgressBar.setVisible(false);
+                    magicProgressBar.setVisible(false);
+                }
+            }
+        });
     }
 
     //状态标记函数,每回合更新,主要给每个人物的技能定时钟,只要没死就要执行
@@ -468,9 +479,9 @@ public class Creature {
     }
 
     public void sendAllAttribute() {
-//        new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(), direction,
-//                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(outputStream);
-        new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);
+        new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(), direction,
+                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(outputStream);
+        //new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);
         new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(outputStream);
     }
 

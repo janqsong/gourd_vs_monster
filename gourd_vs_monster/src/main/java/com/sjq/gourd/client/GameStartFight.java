@@ -193,9 +193,7 @@ public class GameStartFight {
                 while(true) {
                     try {
                         int msgType = in.readInt();
-//                        System.out.println("msgType: " + msgType);
-                        if(msgType == Msg.FINISH_FLAG_MSG) {
-                        } else if(msgType == Msg.UPDATE_FLAG_MSG) {
+                        if(msgType == Msg.UPDATE_FLAG_MSG) {
                             updateFlag = true;
                         } else {
                             msgController.getMsgClass(msgType, in);
@@ -213,82 +211,13 @@ public class GameStartFight {
             public void run() {
                 while (true) {
                     try {
-                        if(!updateFlag) {
-                            Thread.sleep(Constant.FRAME_TIME);
-                            continue;
+                        for (Creature myMember : myFamily.values()) {
+                            ArrayList<Bullet> tempBullet = myMember.update();
                         }
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (Creature myMember : myFamily.values()) {
-                                    ArrayList<Bullet> tempBullet = myMember.update();
-//                                    if (tempBullet.size() != 0) {
-//                                        bullets.addAll(tempBullet);
-//                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
-//                                        while (bulletIterator.hasNext()) {
-//                                            Bullet bullet = bulletIterator.next();
-//                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-//                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
-//                                        }
-//                                    }
-                                }
-//                                for (Creature enemyMember : enemyFamily.values()) {
-//                                     // TODO: 改成接受服务器的消息进行变动
-//                                    ArrayList<Bullet> tempBullet = enemyMember.update();
-//                                    if (tempBullet.size() != 0) {
-//                                        bullets.addAll(tempBullet);
-//                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
-//                                        while (bulletIterator.hasNext()) {
-//                                            Bullet bullet = bulletIterator.next();
-//                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
-//                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
-//                                        }
-//                                    }
-//                                }
-//                                Iterator<Bullet> bulletIterator = bullets.listIterator();
-//                                while (bulletIterator.hasNext()) {
-//                                    Bullet bullet = bulletIterator.next();
-//                                    if (bullet.isValid()) {
-//                                        Collision collision = bullet.update();
-//                                        if (collision != null) {
-//                                            collision.collisionEvent();
-//                                            bulletIterator.remove();
-//                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
-//                                                Platform.runLater(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
-//                                                    }
-//                                                });
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                                if (equipmentFactory.hasNext()) {
-//                                    Equipment equipment = equipmentFactory.next();
-//                                    if (equipment != null)
-//                                        equipmentList.add(equipment);
-//                                }
-//                                if (myCreature != null && myCreature.isAlive()) {
-//                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
-//                                    while (equipmentIterator.hasNext()) {
-//                                        Equipment equipment = equipmentIterator.next();
-//                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
-//                                            myCreature.pickUpEquipment(equipment);
-//                                            equipmentIterator.remove();
-//                                        }
-//                                    }
-//                                }
-//                                for (Equipment equipment : equipmentList) {
-//                                    equipment.draw();
-//                                }
-                            }
-                        });
                         for(Creature myMember : myFamily.values()) {
                             myMember.sendAllAttribute();
                         }
-                        updateFlag = false;
-//                        Thread.sleep(Constant.FRAME_TIME);
+                        Thread.sleep(Constant.FRAME_TIME);
                     } catch (Exception e) {
                         System.out.println("while(true)出错");
                         e.printStackTrace();
@@ -298,5 +227,91 @@ public class GameStartFight {
                 }
             }
         }).start();
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Platform.runLater(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                for (Creature myMember : myFamily.values()) {
+//                                    ArrayList<Bullet> tempBullet = myMember.update();
+////                                    if (tempBullet.size() != 0) {
+////                                        bullets.addAll(tempBullet);
+////                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+////                                        while (bulletIterator.hasNext()) {
+////                                            Bullet bullet = bulletIterator.next();
+////                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
+////                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+////                                        }
+////                                    }
+//                                }
+////                                for (Creature enemyMember : enemyFamily.values()) {
+////                                     // TODO: 改成接受服务器的消息进行变动
+////                                    ArrayList<Bullet> tempBullet = enemyMember.update();
+////                                    if (tempBullet.size() != 0) {
+////                                        bullets.addAll(tempBullet);
+////                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+////                                        while (bulletIterator.hasNext()) {
+////                                            Bullet bullet = bulletIterator.next();
+////                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE)
+////                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+////                                        }
+////                                    }
+////                                }
+////                                Iterator<Bullet> bulletIterator = bullets.listIterator();
+////                                while (bulletIterator.hasNext()) {
+////                                    Bullet bullet = bulletIterator.next();
+////                                    if (bullet.isValid()) {
+////                                        Collision collision = bullet.update();
+////                                        if (collision != null) {
+////                                            collision.collisionEvent();
+////                                            bulletIterator.remove();
+////                                            if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+////                                                Platform.runLater(new Runnable() {
+////                                                    @Override
+////                                                    public void run() {
+////                                                        sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
+////                                                    }
+////                                                });
+////                                            }
+////                                        }
+////                                    }
+////                                }
+////                                if (equipmentFactory.hasNext()) {
+////                                    Equipment equipment = equipmentFactory.next();
+////                                    if (equipment != null)
+////                                        equipmentList.add(equipment);
+////                                }
+////                                if (myCreature != null && myCreature.isAlive()) {
+////                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
+////                                    while (equipmentIterator.hasNext()) {
+////                                        Equipment equipment = equipmentIterator.next();
+////                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
+////                                            myCreature.pickUpEquipment(equipment);
+////                                            equipmentIterator.remove();
+////                                        }
+////                                    }
+////                                }
+////                                for (Equipment equipment : equipmentList) {
+////                                    equipment.draw();
+////                                }
+//                            }
+//                        });
+//                        for(Creature myMember : myFamily.values()) {
+//                            myMember.sendAllAttribute();
+//                        }
+//                        Thread.sleep(Constant.FRAME_TIME);
+//                    } catch (Exception e) {
+//                        System.out.println("while(true)出错");
+//                        e.printStackTrace();
+//                    } finally {
+//                        //flag = !flag;
+//                    }
+//                }
+//            }
+//        }).start();
     }
 }

@@ -194,7 +194,7 @@ public class ServerScene {
                         int monsterMsgType = inMonster.readInt();
                         if (monsterMsgType == Msg.FINISH_FLAG_MSG) {
                             monsterFinishFlag = true;
-                        } else{
+                        } else {
                             monsterMsgController.getMsgClass(monsterMsgType, inMonster);
                         }
                     } catch (Exception e) {
@@ -204,8 +204,6 @@ public class ServerScene {
             }
         }).start();
         while (true) {
-            new NoParseMsg(Msg.UPDATE_FLAG_MSG).sendMsg(outGourd);
-            new NoParseMsg(Msg.UPDATE_FLAG_MSG).sendMsg(outMonster);
             if(gourdFinishFlag && monsterFinishFlag) {
                 // TODO: 发送信息
                 gourdFinishFlag = false;
