@@ -31,4 +31,18 @@ public class CreatureStateWithClock {
     public void dispose() {
 
     }
+
+    public long getGap() {
+        return gap;
+    }
+
+    public void setGap(long gap) {
+        this.gap = gap;
+        //setGap是重置了这个buff,意味着这个buff的开始时间重置
+        lastMillis = System.currentTimeMillis();
+    }
+
+    public long getRemainTime() {
+        return lastMillis + gap - System.currentTimeMillis();
+    }
 }

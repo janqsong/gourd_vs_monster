@@ -12,6 +12,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import org.checkerframework.checker.units.qual.Speed;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -701,8 +702,13 @@ public class Creature {
         boolean flag = false;//集合里有没有
         while (creatureStateWithClockIterator.hasNext()) {
             CreatureStateWithClock creatureStateWithClock1 = creatureStateWithClockIterator.next();
-            if (creatureStateWithClock.getCreatureState() == creatureStateWithClock1.getCreatureState())
+            if (creatureStateWithClock.getCreatureState() == creatureStateWithClock1.getCreatureState()) {
                 flag = true;
+                long newGap = creatureStateWithClock.getGap();
+                long lastGap = creatureStateWithClock1.getRemainTime();
+                if (newGap > lastGap)
+                    creatureStateWithClock1.setGap(newGap);
+            }
         }
         if (!flag) stateSet.add(creatureStateWithClock);
     }
@@ -738,17 +744,36 @@ public class Creature {
     }
 
     public String showMessage() {
-        String message = "";
-        message += "生命值: " + (int) currentHealth + "/" + (int) baseHealth + "\n";
-        message += "魔法值: " + (int) currentMagic + "/" + (int) baseMagic + "\n";
-        message += "攻击力: " + (int) currentAttack + "/" + (int) baseAttack + "\n";
-        message += "防御力: " + (int) currentDefense + "/" + (int) baseDefense + "\n";
-        message += "攻速: " + String.format("%.2f", currentAttackSpeed) + "/" + String.format("%.2f", baseAttackSpeed) + "\n";
-        message += "移速: " + (int) currentMoveSpeed + "/" + (int) baseMoveSpeed + "\n";
-        message += "攻击范围: " + (int) shootRange + "\n";
+        StringBuilder message = new StringBuilder();
+        message.append("生命值: ").append((int) currentHealth).append("/").append((int) baseHealth).append("\n");
+        message.append("魔法值: ").append((int) currentMagic).append("/").append((int) baseMagic).append("\n");
+        message.append("攻击力: ").append((int) currentAttack).append("/").append((int) baseAttack).append("\n");
+        message.append("防御力: ").append((int) currentDefense).append("/").append((int) baseDefense).append("\n");
+        message.append("攻速: ").append(String.format("%.2f", currentAttackSpeed)).append("/").append(String.format("%.2f", baseAttackSpeed)).append("\n");
+        message.append("移速: ").append((int) currentMoveSpeed).append("/").append((int) baseMoveSpeed).append("\n");
+        message.append("攻击范围: ").append((int) shootRange).append("\n");
         if (equipment != null)
-            message += "装备: " + equipment.getName();
-        return message;
+            message.append("装备: ").append(equipment.getName()).append("\n");
+        if (stateSet.size() != 0) {
+            message.append("状态: ");
+            for (CreatureStateWithClock creatureStateWithClock : stateSet) {
+                if (creatureStateWithClock.getCreatureState().equals(CreatureState.SPEED_CUT))
+                    message.append("残废").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.FROZEN))
+                    message.append("冰冻").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.FIRING))
+                    message.append("灼烧").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.IMPRISONMENT))
+                    message.append("禁锢").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.SERIOUS_INJURY))
+                    message.append("重伤").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.STIMULATED))
+                    message.append("振奋").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.CURE))
+                    message.append("治愈").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+            }
+        }
+        return message.toString();
     }
 
 }
