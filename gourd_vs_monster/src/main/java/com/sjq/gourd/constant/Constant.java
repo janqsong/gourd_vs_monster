@@ -32,6 +32,7 @@ public class Constant {
     public static final class CampType {
         public static final String GOURD = "GOURD";
         public static final String MONSTER = "MONSTER";
+        public static final String SERVER = "SERVER";
     }
 
     //对第一优先级追杀10s

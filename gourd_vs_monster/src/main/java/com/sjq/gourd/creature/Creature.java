@@ -478,11 +478,11 @@ public class Creature {
         return bullets;
     }
 
-    public void sendAllAttribute() {
+    public void sendAllAttribute(DataOutputStream out) {
         new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(), direction,
-                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(outputStream);
+                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(out);
         //new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);
-        new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(outputStream);
+        new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(out);
     }
 
     //翻转isControlled状态

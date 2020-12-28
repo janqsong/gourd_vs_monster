@@ -22,6 +22,12 @@ public interface Msg {
     public static final int ATTRIBUTE_VALUE_MSG = 8;
     // 同步客户端
     public static final int UPDATE_FLAG_MSG = 9;
+    // 构造子弹
+    public static final int BULLET_BUILD_MSG = 10;
+    // 移动子弹
+    public static final int BULLET_MOVE_MSG = 11;
+    // 近战子弹协议
+    public static final int BULLET_CLOSE_ATTACK_MSG = 12;
 
     public void sendMsg(DataOutputStream outStream);
     public void parseMsg(DataInputStream inStream);

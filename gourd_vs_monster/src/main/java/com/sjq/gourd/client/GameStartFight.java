@@ -7,6 +7,8 @@ import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
+import com.sjq.gourd.log.MyLogger;
+import com.sjq.gourd.protocol.BulletBuildMsg;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.stage.SceneController;
 import javafx.application.Platform;
@@ -19,10 +21,8 @@ import javafx.scene.input.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameStartFight {
     private SceneController sceneController = null;
@@ -35,7 +35,7 @@ public class GameStartFight {
     private Creature myCreature = null;
     private Creature enemyCreature = null;
 
-    private List<Bullet> bullets = new ArrayList<>();
+    private ConcurrentHashMap<Integer, Bullet> bullets = new ConcurrentHashMap<>();
     private List<Equipment> equipmentList = new ArrayList<>();
 
     private EquipmentFactory equipmentFactory = null;
@@ -56,10 +56,10 @@ public class GameStartFight {
         this.myFamily = myFamily;
         this.enemyFamily = enemyFamily;
         this.equipmentFactory = equipmentFactory;
-        if(campType.equals(Constant.CampType.GOURD))
-            msgController = new MsgController(myFamily, enemyFamily);
+        if (campType.equals(Constant.CampType.GOURD))
+            msgController = new MsgController(myFamily, enemyFamily, bullets);
         else
-            msgController = new MsgController(enemyFamily, myFamily);
+            msgController = new MsgController(enemyFamily, myFamily, bullets);
     }
 
     public void initGame() {
@@ -71,10 +71,10 @@ public class GameStartFight {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (enemyCreature != creature) {
+                    if (enemyCreature != creature && myCreature != null
+                            && myCreature.isAlive() && myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
                         enemyCreature = creature;
-                        if (myCreature != null && myCreature.isAlive() && myCreature.getCreatureId() == CreatureId.GRANDPA_ID)
-                            myCreature.setPlayerAttackTarget(enemyCreature);
+                        myCreature.setPlayerAttackTarget(enemyCreature);
                     }
                     if (myCreature == null || !myCreature.isAlive()) {
                         myCreature = creature;
@@ -190,10 +190,11 @@ public class GameStartFight {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true) {
+                while (true) {
                     try {
                         int msgType = in.readInt();
-                        if(msgType == Msg.UPDATE_FLAG_MSG) {
+//                        System.out.println("msgType: " + msgType);
+                        if (msgType == Msg.UPDATE_FLAG_MSG) {
                             updateFlag = true;
                         } else {
                             msgController.getMsgClass(msgType, in);
@@ -209,47 +210,94 @@ public class GameStartFight {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                int bulletKey = 0;
+                if (campType.equals(Constant.CampType.MONSTER))
+                    bulletKey = 1;
                 while (true) {
                     try {
                         for (Creature myMember : myFamily.values()) {
                             ArrayList<Bullet> tempBullet = myMember.update();
                             if (tempBullet.size() != 0) {
-                                bullets.addAll(tempBullet);
                                 Iterator<Bullet> bulletIterator = tempBullet.listIterator();
                                 while (bulletIterator.hasNext()) {
                                     Bullet bullet = bulletIterator.next();
-                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                    if(bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                        bullets.put(bulletKey, bullet);
+//                                        System.out.println("send bulletKey: " + bulletKey + " " +
+//                                                "sourceCreatureId: " + bullet.getSourceCreature().getCreatureId() + " " +
+//                                                "targetCreatureId: " + bullet.getTargetCreature().getCreatureId());
+                                        new BulletBuildMsg(campType, Constant.CampType.SERVER, bulletKey,
+                                                bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
+                                                bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
+                                                bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(out);
+                                        bulletKey += 2;
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
                                                 sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
                                             }
                                         });
+                                    } else {
+
                                     }
                                 }
                             }
                         }
-                        Iterator<Bullet> bulletIterator = bullets.listIterator();
+
+                        HashMap<Integer, Bullet> buildBullets = msgController.getBullets();
+                        if (buildBullets.size() != 0) {
+                            Iterator<Map.Entry<Integer, Bullet>> bulletMapIterator = buildBullets.entrySet().iterator();
+                            while (bulletMapIterator.hasNext()) {
+                                Map.Entry<Integer, Bullet> bulletEntry = bulletMapIterator.next();
+                                int key = bulletEntry.getKey();
+                                Bullet bullet = bulletEntry.getValue();
+                                bullets.put(key, bullet);
+                                if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        Iterator<Bullet> bulletIterator = bullets.values().iterator();
                         while (bulletIterator.hasNext()) {
                             Bullet bullet = bulletIterator.next();
                             if (bullet.isValid()) {
-                                Collision collision = bullet.update();
-                                if (collision != null) {
-                                    collision.collisionEvent();
-                                    bulletIterator.remove();
-                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
-                                            }
-                                        });
+                                if(bullet.getCircleShape() != null)
+                                    bullet.draw();
+//                                Collision collision = bullet.update();
+//                                if (collision != null) {
+//                                    collision.collisionEvent();
+//                                    bulletIterator.remove();
+//                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+//                                        Platform.runLater(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
+//                                            }
+//                                        });
+//                                    }
+//                                }
+                            } else {
+//                                MyLogger.log.info("bulletKey: " + bulletKey + " " +
+//                                        "sourceCreatureId: " + bullet.getSourceCreature().getCreatureId() + " " +
+//                                        "targetCreatureId: " + bullet.getTargetCreature().getCreatureId());
+                                bullet.setVisible(false);
+                                bulletIterator.remove();
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
                                     }
-                                }
+                                });
                             }
                         }
-                        for(Creature myMember : myFamily.values()) {
-                            myMember.sendAllAttribute();
+                        for (Creature myMember : myFamily.values()) {
+                            myMember.sendAllAttribute(out);
                         }
                         Thread.sleep(Constant.FRAME_TIME);
                     } catch (Exception e) {

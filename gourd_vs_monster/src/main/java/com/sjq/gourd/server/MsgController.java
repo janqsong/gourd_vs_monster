@@ -1,5 +1,7 @@
 package com.sjq.gourd.server;
 
+import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.log.MyLogger;
@@ -10,36 +12,36 @@ import org.checkerframework.checker.units.qual.C;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MsgController {
     private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
     private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
+    private HashMap<Integer, Bullet> buildBullets = new HashMap<>();
 
     private String campType;
     private int creatureId;
     private double layoutX;
     private double layoutY;
 
-    private DataInputStream inGourd;
-    private DataOutputStream outGourd;
-    private DataInputStream inMonster;
-    private DataOutputStream outMonster;
 
     public MsgController() {
 
     }
 
     public MsgController(HashMap<Integer, Creature> gourdFamily,
-                         HashMap<Integer, Creature> monsterFamily,
-                         DataInputStream inGourd, DataOutputStream outGourd,
-                         DataInputStream inMonster, DataOutputStream outMonster) {
+                         HashMap<Integer, Creature> monsterFamily) {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
-        this.inGourd = inGourd;
-        this.outGourd = outGourd;
-        this.inMonster = inMonster;
-        this.outMonster = outMonster;
+    }
+
+    public HashMap<Integer, Bullet> getBuildBullets() {
+        HashMap<Integer, Bullet> tempBuildBullets = buildBullets;
+        buildBullets = new HashMap<>();
+        return tempBuildBullets;
     }
 
     public void getMsgClass(int msgType, DataInputStream inputStream) {
@@ -51,18 +53,10 @@ public class MsgController {
                 creatureId = positionNotifyMsg.getCreatureId();
                 layoutX = positionNotifyMsg.getLayoutX();
                 layoutY = positionNotifyMsg.getLayoutY();
-                System.out.println("Msg.POSITION_NOTIFY_MSG\n" +
-                        "campType: " + campType +
-                        "\ncreatureId: " + creatureId +
-                        "\nlayoutX: " + layoutX +
-                        "\nlayoutY: " + layoutY);
-                if (campType.equals(Constant.CampType.GOURD)) {
+                if (campType.equals(Constant.CampType.GOURD))
                     gourdFamily.get(creatureId).setCreatureImagePos(layoutX, layoutY);
-                    new PositionNotifyMsg(campType, creatureId, layoutX, layoutY).sendMsg(outMonster);
-                } else if (campType.equals(Constant.CampType.MONSTER)) {
+                else
                     monsterFamily.get(creatureId).setCreatureImagePos(layoutX, layoutY);
-                    new PositionNotifyMsg(campType, creatureId, layoutX, layoutY).sendMsg(outGourd);
-                }
                 break;
             }
             case Msg.ATTRIBUTE_VALUE_MSG: {
@@ -80,42 +74,64 @@ public class MsgController {
                 double currentAttackSpeed = attributeValueMsg.getCurrentAttackSpeed();
                 double currentMoveSpeed = attributeValueMsg.getCurrentMoveSpeed();
                 Creature creature = null;
-                if (campType.equals(Constant.CampType.GOURD)) {
+                if (campType.equals(Constant.CampType.GOURD))
                     creature = gourdFamily.get(creatureId);
-                    new AttributeValueMsg(campType, creatureId, layoutX, layoutY, direction,
-                            currentHealth, currentMagic, currentAttack, currentDefense,
-                            currentAttackSpeed, currentMoveSpeed).sendMsg(outMonster);
-                } else {
+                else
                     creature = monsterFamily.get(creatureId);
-                    new AttributeValueMsg(campType, creatureId, layoutX, layoutY, direction,
-                            currentHealth, currentMagic, currentAttack, currentDefense,
-                            currentAttackSpeed, currentMoveSpeed).sendMsg(outGourd);
-                }
-//                creature.setCreatureImagePos(layoutX, layoutY);
-//                creature.setDirection(direction);
-//                creature.setCurrentHealth(currentHealth);
-//                creature.setCurrentMagic(currentMagic);
-//                creature.setCurrentAttack(currentAttack);
-//                creature.setCurrentDefense(currentDefense);
-//                creature.setCurrentAttackSpeed(currentAttackSpeed);
-//                creature.setCurrentMoveSpeed(currentMoveSpeed);
+                creature.setCreatureImagePos(layoutX, layoutY);
+                creature.setDirection(direction);
+                creature.setCurrentHealth(currentHealth);
+                creature.setCurrentMagic(currentMagic);
+                creature.setCurrentAttack(currentAttack);
+                creature.setCurrentDefense(currentDefense);
+                creature.setCurrentAttackSpeed(currentAttackSpeed);
+                creature.setCurrentMoveSpeed(currentMoveSpeed);
                 break;
             }
             case Msg.IMAGE_DIRECTION_MSG: {
-                ImageDirectionMsg imageDirectionMsg = new ImageDirectionMsg();
-                imageDirectionMsg.parseMsg(inputStream);
-                campType = imageDirectionMsg.getCampType();
-                creatureId = imageDirectionMsg.getCreatureId();
-                int direction = imageDirectionMsg.getDirection();
-                Creature creature = null;
-                if (campType.equals(Constant.CampType.GOURD)) {
-                    creature = gourdFamily.get(creatureId);
-                    new ImageDirectionMsg(campType, creatureId, direction).sendMsg(outMonster);
-                } else {
-                    creature = monsterFamily.get(creatureId);
-                    new ImageDirectionMsg(campType, creatureId, direction).sendMsg(outGourd);
-                }
-                creature.setDirection(direction);
+//                ImageDirectionMsg imageDirectionMsg = new ImageDirectionMsg();
+//                imageDirectionMsg.parseMsg(inputStream);
+//                campType = imageDirectionMsg.getCampType();
+//                creatureId = imageDirectionMsg.getCreatureId();
+//                int direction = imageDirectionMsg.getDirection();
+//                Creature creature = null;
+//                if (campType.equals(Constant.CampType.GOURD)) {
+//                    creature = gourdFamily.get(creatureId);
+//                    synchronized (outMonster) {
+//                        new ImageDirectionMsg(campType, creatureId, direction).sendMsg(outMonster);
+//                    }
+//                } else {
+//                    creature = monsterFamily.get(creatureId);
+//                    synchronized (outGourd) {
+//                        new ImageDirectionMsg(campType, creatureId, direction).sendMsg(outGourd);
+//                    }
+//                }
+//                creature.setDirection(direction);
+                break;
+            }
+            case Msg.BULLET_BUILD_MSG: {
+                BulletBuildMsg bulletBuildMsg = new BulletBuildMsg();
+                bulletBuildMsg.parseMsg(inputStream);
+                String senderName = bulletBuildMsg.getSenderName();
+                int bulletKey = bulletBuildMsg.getBulletKey();
+                String sourceCamp = bulletBuildMsg.getSourceCamp();
+                int sourceCreatureId = bulletBuildMsg.getSourceCreatureId();
+                String targetCamp = bulletBuildMsg.getTargetCamp();
+                int targetCreatureId = bulletBuildMsg.getTargetCreatureId();
+                int bulletType = bulletBuildMsg.getBulletType();
+                int bulletState = bulletBuildMsg.getBulletState();
+                Creature sourceCreature = null;
+                Creature targetCreature = null;
+                if (sourceCamp.equals(Constant.CampType.GOURD))
+                    sourceCreature = gourdFamily.get(sourceCreatureId);
+                else
+                    sourceCreature = monsterFamily.get(sourceCreatureId);
+                if (targetCamp.equals(Constant.CampType.GOURD))
+                    targetCreature = gourdFamily.get(targetCreatureId);
+                else
+                    targetCreature = monsterFamily.get(targetCreatureId);
+                Bullet tempBullet = new Bullet(sourceCreature, targetCreature, bulletType, BulletState.values()[bulletState]);
+                buildBullets.put(bulletKey, tempBullet);
                 break;
             }
             default: {

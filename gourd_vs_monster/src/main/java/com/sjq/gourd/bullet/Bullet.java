@@ -5,6 +5,7 @@ import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.ImagePosition;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -85,6 +86,10 @@ public class Bullet {
             //蝙蝠的
             this.circleShape.setFill(Color.ROSYBROWN);
             this.circleShape.setRadius(6);
+        }else if(id == CreatureId.MONSTER4_ID){
+            //蛤蟆精的
+            this.circleShape.setFill(Color.LIGHTYELLOW);
+            this.circleShape.setRadius(6);
         } else if (id == CreatureId.SECOND_GOURD_ID)
             this.circleShape.setFill(Color.ORANGE);
         else if (id == CreatureId.FOURTH_GOURD_ID)
@@ -153,17 +158,27 @@ public class Bullet {
         }
     }
 
+    public void setImagePosition(double layoutX, double layoutY) {
+        imagePosition.setLayoutX(layoutX);
+        imagePosition.setLayoutY(layoutY);
+    }
+
     public void draw() {
-        if (!targetCreature.isAlive()) {
-            circleShape.setVisible(false);
-            valid = false;
-            return;
-        }
-        if (valid) {
-            circleShape.setVisible(true);
-            circleShape.setCenterX(imagePosition.getLayoutX());
-            circleShape.setCenterY(imagePosition.getLayoutY());
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (!targetCreature.isAlive()) {
+                    circleShape.setVisible(false);
+                    valid = false;
+                    return;
+                }
+                if (valid) {
+                    circleShape.setVisible(true);
+                    circleShape.setCenterX(imagePosition.getLayoutX());
+                    circleShape.setCenterY(imagePosition.getLayoutY());
+                }
+            }
+        });
     }
 
     private Collision move() {
@@ -173,8 +188,13 @@ public class Bullet {
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         double sin = deltaY / distance;
         double cos = deltaX / distance;
-        imagePosition.setLayoutX(imagePosition.getLayoutX() + cos * SPEED);
-        imagePosition.setLayoutY(imagePosition.getLayoutY() + sin * SPEED);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imagePosition.setLayoutX(imagePosition.getLayoutX() + cos * SPEED);
+                imagePosition.setLayoutY(imagePosition.getLayoutY() + sin * SPEED);
+            }
+        });
 
         if (circleShape.intersects(targetCreature.getCreatureImageView().getBoundsInParent())) {
             valid = false;
@@ -199,5 +219,9 @@ public class Bullet {
 
     public BulletState getBulletState() {
         return bulletState;
+    }
+
+    public ImagePosition getImagePosition() {
+        return imagePosition;
     }
 }

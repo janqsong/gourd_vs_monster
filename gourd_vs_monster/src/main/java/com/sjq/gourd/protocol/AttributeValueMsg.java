@@ -1,9 +1,6 @@
 package com.sjq.gourd.protocol;
 
-import com.sjq.gourd.creature.Creature;
-
 import java.io.*;
-import java.util.Arrays;
 
 public class AttributeValueMsg implements Msg {
     private static final int msgType = Msg.ATTRIBUTE_VALUE_MSG;

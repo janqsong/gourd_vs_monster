@@ -51,7 +51,7 @@ public class CrocodileMonster extends Creature {
         for (int i = 0; i < 4; i++) {
             if (creatures[i] == null)
                 return false;
-            if (creatures[i].isAlive())
+            if (!creatures[i].isAlive())
                 return false;
             if (creatures[i].currentMagic < creatures[i].baseHealth)
                 return false;
