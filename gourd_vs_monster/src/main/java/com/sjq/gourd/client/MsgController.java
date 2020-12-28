@@ -109,6 +109,7 @@ public class MsgController {
                 creature.setCurrentDefense(currentDefense);
                 creature.setCurrentAttackSpeed(currentAttackSpeed);
                 creature.setCurrentMoveSpeed(currentMoveSpeed);
+                creature.drawBar();
                 break;
             }
             case Msg.IMAGE_DIRECTION_MSG: {

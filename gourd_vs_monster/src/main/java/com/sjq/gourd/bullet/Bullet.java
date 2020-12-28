@@ -20,6 +20,49 @@ public class Bullet {
     private int bulletType;
     private BulletState bulletState = BulletState.NONE;
 
+    public Bullet(Creature sourceCreature, Creature targetCreature, int bulletType, BulletState bulletState) {
+        this.sourceCreature = sourceCreature;
+        this.targetCreature = targetCreature;
+        this.bulletType = bulletType;
+        this.bulletState = bulletState;
+        this.valid = true;
+        this.imagePosition = this.sourceCreature.getCenterPos();
+        if(this.bulletType == Constant.CLOSE_BULLET_TYPE)
+            this.circleShape = null;//近战没有图形
+        else{
+            this.circleShape = new Circle(imagePosition.getLayoutX(),imagePosition.getLayoutY(),5);
+            this.circleShape.setVisible(false);
+            int id = sourceCreature.getCreatureId();
+            if (id == CreatureId.SNAKE_MONSTER_ID) {
+                this.circleShape.setFill(Color.BLACK);
+                this.circleShape.setRadius(7);
+            } else if (id == CreatureId.MONSTER2_ID) {
+                //蝙蝠的
+                this.circleShape.setFill(Color.ROSYBROWN);
+                this.circleShape.setRadius(6);
+            }else if(id == CreatureId.MONSTER4_ID){
+                //蛤蟆精的
+                this.circleShape.setFill(Color.LIGHTYELLOW);
+                this.circleShape.setRadius(6);
+            } else if (id == CreatureId.SECOND_GOURD_ID)
+                this.circleShape.setFill(Color.ORANGE);
+            else if (id == CreatureId.FOURTH_GOURD_ID)
+                this.circleShape.setFill(Color.RED);
+            else if (id == CreatureId.FIFTH_GOURD_ID)
+                this.circleShape.setFill(Color.BLUE);
+            else if (id == CreatureId.SEVENTH_GOURD_ID)
+                this.circleShape.setFill(Color.PURPLE);
+            else if (id == CreatureId.GRANDPA_ID)
+                this.circleShape.setFill(Color.GREEN);
+
+            if(this.bulletState.equals(BulletState.THE_SON_OF_FLAME)
+                    ||this.bulletState.equals(BulletState.THE_HEART_OF_ICE)
+                    ||this.bulletState.equals(BulletState.THE_GOD_OF_HEALING_MAX)
+                    ||this.bulletState.equals(BulletState.THE_TEETH_OF_POISONOUS))
+                this.circleShape.setRadius(10);
+        }
+    }
+
     public Bullet(Creature sourceCreature, Creature targetCreature,
                   ImagePosition imagePosition, Circle circleShape) {
         this.sourceCreature = sourceCreature;

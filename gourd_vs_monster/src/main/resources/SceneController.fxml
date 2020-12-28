@@ -9,7 +9,7 @@
 
 <Pane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
    <children>
-      <Pane fx:id="StartScene" prefHeight="740" prefWidth="1360" visible="false" disable="true">
+      <Pane fx:id="StartScene" prefHeight="740" prefWidth="1360">
         <children>
             <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
                 <image>
@@ -42,7 +42,7 @@
                 </image>
             </ImageView>
         </children></Pane>
-        <Pane fx:id="ConnectScene" prefHeight="740" prefWidth="1360">
+        <Pane fx:id="ConnectScene" prefHeight="740" prefWidth="1360" visible="false" disable="true">
          <children>
             <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
                 <image>

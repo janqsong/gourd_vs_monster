@@ -213,6 +213,40 @@ public class GameStartFight {
                     try {
                         for (Creature myMember : myFamily.values()) {
                             ArrayList<Bullet> tempBullet = myMember.update();
+                            if (tempBullet.size() != 0) {
+                                bullets.addAll(tempBullet);
+                                Iterator<Bullet> bulletIterator = tempBullet.listIterator();
+                                while (bulletIterator.hasNext()) {
+                                    Bullet bullet = bulletIterator.next();
+                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        Iterator<Bullet> bulletIterator = bullets.listIterator();
+                        while (bulletIterator.hasNext()) {
+                            Bullet bullet = bulletIterator.next();
+                            if (bullet.isValid()) {
+                                Collision collision = bullet.update();
+                                if (collision != null) {
+                                    collision.collisionEvent();
+                                    bulletIterator.remove();
+                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
+                                            }
+                                        });
+                                    }
+                                }
+                            }
                         }
                         for(Creature myMember : myFamily.values()) {
                             myMember.sendAllAttribute();
