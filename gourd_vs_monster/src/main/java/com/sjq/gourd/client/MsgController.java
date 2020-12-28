@@ -75,8 +75,6 @@ public class MsgController {
                     monsterFamily.get(creatureId).setCreatureImagePos(layoutX, layoutY);
                     tempImageView = monsterFamily.get(creatureId).getCreatureImageView();
                 }
-                tempImageView.setVisible(true);
-                tempImageView.setDisable(false);
                 break;
             }
             case Msg.ATTRIBUTE_VALUE_MSG: {
@@ -86,6 +84,7 @@ public class MsgController {
                 int creatureId = attributeValueMsg.getCreatureId();
                 double layoutX = attributeValueMsg.getLayoutX();
                 double layoutY = attributeValueMsg.getLayoutY();
+                int direction = attributeValueMsg.getDirection();
                 double currentHealth = attributeValueMsg.getCurrentHealth();
                 double currentMagic = attributeValueMsg.getCurrentMagic();
                 double currentAttack = attributeValueMsg.getCurrentAttack();
@@ -103,6 +102,7 @@ public class MsgController {
                         "\nlayoutX: " + layoutX +
                         "\nlayoutY: " + layoutY);
                 creature.setCreatureImagePos(layoutX, layoutY);
+                creature.setDirection(direction);
                 creature.setCurrentHealth(currentHealth);
                 creature.setCurrentMagic(currentMagic);
                 creature.setCurrentAttack(currentAttack);

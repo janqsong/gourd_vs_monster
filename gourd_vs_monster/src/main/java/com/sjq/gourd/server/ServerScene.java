@@ -45,6 +45,7 @@ public class ServerScene {
     }
 
     public void initScene() {
+        ImageUrl.initImageUrl();
         ArrayList<ImageView> gourdImageView = new ArrayList<>();
         ArrayList<ImageView> monsterImageView = new ArrayList<>();
         for (int i = 0; i <= 20; i++) {
@@ -168,7 +169,6 @@ public class ServerScene {
     }
 
     public void startFight() {
-        //TODO
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -180,24 +180,12 @@ public class ServerScene {
                         } else {
                             gourdMsgController.getMsgClass(gourdMsgType, inGourd);
                         }
-//                        if(gourdFinishFlag) {
-//                            Thread.sleep(10);
-//                        } else {
-//                            int gourdMsgType = inGourd.readInt();
-//                            if (gourdMsgType == Msg.FINISH_FLAG_MSG) {
-//                                gourdFinishFlag = true;
-//                                break;
-//                            } else if (gourdMsgType == Msg.POSITION_NOTIFY_MSG) {
-//                                gourdMsgController.getMsgClass(gourdMsgType, inGourd);
-//                            }
-//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         }).start();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -209,17 +197,6 @@ public class ServerScene {
                         } else{
                             monsterMsgController.getMsgClass(monsterMsgType, inMonster);
                         }
-//                        if(monsterFinishFlag) {
-//                            Thread.sleep(10);
-//                        } else {
-//                            int monsterMsgType = inMonster.readInt();
-//                            if (monsterMsgType == Msg.FINISH_FLAG_MSG) {
-//                                monsterFinishFlag = true;
-//                                break;
-//                            } else if (monsterMsgType == Msg.POSITION_NOTIFY_MSG) {
-//                                monsterMsgController.getMsgClass(monsterMsgType, inMonster);
-//                            }
-//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -227,11 +204,10 @@ public class ServerScene {
             }
         }).start();
         while (true) {
+            new NoParseMsg(Msg.UPDATE_FLAG_MSG).sendMsg(outGourd);
+            new NoParseMsg(Msg.UPDATE_FLAG_MSG).sendMsg(outMonster);
             if(gourdFinishFlag && monsterFinishFlag) {
                 // TODO: 发送信息
-                System.out.println("gourdfinish monsterfinish");
-                new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(outGourd);
-                new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(outMonster);
                 gourdFinishFlag = false;
                 monsterFinishFlag = false;
             }

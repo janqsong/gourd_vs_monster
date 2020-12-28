@@ -1,7 +1,9 @@
 package com.sjq.gourd.protocol;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.sjq.gourd.creature.Creature;
+
+import java.io.*;
+import java.util.Arrays;
 
 public class AttributeValueMsg implements Msg {
     private static final int msgType = Msg.ATTRIBUTE_VALUE_MSG;
@@ -9,6 +11,7 @@ public class AttributeValueMsg implements Msg {
     private int creatureId;
     private double layoutX;
     private double layoutY;
+    private int direction;
     private double currentHealth;
     private double currentMagic;
     private double currentAttack;
@@ -19,13 +22,14 @@ public class AttributeValueMsg implements Msg {
     public AttributeValueMsg() {
     }
 
-    public AttributeValueMsg(String campType, int creatureId, double layoutX, double layoutY,
+    public AttributeValueMsg(String campType, int creatureId, double layoutX, double layoutY, int direction,
                              double currentHealth, double currentMagic, double currentAttack,
                              double currentDefense, double currentAttackSpeed, double currentMoveSpeed) {
         this.campType = campType;
         this.creatureId = creatureId;
         this.layoutX = layoutX;
         this.layoutY = layoutY;
+        this.direction = direction;
         this.currentHealth = currentHealth;
         this.currentMagic = currentMagic;
         this.currentAttack = currentAttack;
@@ -42,6 +46,7 @@ public class AttributeValueMsg implements Msg {
             outStream.writeInt(creatureId);
             outStream.writeDouble(layoutX);
             outStream.writeDouble(layoutY);
+            outStream.writeInt(direction);
             outStream.writeDouble(currentHealth);
             outStream.writeDouble(currentMagic);
             outStream.writeDouble(currentAttack);
@@ -60,6 +65,7 @@ public class AttributeValueMsg implements Msg {
             creatureId = inStream.readInt();
             layoutX = inStream.readDouble();
             layoutY = inStream.readDouble();
+            direction = inStream.readInt();
             currentHealth = inStream.readDouble();
             currentMagic = inStream.readDouble();
             currentAttack = inStream.readDouble();
@@ -110,4 +116,65 @@ public class AttributeValueMsg implements Msg {
     public double getLayoutY() {
         return layoutY;
     }
+
+    public int getDirection() {
+        return direction;
+    }
+
+//    @Override
+//    public void sendMsg(DataOutputStream outStream) {
+//        try {
+//            outStream.writeInt(msgType);
+//            ByteArrayOutputStream buf= new ByteArrayOutputStream();
+//            ObjectOutputStream outputObject = new ObjectOutputStream(buf);
+//            outputObject.writeUTF(campType);
+//            outputObject.writeInt(creatureId);
+//            outputObject.writeDouble(layoutX);
+//            outputObject.writeDouble(layoutY);
+//            outputObject.writeInt(direction);
+//            outputObject.writeDouble(currentHealth);
+//            outputObject.writeDouble(currentMagic);
+//            outputObject.writeDouble(currentAttack);
+//            outputObject.writeDouble(currentDefense);
+//            outputObject.writeDouble(currentAttackSpeed);
+//            outputObject.writeDouble(currentMoveSpeed);
+//            outputObject.close();
+//            outStream.write(buf.toByteArray());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void parseMsg(DataInputStream inStream) {
+//        try {
+//            byte[] buf = new byte[100];
+//            int num = inStream.read(buf);
+//            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buf));
+//            campType = in.readUTF();
+//            creatureId = in.readInt();
+//            layoutX = in.readDouble();
+//            layoutY = in.readDouble();
+//            direction = in.readInt();
+//            currentHealth = in.readDouble();
+//            currentMagic = in.readDouble();
+//            currentAttack = in.readDouble();
+//            currentDefense = in.readDouble();
+//            currentAttackSpeed = in.readDouble();
+//            currentMoveSpeed = in.readDouble();
+//            System.out.println(campType+" "+
+//            creatureId+" "+
+//            layoutX+" "+
+//            layoutY+" "+
+//            direction+" "+
+//            currentHealth+" "+
+//            currentMagic+" "+
+//            currentAttack+" "+
+//            currentDefense+" "+
+//            currentAttackSpeed+" "+
+//            currentMoveSpeed);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

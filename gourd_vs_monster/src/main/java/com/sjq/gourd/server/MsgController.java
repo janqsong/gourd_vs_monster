@@ -72,6 +72,7 @@ public class MsgController {
                 creatureId = attributeValueMsg.getCreatureId();
                 double layoutX = attributeValueMsg.getLayoutX();
                 double layoutY = attributeValueMsg.getLayoutY();
+                int direction = attributeValueMsg.getDirection();
                 double currentHealth = attributeValueMsg.getCurrentHealth();
                 double currentMagic = attributeValueMsg.getCurrentMagic();
                 double currentAttack = attributeValueMsg.getCurrentAttack();
@@ -81,25 +82,23 @@ public class MsgController {
                 Creature creature = null;
                 if (campType.equals(Constant.CampType.GOURD)) {
                     creature = gourdFamily.get(creatureId);
-                    new AttributeValueMsg(campType, creatureId, layoutX, layoutY, currentHealth, currentMagic, currentAttack, currentDefense,
+                    new AttributeValueMsg(campType, creatureId, layoutX, layoutY, direction,
+                            currentHealth, currentMagic, currentAttack, currentDefense,
                             currentAttackSpeed, currentMoveSpeed).sendMsg(outMonster);
                 } else {
                     creature = monsterFamily.get(creatureId);
-                    new AttributeValueMsg(campType, creatureId, layoutX, layoutY, currentHealth, currentMagic, currentAttack, currentDefense,
+                    new AttributeValueMsg(campType, creatureId, layoutX, layoutY, direction,
+                            currentHealth, currentMagic, currentAttack, currentDefense,
                             currentAttackSpeed, currentMoveSpeed).sendMsg(outGourd);
                 }
-                MyLogger.log.info("server Msg.POSITION_NOTIFY_MSG\n" +
-                        "campType: " + campType +
-                        "\ncreatureId: " +creatureId +
-                        "\nlayoutX: " + layoutX +
-                        "\nlayoutY: " + layoutY);
-                creature.setCreatureImagePos(layoutX, layoutY);
-                creature.setCurrentHealth(currentHealth);
-                creature.setCurrentMagic(currentMagic);
-                creature.setCurrentAttack(currentAttack);
-                creature.setCurrentDefense(currentDefense);
-                creature.setCurrentAttackSpeed(currentAttackSpeed);
-                creature.setCurrentMoveSpeed(currentMoveSpeed);
+//                creature.setCreatureImagePos(layoutX, layoutY);
+//                creature.setDirection(direction);
+//                creature.setCurrentHealth(currentHealth);
+//                creature.setCurrentMagic(currentMagic);
+//                creature.setCurrentAttack(currentAttack);
+//                creature.setCurrentDefense(currentDefense);
+//                creature.setCurrentAttackSpeed(currentAttackSpeed);
+//                creature.setCurrentMoveSpeed(currentMoveSpeed);
                 break;
             }
             case Msg.IMAGE_DIRECTION_MSG: {

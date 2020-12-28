@@ -12,8 +12,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.util.*;
 
 public class Creature {
@@ -200,10 +199,17 @@ public class Creature {
 
     //设置position并更新控件位置
     public void setCreatureImagePos(double layoutX, double layoutY) {
-        imagePosition.setLayoutX(layoutX);
-        imagePosition.setLayoutY(layoutY);
-        creatureImageView.setLayoutX(layoutX);
-        creatureImageView.setLayoutY(layoutY);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imagePosition.setLayoutX(layoutX);
+                imagePosition.setLayoutY(layoutY);
+                creatureImageView.setLayoutX(layoutX);
+                creatureImageView.setLayoutY(layoutY);
+                creatureImageView.setVisible(true);
+                creatureImageView.setDisable(false);
+            }
+        });
     }
 
     //设置移动方向
@@ -215,6 +221,15 @@ public class Creature {
             lastDirectionSetTime = System.currentTimeMillis();
             setCreatureImageView();
         }
+    }
+
+    public void updateView() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     //判断是否下载可以攻击,收到攻速的限制
@@ -328,19 +343,19 @@ public class Creature {
 
     //画血条
     public void drawBar() {
-        Platform.runLater(() -> healthProgressBar.setVisible(true));
+        healthProgressBar.setVisible(true);
         healthProgressBar.setLayoutX(imagePosition.getLayoutX());
         healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
         double progressValue = (double) currentHealth / baseHealth;
         double finalProgressValue = progressValue;
-        Platform.runLater(() -> healthProgressBar.setProgress(finalProgressValue));
+        healthProgressBar.setProgress(finalProgressValue);
 
-        Platform.runLater(() -> magicProgressBar.setVisible(true));
+        magicProgressBar.setVisible(true);
         magicProgressBar.setLayoutX(imagePosition.getLayoutX());
         magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
         progressValue = (double) currentMagic / baseMagic;
         double finalProgressValue1 = progressValue;
-        Platform.runLater(() -> magicProgressBar.setProgress(finalProgressValue1));
+        magicProgressBar.setProgress(finalProgressValue1);
     }
 
     //根据新的生命值信息更新当前生命值,如果生命值<=0,则=0,如果超出最大生命值,则等于最大生命值
@@ -422,7 +437,6 @@ public class Creature {
             if (isAlive()) {
 //                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-
                 draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
@@ -454,9 +468,9 @@ public class Creature {
     }
 
     public void sendAllAttribute() {
-        new ImageDirectionMsg(campType, creatureId, direction).sendMsg(outputStream);
-        new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(),
-                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(outputStream);
+//        new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(), direction,
+//                currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(outputStream);
+        new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);
         new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(outputStream);
     }
 

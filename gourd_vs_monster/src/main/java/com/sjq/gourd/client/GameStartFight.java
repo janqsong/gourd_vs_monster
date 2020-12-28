@@ -41,7 +41,8 @@ public class GameStartFight {
     private EquipmentFactory equipmentFactory = null;
 
     private MsgController msgController;
-    private boolean finishFlag = true;
+
+    private boolean updateFlag = false;
 
 
     public GameStartFight(String campType, SceneController sceneController,
@@ -192,9 +193,10 @@ public class GameStartFight {
                 while(true) {
                     try {
                         int msgType = in.readInt();
-                        System.out.println("msgType: " + msgType);
+//                        System.out.println("msgType: " + msgType);
                         if(msgType == Msg.FINISH_FLAG_MSG) {
-                            finishFlag = true;
+                        } else if(msgType == Msg.UPDATE_FLAG_MSG) {
+                            updateFlag = true;
                         } else {
                             msgController.getMsgClass(msgType, in);
                         }
@@ -211,12 +213,15 @@ public class GameStartFight {
             public void run() {
                 while (true) {
                     try {
+                        if(!updateFlag) {
+                            Thread.sleep(Constant.FRAME_TIME);
+                            continue;
+                        }
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
                                 for (Creature myMember : myFamily.values()) {
                                     ArrayList<Bullet> tempBullet = myMember.update();
-                                    myMember.sendAllAttribute();
 //                                    if (tempBullet.size() != 0) {
 //                                        bullets.addAll(tempBullet);
 //                                        Iterator<Bullet> bulletIterator = tempBullet.listIterator();
@@ -279,9 +284,11 @@ public class GameStartFight {
 //                                }
                             }
                         });
-                        //flag=!flag;
-                        Thread.yield();
-                        Thread.sleep(Constant.FRAME_TIME);
+                        for(Creature myMember : myFamily.values()) {
+                            myMember.sendAllAttribute();
+                        }
+                        updateFlag = false;
+//                        Thread.sleep(Constant.FRAME_TIME);
                     } catch (Exception e) {
                         System.out.println("while(true)出错");
                         e.printStackTrace();

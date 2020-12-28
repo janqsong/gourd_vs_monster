@@ -20,6 +20,8 @@ public interface Msg {
     public static final int IMAGE_DIRECTION_MSG = 7;
     // 处理基本属性值
     public static final int ATTRIBUTE_VALUE_MSG = 8;
+    // 同步客户端
+    public static final int UPDATE_FLAG_MSG = 9;
 
     public void sendMsg(DataOutputStream outStream);
     public void parseMsg(DataInputStream inStream);
