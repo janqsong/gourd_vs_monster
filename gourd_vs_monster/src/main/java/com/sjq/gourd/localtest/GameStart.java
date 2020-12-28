@@ -232,6 +232,9 @@ public class GameStart {
                                 myCreatureImageView.setVisible(false);
                                 myCreatureImageView.setDisable(true);
                                 myCreatureText.setVisible(false);
+                                enemyCreatureImageView.setVisible(false);
+                                enemyCreatureImageView.setDisable(true);
+                                enemyCreatureText.setVisible(false);
                             } else {
                                 myCreatureImageView.setVisible(true);
                                 myCreatureImageView.setDisable(false);
@@ -377,6 +380,11 @@ public class GameStart {
                 } else if (keyCode == KeyCode.R) {
                     if (myCreature != null && myCreature.isAlive())
                         myCreature.setRFlag(true);
+                } else if (keyCode == KeyCode.SPACE) {
+                    if(myCreature!=null&&myCreature.isControlled()){
+                        myCreature.flipControlled();
+                        myCreature = null;
+                    }
                 }
                 if (myCreature != null) {
                     if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
