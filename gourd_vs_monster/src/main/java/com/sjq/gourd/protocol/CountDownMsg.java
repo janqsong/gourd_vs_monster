@@ -1,9 +1,8 @@
 package com.sjq.gourd.protocol;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 
-public class CountDownMsg implements  Msg{
+public class CountDownMsg implements Msg{
     private static final int msgType = Msg.COUNT_DOWN_MSG;
     private int timeRemaining;
 
@@ -15,17 +14,18 @@ public class CountDownMsg implements  Msg{
     }
 
     @Override
-    public void sendMsg(DataOutputStream outStream) {
+    public void sendMsg(ObjectOutputStream outStream) {
         try {
             outStream.writeInt(msgType);
             outStream.writeInt(timeRemaining);
+            outStream.flush();
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void parseMsg(DataInputStream inStream) {
+    public void parseMsg(ObjectInputStream inStream) {
         try {
             timeRemaining = inStream.readInt();
         } catch(Exception e) {

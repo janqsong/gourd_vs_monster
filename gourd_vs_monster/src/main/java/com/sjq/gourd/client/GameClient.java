@@ -11,8 +11,8 @@ public class GameClient {
     protected String ipServer;
     protected int portServer;
     protected Socket clientSocket;
-    protected DataInputStream in;
-    protected DataOutputStream out;
+    protected ObjectOutputStream out;
+    protected ObjectInputStream in;
 
     private final MsgController msgController = new MsgController();
     private String campType;
@@ -27,11 +27,13 @@ public class GameClient {
 
     public void run() {
         try {
+            System.out.println("准备连接服务");
             clientSocket = new Socket(ipServer, portServer);
-            in = new DataInputStream(clientSocket.getInputStream());
-            out = new DataOutputStream(clientSocket.getOutputStream());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
             msgController.getMsgClass(in.readInt(), in);
             campType = msgController.getCampType();
+            System.out.println("campType: " + campType);
             initGameCamp();
         } catch (Exception e) {
             e.printStackTrace();

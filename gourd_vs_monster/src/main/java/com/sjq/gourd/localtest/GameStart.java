@@ -131,9 +131,9 @@ public class GameStart {
             }
         }
         CreatureFactory gourdFactory = new CreatureFactory(Constant.CampType.GOURD, gourdFaceDirection,
-                null, null, gourdImageView);
+                gourdImageView);
         CreatureFactory monsterFactory = new CreatureFactory(Constant.CampType.MONSTER, monsterFaceDirection,
-                null, null, monsterImageView);
+                monsterImageView);
 
         int id = CreatureId.MIN_GOURD_ID;
         while (gourdFactory.hasNext()) {

@@ -25,10 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerScene {
     private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
     private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
-    private DataInputStream inGourd;
-    private DataOutputStream outGourd;
-    private DataInputStream inMonster;
-    private DataOutputStream outMonster;
+    private ObjectInputStream inGourd;
+    private ObjectOutputStream outGourd;
+    private ObjectInputStream inMonster;
+    private ObjectOutputStream outMonster;
 
     private MsgController gourdMsgController = null;
     private MsgController monsterMsgController = null;
@@ -38,8 +38,8 @@ public class ServerScene {
 
     private ConcurrentHashMap<Integer, Bullet> bullets = new ConcurrentHashMap<>();
 
-    public ServerScene(DataInputStream inGourd, DataOutputStream outGourd,
-                       DataInputStream inMonster, DataOutputStream outMonster) {
+    public ServerScene(ObjectInputStream inGourd, ObjectOutputStream outGourd,
+                       ObjectInputStream inMonster, ObjectOutputStream outMonster) {
         this.inGourd = inGourd;
         this.outGourd = outGourd;
         this.inMonster = inMonster;
@@ -62,9 +62,9 @@ public class ServerScene {
 
         try {
             CreatureFactory gourdFactory = new CreatureFactory(Constant.CampType.GOURD, Constant.Direction.RIGHT,
-                    null, null, gourdImageView);
+                    gourdImageView);
             CreatureFactory monsterFactory = new CreatureFactory(Constant.CampType.MONSTER, Constant.Direction.LEFT,
-                    null, null, monsterImageView);
+                    monsterImageView);
 
             int id = CreatureId.MIN_GOURD_ID;
             while (gourdFactory.hasNext()) {

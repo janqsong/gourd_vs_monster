@@ -1,104 +1,92 @@
 package com.sjq.gourd.protocol;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
+
+class BulletBuild implements Serializable {
+    public String senderName;
+    public String receiverName;
+    public int bulletKey;
+    public String sourceCamp;
+    public int sourceCreatureId;
+    public String targetCamp;
+    public int targetCreatureId;
+    public int bulletType;
+    public int bulletState;
+}
 
 public class BulletBuildMsg implements Msg {
     private static final int msgType = Msg.BULLET_BUILD_MSG;
-    private String senderName;
-    private String receiverName;
-    private int bulletKey;
-    private String sourceCamp;
-    private int sourceCreatureId;
-    private String targetCamp;
-    private int targetCreatureId;
-    private int bulletType;
-    private int bulletState;
+    BulletBuild bulletBuild = new BulletBuild();
 
     public BulletBuildMsg() {
     }
 
     public BulletBuildMsg(String senderName, String receiverName, int bulletKey, String sourceCamp, int sourceCreatureId,
                           String targetCamp, int targetCreatureId, int bulletType, int bulletState) {
-        this.senderName = senderName;
-        this.receiverName = receiverName;
-        this.bulletKey = bulletKey;
-        this.sourceCamp = sourceCamp;
-        this.sourceCreatureId = sourceCreatureId;
-        this.targetCamp = targetCamp;
-        this.targetCreatureId = targetCreatureId;
-        this.bulletType = bulletType;
-        this.bulletState = bulletState;
+        bulletBuild.senderName = senderName;
+        bulletBuild.receiverName = receiverName;
+        bulletBuild.bulletKey = bulletKey;
+        bulletBuild.sourceCamp = sourceCamp;
+        bulletBuild.sourceCreatureId = sourceCreatureId;
+        bulletBuild.targetCamp = targetCamp;
+        bulletBuild.targetCreatureId = targetCreatureId;
+        bulletBuild.bulletType = bulletType;
+        bulletBuild.bulletState = bulletState;
     }
 
     @Override
-    public void sendMsg(DataOutputStream outStream) {
+    public void sendMsg(ObjectOutputStream outStream) {
         try {
             outStream.writeInt(msgType);
-            outStream.writeUTF(senderName);
-            outStream.writeUTF(receiverName);
-            outStream.writeInt(bulletKey);
-            outStream.writeUTF(sourceCamp);
-            outStream.writeInt(sourceCreatureId);
-            outStream.writeUTF(targetCamp);
-            outStream.writeInt(targetCreatureId);
-            outStream.writeInt(bulletType);
-            outStream.writeInt(bulletState);
+            outStream.writeObject(bulletBuild);
+            outStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void parseMsg(DataInputStream inStream) {
+    public void parseMsg(ObjectInputStream inStream) {
         try {
-            senderName = inStream.readUTF();
-            receiverName = inStream.readUTF();
-            bulletKey = inStream.readInt();
-            sourceCamp = inStream.readUTF();
-            sourceCreatureId = inStream.readInt();
-            targetCamp = inStream.readUTF();
-            targetCreatureId = inStream.readInt();
-            bulletType = inStream.readInt();
-            bulletState = inStream.readInt();
+            bulletBuild = (BulletBuild) inStream.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public String getSenderName() {
-        return senderName;
+        return bulletBuild.senderName;
     }
 
     public String getReceiverName() {
-        return receiverName;
+        return bulletBuild.receiverName;
     }
 
     public int getBulletKey() {
-        return bulletKey;
+        return bulletBuild.bulletKey;
     }
 
     public String getSourceCamp() {
-        return sourceCamp;
+        return bulletBuild.sourceCamp;
     }
 
     public int getSourceCreatureId() {
-        return sourceCreatureId;
+        return bulletBuild.sourceCreatureId;
     }
 
     public String getTargetCamp() {
-        return targetCamp;
+        return bulletBuild.targetCamp;
     }
 
     public int getTargetCreatureId() {
-        return targetCreatureId;
+        return bulletBuild.targetCreatureId;
     }
 
     public int getBulletType() {
-        return bulletType;
+        return bulletBuild.bulletType;
     }
 
     public int getBulletState() {
-        return bulletState;
+        return bulletBuild.bulletState;
     }
 }

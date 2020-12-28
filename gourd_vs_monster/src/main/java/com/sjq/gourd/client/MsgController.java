@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.DataInputStream;
+import java.io.ObjectInputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -61,7 +62,7 @@ public class MsgController {
         return tempBullet;
     }
 
-    public void getMsgClass(int msgType, DataInputStream inputStream) {
+    public void getMsgClass(int msgType, ObjectInputStream inputStream) {
         switch (msgType) {
             case Msg.DISTRIBUTION_OF_CAMP_MSG: {
                 DistributionCampMsg distributionCampMsg = new DistributionCampMsg();

@@ -40,33 +40,6 @@ public class SceneController {
     @FXML
     private TextField ServerPortText1;
 
-    private final Random randomNum = new Random(System.currentTimeMillis());
-    private Text notificationMidText;
-    private DataInputStream in;
-    private DataOutputStream out;
-//    private MsgController msgController;
-    private String campType;
-    private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
-    private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
-
-    private Creature selectOwnCampCreature;
-    PositionXY beginPosition = new PositionXY(0, 0);
-
-    ArrayList<Bullet> bulletList = new ArrayList<>();
-
-    @FXML
-    void gourdStartGameButton(ActionEvent event) {
-        //TODO 这里是从主屏幕进入本地游戏的接口，其他的函数能不动就不动，可以多加函数，如果多加了，尽量写一些标识符。
-        System.out.println("startGame");
-        ConnectScene.setVisible(false);
-        ConnectScene.setDisable(true);
-        fightScene.setVisible(true);
-        fightScene.setDisable(false);
-        mapPane.setVisible(true);
-        mapPane.setDisable(false);
-        new GameStart(gourdFamily, monsterFamily, this).startGame();
-    }
-
     @FXML
     void AboutUsMouseClickEvent(MouseEvent event) {
         System.out.println("about");

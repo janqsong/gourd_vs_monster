@@ -12,6 +12,7 @@ import org.checkerframework.checker.units.qual.C;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,7 @@ public class MsgController {
         return tempBuildBullets;
     }
 
-    public void getMsgClass(int msgType, DataInputStream inputStream) {
+    public void getMsgClass(int msgType, ObjectInputStream inputStream) {
         switch (msgType) {
             case Msg.POSITION_NOTIFY_MSG: {
                 PositionNotifyMsg positionNotifyMsg = new PositionNotifyMsg();

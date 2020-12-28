@@ -2,6 +2,8 @@ package com.sjq.gourd.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class GourdCamp extends Camp{
     PositionXY beginPosition = new PositionXY(0, 0);
 
     public GourdCamp(SceneController sceneController,
-                     DataInputStream in, DataOutputStream out) {
+                     ObjectInputStream in, ObjectOutputStream out) {
         super(sceneController, in, out);
         ArrayList<ImageView> gourdImageView = new ArrayList<>();
         ArrayList<ImageView> monsterImageView = new ArrayList<>();
@@ -52,9 +54,9 @@ public class GourdCamp extends Camp{
         }
         try {
             CreatureFactory gourdFactory = new CreatureFactory(Constant.CampType.GOURD, Constant.Direction.RIGHT,
-                    in, out, gourdImageView);
+                    gourdImageView);
             CreatureFactory monsterFactory = new CreatureFactory(Constant.CampType.MONSTER, Constant.Direction.LEFT,
-                    in, out, monsterImageView);
+                    monsterImageView);
 
             int id = CreatureId.MIN_GOURD_ID;
             while (gourdFactory.hasNext()) {

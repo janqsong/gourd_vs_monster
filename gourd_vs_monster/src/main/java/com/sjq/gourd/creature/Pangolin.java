@@ -10,8 +10,8 @@ import java.io.DataOutputStream;
 
 public class Pangolin extends Creature {
 
-    public Pangolin(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
-        super(in, out, Constant.CampType.GOURD, CreatureId.PANGOLIN_ID, CreatureId.PANGOLIN_NAME,
+    public Pangolin(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+        super(Constant.CampType.GOURD, CreatureId.PANGOLIN_ID, CreatureId.PANGOLIN_NAME,
                 3000, 100, 75, 60, 0.5, 10, 100.0,
                 faceDirection, 70.0, true, Constant.ClawType.FIRST_CLAW,
                 imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.PANGOLIN_ID),

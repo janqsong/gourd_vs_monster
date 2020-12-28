@@ -21,8 +21,8 @@ public class SnakeMonster extends Creature {
     private final double healthIncrement = 1000;
     private final double defenseIncrement = 30;
 
-    public SnakeMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
-        super(in, out, Constant.CampType.MONSTER, CreatureId.SNAKE_MONSTER_ID, CreatureId.SNAKE_MONSTER_NAME,
+    public SnakeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+        super(Constant.CampType.MONSTER, CreatureId.SNAKE_MONSTER_ID, CreatureId.SNAKE_MONSTER_NAME,
                 4000, 200, 120, 30, 0.7, 15, 500.0,
                 faceDirection, 100.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SNAKE_MONSTER_ID),

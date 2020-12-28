@@ -1,53 +1,51 @@
 package com.sjq.gourd.protocol;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
+
+class PositionNotify implements Serializable {
+    public String campType;
+    public int creatureId;
+    public double layoutX;
+    public double layoutY;
+}
 
 public class PositionNotifyMsg implements Msg{
     private static final int msgType = Msg.POSITION_NOTIFY_MSG;
-    private String campType;
-    private int creatureId;
-    private double layoutX;
-    private double layoutY;
+    PositionNotify positionNotify = new PositionNotify();
 
     public PositionNotifyMsg() {
     }
 
     public PositionNotifyMsg(String campType, int creatureId,
                              double layoutX, double layoutY) {
-        this.campType = campType;
-        this.creatureId = creatureId;
-        this.layoutX = layoutX;
-        this.layoutY = layoutY;
+        positionNotify.campType = campType;
+        positionNotify.creatureId = creatureId;
+        positionNotify.layoutX = layoutX;
+        positionNotify.layoutY = layoutY;
     }
 
     @Override
-    public void sendMsg(DataOutputStream outStream) {
+    public void sendMsg(ObjectOutputStream outStream) {
         try {
             outStream.writeInt(msgType);
-            outStream.writeUTF(campType);
-            outStream.writeInt(creatureId);
-            outStream.writeDouble(layoutX);
-            outStream.writeDouble(layoutY);
+            outStream.writeObject(positionNotify);
+            outStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void parseMsg(DataInputStream inStream) {
+    public void parseMsg(ObjectInputStream inStream) {
         try {
-            campType = inStream.readUTF();
-            creatureId = inStream.readInt();
-            layoutX = inStream.readDouble();
-            layoutY = inStream.readDouble();
+            positionNotify = (PositionNotify) inStream.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getCampType() {return campType;}
-    public int getCreatureId() {return creatureId;}
-    public double getLayoutX() {return layoutX;}
-    public double getLayoutY() {return layoutY;}
+    public String getCampType() {return positionNotify.campType;}
+    public int getCreatureId() {return positionNotify.creatureId;}
+    public double getLayoutX() {return positionNotify.layoutX;}
+    public double getLayoutY() {return positionNotify.layoutY;}
 }

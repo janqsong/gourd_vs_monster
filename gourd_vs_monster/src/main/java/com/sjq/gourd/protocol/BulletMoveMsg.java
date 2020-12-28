@@ -2,93 +2,75 @@ package com.sjq.gourd.protocol;
 
 import com.sjq.gourd.log.MyLogger;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
+
+class BulletMove implements Serializable {
+    public String senderName;
+    public String receiverName;
+    public int bulletKey;
+    public double layoutX;
+    public double layoutY;
+    public boolean valid;
+}
 
 public class BulletMoveMsg implements Msg {
     private static final int msgType = Msg.BULLET_MOVE_MSG;
-    private String senderName;
-    private String receiverName;
-    private int bulletKey;
-    private double layoutX;
-    private double layoutY;
-    private boolean valid;
+    BulletMove bulletMove = new BulletMove();
 
     public BulletMoveMsg() {
     }
 
     public BulletMoveMsg(String senderName, String receiverName, int bulletKey,
                          double layoutX, double layoutY, boolean valid) {
-        this.senderName = senderName;
-        this.receiverName = receiverName;
-        this.bulletKey = bulletKey;
-        this.layoutX = layoutX;
-        this.layoutY = layoutY;
-        this.valid = valid;
+        bulletMove.senderName = senderName;
+        bulletMove.receiverName = receiverName;
+        bulletMove.bulletKey = bulletKey;
+        bulletMove.layoutX = layoutX;
+        bulletMove.layoutY = layoutY;
+        bulletMove.valid = valid;
     }
 
     @Override
-    public void sendMsg(DataOutputStream outStream) {
+    public void sendMsg(ObjectOutputStream outStream) {
         try {
             outStream.writeInt(msgType);
-            outStream.writeUTF(senderName);
-            outStream.writeUTF(receiverName);
-            outStream.writeInt(bulletKey);
-            outStream.writeDouble(layoutX);
-            outStream.writeDouble(layoutY);
-            outStream.writeBoolean(valid);
-//            MyLogger.log.info("senderName: " + senderName + " " +
-//                    "receiverName: " + receiverName + " " +
-//                    "bulletKey: " + bulletKey + " " +
-//                    "layoutX: " + layoutX + " " +
-//                    "layoutY: " + layoutY + " " +
-//                    "valid: " + valid);
+            outStream.writeObject(bulletMove);
+            outStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void parseMsg(DataInputStream inStream) {
+    public void parseMsg(ObjectInputStream inStream) {
         try {
-            senderName = inStream.readUTF();
-            receiverName = inStream.readUTF();
-            bulletKey = inStream.readInt();
-            layoutX = inStream.readDouble();
-            layoutY = inStream.readDouble();
-            valid = inStream.readBoolean();
-//            MyLogger.log.info("senderName: " + senderName + " " +
-//                    "receiverName: " + receiverName + " " +
-//                    "bulletKey: " + bulletKey + " " +
-//                    "layoutX: " + layoutX + " " +
-//                    "layoutY: " + layoutY + " " +
-//                    "valid: " + valid);
+            bulletMove = (BulletMove) inStream.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public String getSenderName() {
-        return senderName;
+        return bulletMove.senderName;
     }
 
     public String getReceiverName() {
-        return receiverName;
+        return bulletMove.receiverName;
     }
 
     public int getBulletKey() {
-        return bulletKey;
+        return bulletMove.bulletKey;
     }
 
     public double getLayoutX() {
-        return layoutX;
+        return bulletMove.layoutX;
     }
 
     public double getLayoutY() {
-        return layoutY;
+        return bulletMove.layoutY;
     }
 
     public boolean isValid() {
-        return valid;
+        return bulletMove.valid;
     }
 }

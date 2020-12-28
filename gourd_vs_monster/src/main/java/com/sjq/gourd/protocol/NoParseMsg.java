@@ -2,6 +2,8 @@ package com.sjq.gourd.protocol;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class NoParseMsg implements Msg{
     private final int msgType;
@@ -11,14 +13,15 @@ public class NoParseMsg implements Msg{
     }
 
     @Override
-    public void sendMsg(DataOutputStream outStream) {
+    public void sendMsg(ObjectOutputStream outStream) {
         try {
             outStream.writeInt(msgType);
+            outStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     @Override
-    public void parseMsg(DataInputStream inStream) {
+    public void parseMsg(ObjectInputStream inStream) {
     }
 }

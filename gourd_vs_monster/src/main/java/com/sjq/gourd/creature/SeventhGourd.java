@@ -17,8 +17,8 @@ public class SeventhGourd extends Creature {
     private long gap = 5000;
     private final double shootRangeIncrement = 400.0;
 
-    public SeventhGourd(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
-        super(in, out, Constant.CampType.GOURD, CreatureId.SEVENTH_GOURD_ID, CreatureId.SEVENTH_GOURD_NAME,
+    public SeventhGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+        super(Constant.CampType.GOURD, CreatureId.SEVENTH_GOURD_ID, CreatureId.SEVENTH_GOURD_NAME,
                 2500, 100, 80, 20, 0.9, 15, 600.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.SEVENTH_GOURD_ID),

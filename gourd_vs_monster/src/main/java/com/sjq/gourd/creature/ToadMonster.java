@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class ToadMonster extends Creature {
     Creature[] creatures = new Creature[4];
 
-    public ToadMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
-        super(in, out, Constant.CampType.MONSTER, CreatureId.MONSTER4_ID, CreatureId.MONSTER4_NAME,
+    public ToadMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+        super(Constant.CampType.MONSTER, CreatureId.MONSTER4_ID, CreatureId.MONSTER4_NAME,
                 3500, 100, 75, 40, 0.5, 10, 500.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.MONSTER4_ID),

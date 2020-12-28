@@ -36,8 +36,8 @@ public class Camp {
     protected HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
 
     protected SceneController sceneController;
-    protected DataInputStream in;
-    protected DataOutputStream out;
+    protected ObjectInputStream in;
+    protected ObjectOutputStream out;
 
     protected EquipmentFactory equipmentFactory = null;
     MsgController msgController = null;
@@ -45,7 +45,7 @@ public class Camp {
     protected final Random randomNum = new Random(System.currentTimeMillis());
 
     public Camp(SceneController sceneController,
-                DataInputStream in, DataOutputStream out) {
+                ObjectInputStream in, ObjectOutputStream out) {
         this.sceneController = sceneController;
         this.in = in;
         this.out = out;

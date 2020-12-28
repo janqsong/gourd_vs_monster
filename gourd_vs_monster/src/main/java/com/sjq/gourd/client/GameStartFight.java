@@ -18,16 +18,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameStartFight {
     private SceneController sceneController = null;
-    private DataInputStream in = null;
-    private DataOutputStream out = null;
+    private ObjectInputStream in = null;
+    private ObjectOutputStream out = null;
     private String campType = "";
     private HashMap<Integer, Creature> myFamily = null;
     private HashMap<Integer, Creature> enemyFamily = null;
@@ -46,7 +44,7 @@ public class GameStartFight {
 
 
     public GameStartFight(String campType, SceneController sceneController,
-                          DataInputStream in, DataOutputStream out,
+                          ObjectInputStream in, ObjectOutputStream out,
                           HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily,
                           EquipmentFactory equipmentFactory) {
         this.campType = campType;

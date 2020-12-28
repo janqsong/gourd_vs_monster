@@ -4,17 +4,15 @@ import java.net.*;
 import java.io.*;
 
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.equipment.TreasureBag;
 import com.sjq.gourd.protocol.*;
-import javafx.application.Application;
 
 public class SocketController {
     private Socket socketPlayerGourd;
     private Socket socketPlayerMonster;
-    private DataInputStream inGourd;
-    private DataOutputStream outGourd;
-    private DataInputStream inMonster;
-    private DataOutputStream outMonster;
+    private ObjectInputStream inGourd;
+    private ObjectOutputStream outGourd;
+    private ObjectInputStream inMonster;
+    private ObjectOutputStream outMonster;
 
     boolean gourdFinishFlag = false;
     boolean monsterFinishFlag = false;
@@ -25,8 +23,9 @@ public class SocketController {
     public void addGourdPlayer(Socket socket) {
         socketPlayerGourd = socket;
         try {
-            inGourd = new DataInputStream(socketPlayerGourd.getInputStream());
-            outGourd = new DataOutputStream(socketPlayerGourd.getOutputStream());
+            System.out.println("分配葫芦娃" + socketPlayerGourd);
+            outGourd = new ObjectOutputStream(socketPlayerGourd.getOutputStream());
+            inGourd = new ObjectInputStream(socketPlayerGourd.getInputStream());
             new DistributionCampMsg(Constant.CampType.GOURD).sendMsg(outGourd);
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,8 +35,8 @@ public class SocketController {
     public void addMonsterPlayer(Socket socket) {
         socketPlayerMonster = socket;
         try {
-            inMonster = new DataInputStream(socketPlayerMonster.getInputStream());
-            outMonster = new DataOutputStream(socketPlayerMonster.getOutputStream());
+            outMonster = new ObjectOutputStream(socketPlayerMonster.getOutputStream());
+            inMonster = new ObjectInputStream(socketPlayerMonster.getInputStream());
             new DistributionCampMsg(Constant.CampType.MONSTER).sendMsg(outMonster);
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,6 +45,7 @@ public class SocketController {
 
 
     public void prepareFight(){
+        System.out.println("prepareFight");
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outMonster);
         new Thread(new Runnable() {

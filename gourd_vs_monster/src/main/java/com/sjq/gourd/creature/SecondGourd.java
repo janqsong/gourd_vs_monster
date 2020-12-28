@@ -18,8 +18,8 @@ public class SecondGourd extends Creature {
     private long gap = 5000; //ms
     private long lastQActionMillis = 0;
 
-    public SecondGourd(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
-        super(in, out, Constant.CampType.GOURD, CreatureId.SECOND_GOURD_ID, CreatureId.SECOND_GOURD_NAME,
+    public SecondGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+        super(Constant.CampType.GOURD, CreatureId.SECOND_GOURD_ID, CreatureId.SECOND_GOURD_NAME,
                 2500, 150, 80, 30, 0.5, 10, 400.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.SECOND_GOURD_ID),

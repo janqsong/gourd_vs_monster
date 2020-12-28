@@ -25,8 +25,8 @@ public class ScorpionMonster extends Creature {
     private final double healthIncrement = 1000;
     private Creature[] creatures = new Creature[3];
 
-    public ScorpionMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
-        super(in, out, Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
+    public ScorpionMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+        super(Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
                 10000, 100, 150, 55, 0.5, 8, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SCORPION_MONSTER_ID),

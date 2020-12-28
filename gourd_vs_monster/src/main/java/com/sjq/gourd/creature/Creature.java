@@ -20,9 +20,6 @@ public class Creature {
     protected HashMap<Integer, Creature> enemyFamily;
     protected HashMap<Integer, Creature> myFamily;
 
-    protected DataInputStream inputStream;
-    protected DataOutputStream outputStream;
-
     //campType表示阵营,Constant中有阵营信息
     //creatureId表示生物id,Constant中有每个生物的id
     //creatureName表示生物名字
@@ -106,15 +103,12 @@ public class Creature {
     protected boolean eFlag = false;
     protected boolean rFlag = false;
 
-    public Creature(DataInputStream in, DataOutputStream out,
-                    String campType, int creatureId, String creatureName,
+    public Creature(String campType, int creatureId, String creatureName,
                     double baseHealth, double baseMagic, double baseAttack, double baseDefense, double baseAttackSpeed,
                     double baseMoveSpeed, double shootRange, int faceDirection, double width, boolean isCloseAttack, int clawType,
                     ImageView imageView, ImageView closeAttackImageView,
                     Image creatureLeftImage, Image selectCreatureLeftImage,
                     Image creatureRightImage, Image selectCreatureRightImage) {
-        this.inputStream = in;
-        this.outputStream = out;
         this.campType = campType;
         this.creatureId = creatureId;
         this.creatureName = creatureName;
@@ -478,7 +472,7 @@ public class Creature {
         return bullets;
     }
 
-    public void sendAllAttribute(DataOutputStream out) {
+    public void sendAllAttribute(ObjectOutputStream out) {
         new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(), direction,
                 currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(out);
         //new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);

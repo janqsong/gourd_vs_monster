@@ -2,6 +2,8 @@ package com.sjq.gourd.protocol;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public interface Msg {
     // 负责传位置信息
@@ -29,6 +31,6 @@ public interface Msg {
     // 近战子弹协议
     public static final int BULLET_CLOSE_ATTACK_MSG = 12;
 
-    public void sendMsg(DataOutputStream outStream);
-    public void parseMsg(DataInputStream inStream);
+    public void sendMsg(ObjectOutputStream outStream);
+    public void parseMsg(ObjectInputStream inStream);
 }
