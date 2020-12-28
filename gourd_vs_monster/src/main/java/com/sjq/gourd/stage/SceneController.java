@@ -462,4 +462,8 @@ public class SceneController {
     public Pane getMapPane() {
         return mapPane;
     }
+
+    public Pane getFightScene() {
+        return fightScene;
+    }
 }

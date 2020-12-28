@@ -736,4 +736,19 @@ public class Creature {
         }
         return bullet;
     }
+
+    public String showMessage() {
+        String message = "";
+        message += "生命值: " + (int) currentHealth + "/" + (int) baseHealth + "\n";
+        message += "魔法值: " + (int) currentMagic + "/" + (int) baseMagic + "\n";
+        message += "攻击力: " + (int) currentAttack + "/" + (int) baseAttack + "\n";
+        message += "防御力: " + (int) currentDefense + "/" + (int) baseDefense + "\n";
+        message += "攻速: " + String.format("%.2f", currentAttackSpeed) + "/" + String.format("%.2f", baseAttackSpeed) + "\n";
+        message += "移速: " + (int) currentMoveSpeed + "/" + (int) baseMoveSpeed + "\n";
+        message += "攻击范围: " + (int) shootRange + "\n";
+        if (equipment != null)
+            message += "装备: " + equipment.getName();
+        return message;
+    }
+
 }

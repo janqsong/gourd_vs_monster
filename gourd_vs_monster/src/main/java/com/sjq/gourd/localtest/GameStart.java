@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -44,6 +45,11 @@ public class GameStart {
 
     private boolean flag = false;
 
+    private final ImageView myCreatureImageView = new ImageView();
+    private final ImageView enemyCreatureImageView = new ImageView();
+    private final Text myCreatureText = new Text();
+    private final Text enemyCreatureText = new Text();
+
     public GameStart(HashMap<Integer, Creature> gourdFamily,
                      HashMap<Integer, Creature> monsterFamily,
                      SceneController sceneController) {
@@ -52,6 +58,27 @@ public class GameStart {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
         this.sceneController = sceneController;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sceneController.getFightScene().getChildren().add(myCreatureImageView);
+                sceneController.getFightScene().getChildren().add(enemyCreatureImageView);
+                sceneController.getFightScene().getChildren().add(myCreatureText);
+                sceneController.getFightScene().getChildren().add(enemyCreatureText);
+                myCreatureImageView.setVisible(false);
+                myCreatureImageView.setDisable(true);
+                myCreatureImageView.setPreserveRatio(true);
+                myCreatureImageView.setFitWidth(80);
+                myCreatureImageView.setLayoutX(5);
+                myCreatureImageView.setLayoutY(20);
+                enemyCreatureImageView.setVisible(false);
+                enemyCreatureImageView.setDisable(true);
+                enemyCreatureImageView.setPreserveRatio(true);
+                enemyCreatureImageView.setFitWidth(80);
+                myCreatureText.setVisible(false);
+                enemyCreatureText.setVisible(false);
+            }
+        });
     }
 
     public void startGame() {
@@ -186,13 +213,74 @@ public class GameStart {
             }
         }
 
-        if (camp == Constant.CampType.GOURD)
+        if (camp.equals(Constant.CampType.GOURD))
             myGameStart(camp, gourdFamily, monsterFamily);
         else
             myGameStart(camp, monsterFamily, gourdFamily);
     }
 
     public void myGameStart(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (myCreature == null || !myCreature.isAlive()) {
+                                myCreatureImageView.setVisible(false);
+                                myCreatureImageView.setDisable(true);
+                                myCreatureText.setVisible(false);
+                            } else {
+                                myCreatureImageView.setVisible(true);
+                                myCreatureImageView.setDisable(false);
+                                int id = myCreature.getCreatureId();
+                                if (camp.equals(Constant.CampType.GOURD)) {
+                                    myCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id));
+                                } else
+                                    myCreatureImageView.setImage(ImageUrl.monsterLeftImageMap.get(id));
+                                myCreatureText.setText(myCreature.showMessage());
+                                myCreatureText.setLayoutX(5);
+                                myCreatureText.setLayoutY(20 + myCreatureImageView.getBoundsInLocal().getMaxY() + 20);
+                                myCreatureText.setVisible(true);
+                                if (enemyCreature == null || !enemyCreature.isAlive()) {
+                                    enemyCreatureImageView.setVisible(false);
+                                    enemyCreatureImageView.setDisable(true);
+                                    enemyCreatureText.setVisible(false);
+                                } else {
+                                    enemyCreatureImageView.setVisible(true);
+                                    enemyCreatureImageView.setDisable(false);
+                                    enemyCreatureImageView.setLayoutX(5);
+                                    enemyCreatureImageView.setLayoutY(20 + myCreatureImageView.getBoundsInLocal().getMaxY()
+                                            + 20 + myCreatureText.getBoundsInLocal().getMaxY() + 20);
+                                    int id0 = enemyCreature.getCreatureId();
+                                    if (camp.equals(Constant.CampType.GOURD)) {
+                                        if (myCreature.getCreatureId() == CreatureId.GRANDPA_ID)
+                                            enemyCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id0));
+                                        else
+                                            enemyCreatureImageView.setImage(ImageUrl.monsterLeftImageMap.get(id0));
+                                    } else
+                                        enemyCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id0));
+                                    enemyCreatureText.setText(enemyCreature.showMessage());
+                                    enemyCreatureText.setLayoutX(5);
+                                    enemyCreatureText.setLayoutY(20 + myCreatureImageView.getBoundsInLocal().getMaxY()
+                                            + 20 + myCreatureText.getBoundsInLocal().getMaxY() + 20 +
+                                            enemyCreatureImageView.getBoundsInLocal().getMaxY() + 20);
+                                    enemyCreatureText.setVisible(true);
+                                }
+                            }
+                        }
+                    });
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
         System.out.println(camp);
         int idOffset = 0;
         if (!camp.equals(Constant.CampType.GOURD))
@@ -221,21 +309,21 @@ public class GameStart {
                 @Override
                 public void handle(MouseEvent event) {
                     System.out.println("clickMine");
-                    if (enemyCreature != creature) {
+                    if (enemyCreature != creature && myCreature != null && myCreature.isAlive()
+                            && myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
                         enemyCreature = creature;
-                        if (myCreature != null && myCreature.isAlive() && myCreature.getCreatureId() == CreatureId.GRANDPA_ID)
-                            myCreature.setPlayerAttackTarget(enemyCreature);
+                        myCreature.setPlayerAttackTarget(enemyCreature);
                     }
-                    if (myCreature == null || !myCreature.isAlive()) {
-                        myCreature = creature;
-                        myCreature.flipControlled();
-                    } else if (myCreature != creature) {
-                        myCreature.flipControlled();
-                        myCreature = creature;
-                        myCreature.flipControlled();
-                    } else if (!myCreature.isControlled()) {
-                        myCreature.flipControlled();
-                    }
+//                    if (myCreature == null || !myCreature.isAlive()) {
+//                        myCreature = creature;
+//                        myCreature.flipControlled();
+//                    } else if (myCreature != creature) {
+//                        myCreature.flipControlled();
+//                        myCreature = creature;
+//                        myCreature.flipControlled();
+//                    } else if (!myCreature.isControlled()) {
+//                        myCreature.flipControlled();
+//                    }
                 }
             });
         }
@@ -245,10 +333,10 @@ public class GameStart {
                 @Override
                 public void handle(MouseEvent event) {
                     System.out.println("clickHis");
-                    if (enemyCreature != creature) {
+                    if (enemyCreature != creature && myCreature != null && myCreature.isAlive()
+                            && myCreature.getCreatureId() != CreatureId.GRANDPA_ID) {
                         enemyCreature = creature;
-                        if (myCreature != null && myCreature.isAlive())
-                            myCreature.setPlayerAttackTarget(enemyCreature);
+                        myCreature.setPlayerAttackTarget(enemyCreature);
                     }
                 }
             });
@@ -308,6 +396,7 @@ public class GameStart {
                                 if (!creature.isControlled())
                                     creature.flipControlled();
                                 myCreature = creature;
+                                enemyCreature = null;
                             }
                         }
                     }
