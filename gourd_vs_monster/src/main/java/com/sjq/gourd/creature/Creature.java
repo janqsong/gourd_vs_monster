@@ -3,12 +3,15 @@ package com.sjq.gourd.creature;
 import com.sjq.gourd.ai.AiInterface;
 import com.sjq.gourd.ai.FirstGenerationAi;
 import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
+import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.equipment.Equipment;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -629,13 +632,8 @@ public class Creature {
                 return null;
 
             setLastAttackTimeMillis(System.currentTimeMillis());
-            if (isCloseAttack()) {
-                return new Bullet(this, playerAttackTarget,
-                        new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
-            } else {
-                return new Bullet(this, playerAttackTarget,
-                        new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
-            }
+            Bullet bullet = selectBullet(playerAttackTarget);
+            return bullet;
         }
         return null;
     }
@@ -721,5 +719,21 @@ public class Creature {
 
     public Equipment getEquipment() {
         return equipment;
+    }
+
+    private Bullet selectBullet(Creature target) {
+        Bullet bullet = null;
+        if (isCloseAttack())
+            bullet = new Bullet(this, target, getCenterPos());
+        else {
+            if (getCreatureId() == CreatureId.GRANDPA_ID) {
+                bullet = new Bullet(this, target, 5, Color.GREEN, BulletState.THE_GOD_OF_HEALING);
+            } else if (getCampType().equals(Constant.CampType.MONSTER) && getEquipment() != null && getEquipment().getName().equals("magicMirror")) {
+                bullet = new Bullet(this, target, 5, Color.YELLOW, BulletState.GAZE_OF_MAGIC_MIRROR);
+            } else {
+                bullet = new Bullet(this, target, getCenterPos(), null);
+            }
+        }
+        return bullet;
     }
 }
