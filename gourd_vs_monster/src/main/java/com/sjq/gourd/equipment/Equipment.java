@@ -35,6 +35,8 @@ public abstract class Equipment {
         this.imageView.setFitHeight(height);
     }
 
+
+
     public void draw() {
         if (isFree) {
             imageView.setLayoutX(imagePosition.getLayoutX());

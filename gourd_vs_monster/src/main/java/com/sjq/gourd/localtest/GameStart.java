@@ -12,7 +12,10 @@ import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.stage.SceneController;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -20,6 +23,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,6 +52,7 @@ public class GameStart {
     private Creature enemyCreature = null;
 
     private boolean flag = false;
+    private Text winText = new Text();
 
     private final ImageView myCreatureImageView = new ImageView();
     private final ImageView enemyCreatureImageView = new ImageView();
@@ -81,6 +86,13 @@ public class GameStart {
                 enemyCreatureImageView.setFitWidth(80);
                 myCreatureText.setVisible(false);
                 enemyCreatureText.setVisible(false);
+
+                sceneController.getMapPane().getChildren().add(winText);
+                winText.setVisible(false);
+                winText.setLayoutX(570);
+                winText.setLayoutY(330);
+                winText.setWrappingWidth(60);
+                winText.setTextAlignment(TextAlignment.CENTER);
             }
         });
     }
@@ -217,13 +229,56 @@ public class GameStart {
             }
         }
 
-        logger.debug("开始第一场游戏,我方:" + camp);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Button button = new Button();
+                button.setLayoutX(5);
+                button.setLayoutY(700);
+                button.setPrefHeight(30);
+                button.setPrefWidth(60);
+                button.setText("退出");
+                sceneController.getFightScene().getChildren().add(button);
+                button.setOnAction(e -> Platform.exit());
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (judgeWin[0] != 3) {
+                        String string = "获胜方是: ";
+                        if (judgeWin[0] == -1)
+                            string += "妖精";
+                        else if (judgeWin[0] == 1)
+                            string += "葫芦娃";
+                        else if (judgeWin[0] == 0)
+                            string = "平局";
+                        String finalString = string;
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                winText.setText(finalString);
+                                winText.setVisible(true);
+                            }
+                        });
+                    }
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+//        logger.debug("开始第1场游戏");
         if (camp.equals(Constant.CampType.GOURD)) {
             myGameStart(camp, gourdFamily, monsterFamily);
-            testWinRate(camp, gourdFamily, monsterFamily);
+            //testWinRate(camp, gourdFamily, monsterFamily);
         } else {
             myGameStart(camp, monsterFamily, gourdFamily);
-            testWinRate(camp, monsterFamily, gourdFamily);
+            //testWinRate(camp, monsterFamily, gourdFamily);
         }
     }
 
@@ -240,7 +295,6 @@ public class GameStart {
             public void run() {
                 while (true) {
                     if (judgeWin[0] != 3) {
-                        System.out.println("judgeWin:" + judgeWin[0]);
                         count++;
                         if (judgeWin[0] == -1) {
                             monsterWin++;
@@ -256,7 +310,6 @@ public class GameStart {
                                     "  葫芦娃胜率" + String.format("%.4f", gourdWin / (double) count));
                         }
                         judgeWin[0] = 3;
-                        System.out.println(count + " " + judgeWin[0]);
                         for (Creature creature : myFamily.values()) {
                             creature.setCurrentHealth(creature.getBaseHealth());
                             creature.setCurrentMagic(0);
@@ -274,7 +327,7 @@ public class GameStart {
                             creature.setCurrentAttackSpeed(creature.getBaseAttackSpeed());
                         }
 
-                        logger.debug("开始第" + (count + 1) + "场游戏,我方:" + myCamp);
+                        logger.debug("开始第" + (count + 1) + "场游戏");
                         myGameStart(myCamp, myFamily, enemyFamily);
                     }
                     try {
@@ -288,7 +341,7 @@ public class GameStart {
     }
 
     public void myGameStart(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
-//        init(camp, myFamily, enemyFamily);//鼠标键盘交互逻辑
+        init(camp, myFamily, enemyFamily);//鼠标键盘交互逻辑
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -351,24 +404,24 @@ public class GameStart {
                                     }
                                 }
                                 //todo Equipment逻辑
-//                                if (equipmentFactory.hasNext()) {
-//                                    Equipment equipment = equipmentFactory.next();
-//                                    if (equipment != null)
-//                                        equipmentList.add(equipment);
-//                                }
-//                                if (myCreature != null && myCreature.isAlive()) {
-//                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
-//                                    while (equipmentIterator.hasNext()) {
-//                                        Equipment equipment = equipmentIterator.next();
-//                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
-//                                            myCreature.pickUpEquipment(equipment);
-//                                            equipmentIterator.remove();
-//                                        }
-//                                    }
-//                                }
-//                                for (Equipment equipment : equipmentList) {
-//                                    equipment.draw();
-//                                }
+                                if (equipmentFactory.hasNext()) {
+                                    Equipment equipment = equipmentFactory.next();
+                                    if (equipment != null)
+                                        equipmentList.add(equipment);
+                                }
+                                if (myCreature != null && myCreature.isAlive()) {
+                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
+                                    while (equipmentIterator.hasNext()) {
+                                        Equipment equipment = equipmentIterator.next();
+                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
+                                            myCreature.pickUpEquipment(equipment);
+                                            equipmentIterator.remove();
+                                        }
+                                    }
+                                }
+                                for (Equipment equipment : equipmentList) {
+                                    equipment.draw();
+                                }
                             }
                         });
                         //flag=!flag;
@@ -481,7 +534,7 @@ public class GameStart {
             }
         }).start();
 
-        System.out.println(camp);
+
         int idOffset = 0;
         if (!camp.equals(Constant.CampType.GOURD))
             idOffset = CreatureId.MIN_MONSTER_ID;
@@ -508,7 +561,7 @@ public class GameStart {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    System.out.println("clickMine");
+
                     if (enemyCreature != creature && myCreature != null && myCreature.isAlive()
                             && myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
                         enemyCreature = creature;
@@ -532,7 +585,7 @@ public class GameStart {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    System.out.println("clickHis");
+
                     if (enemyCreature != creature && myCreature != null && myCreature.isAlive()
                             && myCreature.getCreatureId() != CreatureId.GRANDPA_ID) {
                         enemyCreature = creature;

@@ -42,9 +42,10 @@ public class Collision {
             damage = 1;
         damage = (double) Math.round(damage);
         targetCreature.setCurrentHealth(targetHealth - damage);
-        sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
         bullet.setValid(false);
         bullet.setVisible(false);
+        if (bullet.getBulletState() == BulletState.NONE)
+            sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
 
         if (bullet.getBulletState() == BulletState.THE_HEART_OF_ICE) {
             targetCreature.addState(new CreatureStateWithClock(CreatureState.FROZEN, 2000));
