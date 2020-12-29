@@ -102,7 +102,7 @@ public class SnakeMonster extends Creature {
     public void eAction() {
         //复活之术,如果己方有妖精已经死掉了,复活一只妖精,优先复活蝎子精,蝎子精复活只有1/2基础血量,其他复活满血
         //如果没怪死,这个技能仍旧扣蓝量,属于误操作,相当于空大
-        if (currentMagic < baseMagic)
+        if (currentMagic < baseMagic && !canEAction())
             return;
         currentMagic = 0;
         inEAction = true;
@@ -142,5 +142,14 @@ public class SnakeMonster extends Creature {
     private void disposeRAction() {
         setCurrentDefense(currentDefense - defenseIncrement);
         inRAction = false;
+    }
+
+    private boolean canEAction() {
+        //将蛇精的E技能设置一个门
+        for (Creature creature : myFamily.values()) {
+            if (this.getCreatureId() != creature.getCreatureId() && !creature.isAlive())
+                return true;
+        }
+        return false;
     }
 }

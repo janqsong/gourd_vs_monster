@@ -109,6 +109,7 @@ public class Creature {
     protected boolean eFlag = false;
     protected boolean rFlag = false;
 
+
     public Creature(DataInputStream in, DataOutputStream out,
                     String campType, int creatureId, String creatureName,
                     double baseHealth, double baseMagic, double baseAttack, double baseDefense, double baseAttackSpeed,
@@ -776,4 +777,19 @@ public class Creature {
         return message.toString();
     }
 
+    public double getBaseDefense() {
+        return baseDefense;
+    }
+
+    public double getBaseAttack() {
+        return baseAttack;
+    }
+
+    public double getBaseMagic() {
+        return baseMagic;
+    }
+
+    public double getBaseMoveSpeed() {
+        return baseMoveSpeed;
+    }
 }
