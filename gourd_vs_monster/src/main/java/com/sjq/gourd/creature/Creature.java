@@ -109,6 +109,7 @@ public class Creature {
     protected boolean eFlag = false;
     protected boolean rFlag = false;
 
+    private long lastRecoveryOfMagicTimeMillis = 0;
 
     public Creature(DataInputStream in, DataOutputStream out,
                     String campType, int creatureId, String creatureName,
@@ -234,6 +235,17 @@ public class Creature {
         if (!isAlive())
             return;
         setCreatureState();
+
+        //蓝量回复
+        long currentTime = System.currentTimeMillis();
+        //没秒(1000ms)钟恢复两点蓝量
+        long recoveryOfMagicTimeGap = 1000;
+        if (currentTime - lastRecoveryOfMagicTimeMillis > recoveryOfMagicTimeGap) {
+            setCurrentMagic(2 + currentMagic);
+            lastRecoveryOfMagicTimeMillis = currentTime;
+        }
+
+
         double speed = currentMoveSpeed;
         boolean notMoveFlag = false, speedCutFlag = false, speedAddFlag = false;
         Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();

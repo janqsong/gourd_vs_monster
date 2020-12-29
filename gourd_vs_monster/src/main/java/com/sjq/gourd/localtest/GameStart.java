@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.ChoiceFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -295,25 +297,38 @@ public class GameStart {
             int monsterWin = 0;
             int allWinAndLose = 0;//平局
             int count = 0;
+            double monsterRate = 0.0;
+            double gourdRate = 0.0;
+            double allLoseAndWinRate = 0.0;
+            NumberFormat numberFormat = NumberFormat.getPercentInstance();
 
             @Override
             public void run() {
                 while (true) {
                     if (judgeWin[0] != 3) {
+                        numberFormat.setMaximumFractionDigits(2);
                         count++;
                         if (judgeWin[0] == -1) {
                             monsterWin++;
-                            logger.debug("第" + count + "局,本局妖精获胜  " + "妖精总共获胜" + monsterWin + "局" +
-                                    "  妖精胜率" + String.format("%.4f", monsterWin / (double) count));
+                            monsterRate = monsterWin / (double) count;
+                            gourdRate = gourdWin / (double) count;
+                            allLoseAndWinRate = allWinAndLose / (double) count;
+                            logger.debug("第" + count + "局,本局妖精获胜  " + "妖精总共获胜" + monsterWin + "局");
                         } else if (judgeWin[0] == 0) {
                             allWinAndLose++;
-                            logger.debug("第" + count + "局,本局平局  " + "总共平局" + allWinAndLose + "局" +
-                                    "  双方平局率" + String.format("%.4f", allWinAndLose / (double) count));
+                            monsterRate = monsterWin / (double) count;
+                            gourdRate = gourdWin / (double) count;
+                            allLoseAndWinRate = allWinAndLose / (double) count;
+                            logger.debug("第" + count + "局,本局平局  " + "总共平局" + allWinAndLose + "局");
                         } else if (judgeWin[0] == 1) {
                             gourdWin++;
-                            logger.debug("第" + count + "局,本局葫芦娃获胜  " + "葫芦娃总共获胜" + gourdWin + "局" +
-                                    "  葫芦娃胜率" + String.format("%.4f", gourdWin / (double) count));
+                            monsterRate = monsterWin / (double) count;
+                            gourdRate = gourdWin / (double) count;
+                            allLoseAndWinRate = allWinAndLose / (double) count;
+                            logger.debug("第" + count + "局,本局葫芦娃获胜  " + "葫芦娃总共获胜" + gourdWin + "局");
                         }
+                        logger.debug("实时胜率 葫芦娃: " + numberFormat.format(gourdRate) + " 妖精: "
+                                + numberFormat.format(monsterRate) + " 平局: " + numberFormat.format(allLoseAndWinRate));
                         judgeWin[0] = 3;
                         for (Creature creature : myFamily.values()) {
                             creature.setCurrentHealth(creature.getBaseHealth());
