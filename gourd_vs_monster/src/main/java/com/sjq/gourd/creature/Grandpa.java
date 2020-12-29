@@ -55,6 +55,45 @@ public class Grandpa extends Creature {
         return bullets;
     }
 
+
+    //test
+    @Override
+    public ArrayList<Bullet> updateTest() {
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        if (!isControlled()) {
+            if (isAlive()) {
+                aiInterface.moveMod(this, myFamily);
+                draw();
+                Bullet bullet = aiInterface.aiAttack(this, myFamily);
+                if (bullet != null) {
+                    bullets.add(bullet);
+                }
+                if (qFlag && currentMagic >= baseMagic) {
+                    ArrayList<Bullet> bullets1 = qAction();
+                    currentMagic = 0;
+                    if (bullets1.size() > 0)
+                        bullets.addAll(bullets1);
+                }
+                qFlag = false;
+            } else {
+                draw();
+            }
+        } else {
+            draw();
+            Bullet bullet = playerAttack();
+            if (bullet != null)
+                bullets.add(bullet);
+            if (qFlag && currentMagic >= baseMagic) {
+                ArrayList<Bullet> bullets1 = qAction();
+                currentMagic = 0;
+                if (bullets1.size() > 0)
+                    bullets.addAll(bullets1);
+            }
+            qFlag = false;
+        }
+        return bullets;
+    }
+
     @Override
     protected Bullet playerAttack() {
         if (playerAttackTarget == null)

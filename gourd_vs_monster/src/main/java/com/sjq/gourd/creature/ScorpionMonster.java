@@ -78,6 +78,60 @@ public class ScorpionMonster extends Creature {
         return bullets;
     }
 
+    @Override
+    //test
+    public ArrayList<Bullet> updateTest() {
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        if (!isControlled()) {
+            if (isAlive()) {
+//                setCreatureState();这东西在move里更新就能保证
+                aiInterface.moveMod(this, enemyFamily);
+                draw();
+                Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
+                if (bullet != null)
+                    bullets.add(bullet);
+                if (qFlag && !inQAction) {
+                    ArrayList<Bullet> bullets1 = qAction();
+                    if (bullets1.size() > 0)
+                        bullets.addAll(bullets1);
+                }
+                qFlag = false;
+                if (eFlag && !inEAction) {
+                    eAction();
+                }
+                eFlag = false;
+                if (rFlag && !inRAction) {
+                    rAction();
+                }
+                rFlag = false;
+                updateActionState();
+            } else {
+                draw();
+            }
+        } else {
+            draw();
+            Bullet bullet = playerAttack();
+            if (bullet != null)
+                bullets.add(bullet);
+            if (qFlag && !inQAction) {
+                ArrayList<Bullet> bullets1 = qAction();
+                if (bullets1.size() > 0)
+                    bullets.addAll(bullets1);
+            }
+            qFlag = false;
+            if (eFlag && !inEAction) {
+                eAction();
+            }
+            eFlag = false;
+            if (rFlag && !inRAction) {
+                rAction();
+            }
+            rFlag = false;
+            updateActionState();
+        }
+        return bullets;
+    }
+
     private void updateActionState() {
         long sys = System.currentTimeMillis();
         if (inQAction && sys - lastQActionMillis > qGap)

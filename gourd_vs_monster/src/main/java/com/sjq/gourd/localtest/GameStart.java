@@ -272,13 +272,18 @@ public class GameStart {
                 }
             }
         }).start();
-//        logger.debug("开始第1场游戏");
+
+        logger.debug("测试条件:葫芦娃和妖精双方完全由ai控制,都会使用技能,都会拾取装备");
+
+        logger.debug("开始第1场游戏:");
         if (camp.equals(Constant.CampType.GOURD)) {
             myGameStart(camp, gourdFamily, monsterFamily);
-            //testWinRate(camp, gourdFamily, monsterFamily);
+            debugView(camp, gourdFamily, monsterFamily);
+            testWinRate(camp, gourdFamily, monsterFamily);
         } else {
             myGameStart(camp, monsterFamily, gourdFamily);
-            //testWinRate(camp, monsterFamily, gourdFamily);
+            debugView(camp, monsterFamily, gourdFamily);
+            testWinRate(camp, monsterFamily, gourdFamily);
         }
     }
 
@@ -317,6 +322,7 @@ public class GameStart {
                             creature.setCurrentAttack(creature.getBaseAttack());
                             creature.setCurrentMoveSpeed(creature.getBaseMoveSpeed());
                             creature.setCurrentAttackSpeed(creature.getBaseAttackSpeed());
+                            creature.giveUpEquipment();
                         }
                         for (Creature creature : enemyFamily.values()) {
                             creature.setCurrentHealth(creature.getBaseHealth());
@@ -325,9 +331,10 @@ public class GameStart {
                             creature.setCurrentAttack(creature.getBaseAttack());
                             creature.setCurrentMoveSpeed(creature.getBaseMoveSpeed());
                             creature.setCurrentAttackSpeed(creature.getBaseAttackSpeed());
+                            creature.giveUpEquipment();
                         }
 
-                        logger.debug("开始第" + (count + 1) + "场游戏");
+                        logger.debug("开始第" + (count + 1) + "场游戏:");
                         myGameStart(myCamp, myFamily, enemyFamily);
                     }
                     try {
@@ -341,7 +348,7 @@ public class GameStart {
     }
 
     public void myGameStart(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
-        init(camp, myFamily, enemyFamily);//鼠标键盘交互逻辑
+//        init(camp, myFamily, enemyFamily);//鼠标键盘交互逻辑
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -351,7 +358,19 @@ public class GameStart {
                             @Override
                             public void run() {
                                 for (Creature myMember : myFamily.values()) {
-                                    ArrayList<Bullet> tempBullet = myMember.update();
+                                    if (myMember.isAlive()) {
+                                        //10%几率按下某个技能
+                                        int rand = randomNum.nextInt(20);
+                                        if (rand == 0) {
+                                            myMember.setQFlag(true);
+                                        } else if (rand == 1)
+                                            myMember.setEFlag(true);
+                                        else if (rand == 2)
+                                            myMember.setRFlag(true);
+                                    }
+
+//                                    ArrayList<Bullet> tempBullet = myMember.update();
+                                    ArrayList<Bullet> tempBullet = myMember.updateTest();
                                     if (tempBullet.size() != 0) {
                                         bullets.addAll(tempBullet);
                                         Iterator<Bullet> bulletIterator = tempBullet.listIterator();
@@ -366,9 +385,33 @@ public class GameStart {
                                                 });
                                         }
                                     }
+
+                                    //ai也可以拾取装备
+                                    if (myMember.isAlive()) {
+                                        Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
+                                        while (equipmentIterator.hasNext()) {
+                                            Equipment equipment = equipmentIterator.next();
+                                            if (equipment.getImageView().getBoundsInParent().intersects(myMember.getCreatureImageView().getBoundsInParent())) {
+                                                myMember.pickUpEquipment(equipment);
+                                                equipmentIterator.remove();
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Creature enemyMember : enemyFamily.values()) {
-                                    ArrayList<Bullet> tempBullet = enemyMember.update();
+                                    if (enemyMember.isAlive()) {
+                                        //10%几率按下某个技能
+                                        int rand = randomNum.nextInt(10);
+                                        if (rand == 0)
+                                            enemyMember.setQFlag(true);
+                                        else if (rand == 1)
+                                            enemyMember.setEFlag(true);
+                                        else if (rand == 2)
+                                            enemyMember.setRFlag(true);
+                                    }
+
+//                                    ArrayList<Bullet> tempBullet = enemyMember.update();
+                                    ArrayList<Bullet> tempBullet = enemyMember.updateTest();
                                     if (tempBullet.size() != 0) {
                                         bullets.addAll(tempBullet);
                                         Iterator<Bullet> bulletIterator = tempBullet.listIterator();
@@ -381,6 +424,18 @@ public class GameStart {
                                                         sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
                                                     }
                                                 });
+                                        }
+                                    }
+
+                                    //ai也可以拾取装备
+                                    if (enemyMember.isAlive()) {
+                                        Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
+                                        while (equipmentIterator.hasNext()) {
+                                            Equipment equipment = equipmentIterator.next();
+                                            if (equipment.getImageView().getBoundsInParent().intersects(enemyMember.getCreatureImageView().getBoundsInParent())) {
+                                                enemyMember.pickUpEquipment(equipment);
+                                                equipmentIterator.remove();
+                                            }
                                         }
                                     }
                                 }
@@ -409,16 +464,16 @@ public class GameStart {
                                     if (equipment != null)
                                         equipmentList.add(equipment);
                                 }
-                                if (myCreature != null && myCreature.isAlive()) {
-                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
-                                    while (equipmentIterator.hasNext()) {
-                                        Equipment equipment = equipmentIterator.next();
-                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
-                                            myCreature.pickUpEquipment(equipment);
-                                            equipmentIterator.remove();
-                                        }
-                                    }
-                                }
+//                                if (myCreature != null && myCreature.isAlive()) {
+//                                    Iterator<Equipment> equipmentIterator = equipmentList.listIterator();
+//                                    while (equipmentIterator.hasNext()) {
+//                                        Equipment equipment = equipmentIterator.next();
+//                                        if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
+//                                            myCreature.pickUpEquipment(equipment);
+//                                            equipmentIterator.remove();
+//                                        }
+//                                    }
+//                                }
                                 for (Equipment equipment : equipmentList) {
                                     equipment.draw();
                                 }
@@ -683,6 +738,100 @@ public class GameStart {
             }
         });
 
+    }
+
+    public void debugView(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+        final Creature[] myCreature = {null};
+        final Creature[] enemyCreature = {null};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (myCreature[0] == null || !myCreature[0].isAlive()) {
+                                myCreatureImageView.setVisible(false);
+                                myCreatureImageView.setDisable(true);
+                                myCreatureText.setVisible(false);
+                                enemyCreatureImageView.setVisible(false);
+                                enemyCreatureImageView.setDisable(true);
+                                enemyCreatureText.setVisible(false);
+                            } else {
+                                myCreatureImageView.setVisible(true);
+                                myCreatureImageView.setDisable(false);
+                                int id = myCreature[0].getCreatureId();
+                                if (camp.equals(Constant.CampType.GOURD)) {
+                                    myCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id));
+                                } else
+                                    myCreatureImageView.setImage(ImageUrl.monsterLeftImageMap.get(id));
+                                myCreatureText.setText(myCreature[0].showMessage());
+                                myCreatureText.setLayoutX(5);
+                                myCreatureText.setLayoutY(20 + myCreatureImageView.getBoundsInLocal().getMaxY() + 20);
+                                myCreatureText.setVisible(true);
+                                if (enemyCreature[0] == null || !enemyCreature[0].isAlive()) {
+                                    enemyCreatureImageView.setVisible(false);
+                                    enemyCreatureImageView.setDisable(true);
+                                    enemyCreatureText.setVisible(false);
+                                } else {
+                                    enemyCreatureImageView.setVisible(true);
+                                    enemyCreatureImageView.setDisable(false);
+                                    enemyCreatureImageView.setLayoutX(5);
+                                    enemyCreatureImageView.setLayoutY(20 + myCreatureImageView.getBoundsInLocal().getMaxY()
+                                            + 20 + myCreatureText.getBoundsInLocal().getMaxY() + 20);
+                                    int id0 = enemyCreature[0].getCreatureId();
+                                    if (camp.equals(Constant.CampType.GOURD)) {
+                                        if (myCreature[0].getCreatureId() == CreatureId.GRANDPA_ID)
+                                            enemyCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id0));
+                                        else
+                                            enemyCreatureImageView.setImage(ImageUrl.monsterLeftImageMap.get(id0));
+                                    } else
+                                        enemyCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id0));
+                                    enemyCreatureText.setText(enemyCreature[0].showMessage());
+                                    enemyCreatureText.setLayoutX(5);
+                                    enemyCreatureText.setLayoutY(20 + myCreatureImageView.getBoundsInLocal().getMaxY()
+                                            + 20 + myCreatureText.getBoundsInLocal().getMaxY() + 20 +
+                                            enemyCreatureImageView.getBoundsInLocal().getMaxY() + 20);
+                                    enemyCreatureText.setVisible(true);
+                                }
+                            }
+                        }
+                    });
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    for (Creature creature : myFamily.values()) {
+                        if (creature.isAlive()) {
+                            myCreature[0] = creature;
+                            break;
+                        }
+                    }
+
+                    for (Creature creature : enemyFamily.values()) {
+                        if (creature.isAlive()) {
+                            enemyCreature[0] = creature;
+                            break;
+                        }
+                    }
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }
 

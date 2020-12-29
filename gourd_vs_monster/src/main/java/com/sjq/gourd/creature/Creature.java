@@ -456,6 +456,59 @@ public class Creature {
         return bullets;
     }
 
+    //测试ai自动按技能
+    public ArrayList<Bullet> updateTest() {
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        if (!isControlled()) {
+            if (isAlive()) {
+//                setCreatureState();这东西在move里更新就能保证
+                aiInterface.moveMod(this, enemyFamily);
+                draw();
+                Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
+                if (bullet != null)
+                    bullets.add(bullet);
+
+                if (qFlag) {
+                    ArrayList<Bullet> bullets1 = qAction();
+                    if (bullets1.size() > 0)
+                        bullets.addAll(bullets1);
+                    qFlag = false;
+                }
+                if (eFlag) {
+                    eAction();
+                    eFlag = false;
+                }
+                if (rFlag) {
+                    rAction();
+                    rFlag = false;
+                }
+            } else {
+                draw();
+            }
+        } else {
+            draw();
+            Bullet bullet = playerAttack();
+            if (bullet != null)
+                bullets.add(bullet);
+            if (qFlag) {
+                ArrayList<Bullet> bullets1 = qAction();
+                if (bullets1.size() > 0)
+                    bullets.addAll(bullets1);
+                qFlag = false;
+            }
+            if (eFlag) {
+                eAction();
+                eFlag = false;
+            }
+            if (rFlag) {
+                rAction();
+                rFlag = false;
+            }
+        }
+        return bullets;
+    }
+
+
     //翻转isControlled状态
     public void flipControlled() {
         isControlled = !isControlled;
@@ -597,7 +650,7 @@ public class Creature {
         equipment.takeEffect(this);
     }
 
-    private void giveUpEquipment() {
+    public void giveUpEquipment() {
         //舍弃原来的装备
         if (equipment != null) {
             equipment.giveUpTakeEffect(this);

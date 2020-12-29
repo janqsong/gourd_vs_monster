@@ -63,6 +63,44 @@ public class SeventhGourd extends Creature {
 
 
     @Override
+    //test
+    public ArrayList<Bullet> updateTest() {
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        if (!isControlled()) {
+            if (isAlive()) {
+//                setCreatureState();这东西在move里更新就能保证
+                aiInterface.moveMod(this, enemyFamily);
+                draw();
+                Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
+                if (bullet != null)
+                    bullets.add(bullet);
+                if (qFlag && !inQAction) {
+                    //保证两次技能不重叠
+                    qAction();
+                }
+                qFlag = false;
+                if (inQAction && System.currentTimeMillis() - lastQAction > gap)
+                    disposeQAction();
+            } else {
+                draw();
+            }
+        } else {
+            draw();
+            Bullet bullet = playerAttack();
+            if (bullet != null)
+                bullets.add(bullet);
+            if (qFlag && !inQAction) {
+                //保证两次技能不重叠
+                qAction();
+            }
+            qFlag = false;
+            if (inQAction && System.currentTimeMillis() - lastQAction > gap)
+                disposeQAction();
+        }
+        return bullets;
+    }
+
+    @Override
     public ArrayList<Bullet> qAction() {
         //看我法宝,攻速5s内攻速提升基础攻速的300%,射程提升400.0
         ArrayList<Bullet> bullets = new ArrayList<>();

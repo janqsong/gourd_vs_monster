@@ -62,6 +62,44 @@ public class SecondGourd extends Creature {
     }
 
     @Override
+    //葫芦娃自动技能Test
+    public ArrayList<Bullet> updateTest() {
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        if (!isControlled()) {
+            if (isAlive()) {
+//                setCreatureState();这东西在move里更新就能保证
+                aiInterface.moveMod(this, enemyFamily);
+                draw();
+                Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
+                if (bullet != null)
+                    bullets.add(bullet);
+                if (qFlag && !inQAction) {
+                    //保证两次技能不重叠
+                    qAction();
+                }
+                qFlag = false;
+                if (inQAction && (double) System.currentTimeMillis() - lastQActionMillis > 4 * gap)
+                    disposeQAction();
+            } else {
+                draw();
+            }
+        } else {
+            draw();
+            Bullet bullet = playerAttack();
+            if (bullet != null)
+                bullets.add(bullet);
+            if (qFlag && !inQAction) {
+                //保证两次技能不重叠
+                qAction();
+            }
+            qFlag = false;
+            if (inQAction && (double) System.currentTimeMillis() - lastQActionMillis > 4 * gap)
+                disposeQAction();
+        }
+        return bullets;
+    }
+
+    @Override
     public ArrayList<Bullet> qAction() {
         //老二的技能:兄弟们冲啊！给2.0倍攻速范围内所有友军增加振奋buff,20s内最多使用一次
         ArrayList<Bullet> bullets = new ArrayList<>();
