@@ -297,7 +297,8 @@ public class GameStartFight {
                         for(Map.Entry<Integer, PositionXY> entry : moveBullets.entrySet()) {
                             int key = entry.getKey();
                             PositionXY positionXY = entry.getValue();
-                            bullets.get(key).setImagePosition(positionXY.X, positionXY.Y);
+                            if(bullets.get(key) != null)
+                                bullets.get(key).setImagePosition(positionXY.X, positionXY.Y);
                         }
 
                         ArrayList<Integer> deleteBulletKeys = msgController.getDeleteBulletKeys();
