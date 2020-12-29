@@ -57,10 +57,10 @@ public class Collision {
 
 
         if (bullet.getBulletType() == Constant.CLOSE_BULLET_TYPE) {
-            if (sourceCreature.getClawType() != Constant.ClawType.NONE_CLAW && targetCreature.isAlive()) {
-                targetCreature.getCloseAttackImageView().setImage(ImageUrl.closeAttackImageMap.get(sourceCreature.getClawType()));
-                bullet.getTargetCreature().setLastCloseAttack(System.currentTimeMillis());
-            }
+//            if (sourceCreature.getClawType() != Constant.ClawType.NONE_CLAW && targetCreature.isAlive()) {
+//                targetCreature.getCloseAttackImageView().setImage(ImageUrl.closeAttackImageMap.get(sourceCreature.getClawType()));
+//                bullet.getTargetCreature().setLastCloseAttack(System.currentTimeMillis());
+//            }
         } else {
 
         }

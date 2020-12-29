@@ -5,12 +5,9 @@ import com.sjq.gourd.log.MyLogger;
 import java.io.*;
 
 class BulletMove implements Serializable {
-    public String senderName;
-    public String receiverName;
     public int bulletKey;
     public double layoutX;
     public double layoutY;
-    public boolean valid;
 }
 
 public class BulletMoveMsg implements Msg {
@@ -20,14 +17,10 @@ public class BulletMoveMsg implements Msg {
     public BulletMoveMsg() {
     }
 
-    public BulletMoveMsg(String senderName, String receiverName, int bulletKey,
-                         double layoutX, double layoutY, boolean valid) {
-        bulletMove.senderName = senderName;
-        bulletMove.receiverName = receiverName;
+    public BulletMoveMsg(int bulletKey, double layoutX, double layoutY) {
         bulletMove.bulletKey = bulletKey;
         bulletMove.layoutX = layoutX;
         bulletMove.layoutY = layoutY;
-        bulletMove.valid = valid;
     }
 
     @Override
@@ -50,14 +43,6 @@ public class BulletMoveMsg implements Msg {
         }
     }
 
-    public String getSenderName() {
-        return bulletMove.senderName;
-    }
-
-    public String getReceiverName() {
-        return bulletMove.receiverName;
-    }
-
     public int getBulletKey() {
         return bulletMove.bulletKey;
     }
@@ -68,9 +53,5 @@ public class BulletMoveMsg implements Msg {
 
     public double getLayoutY() {
         return bulletMove.layoutY;
-    }
-
-    public boolean isValid() {
-        return bulletMove.valid;
     }
 }

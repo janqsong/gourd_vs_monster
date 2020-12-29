@@ -3,6 +3,8 @@ package com.sjq.gourd.client;
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
+import com.sjq.gourd.constant.CreatureId;
+import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.log.MyLogger;
 import com.sjq.gourd.protocol.*;
@@ -169,9 +171,6 @@ public class MsgController {
                 else
                     targetCreature = monsterFamily.get(targetCreatureId);
                 Bullet tempBullet = new Bullet(sourceCreature, targetCreature, bulletType, BulletState.values()[bulletState]);
-//                System.out.println("receive bulletKey: " + bulletKey + " " +
-//                                                "sourceCreatureId: " + tempBullet.getSourceCreature().getCreatureId() + " " +
-//                                                "targetCreatureId: " + tempBullet.getTargetCreature().getCreatureId());
                 buildBullets.put(bulletKey, tempBullet);
                 break;
             }
@@ -182,11 +181,45 @@ public class MsgController {
                 int bulletKey = bulletMoveMsg.getBulletKey();
                 double layoutX = bulletMoveMsg.getLayoutX();
                 double layoutY = bulletMoveMsg.getLayoutY();
-                boolean valid = bulletMoveMsg.isValid();
                 if(bulletsHashMap.get(bulletKey) != null) {
                     bulletsHashMap.get(bulletKey).setImagePosition(layoutX, layoutY);
-                    bulletsHashMap.get(bulletKey).setValid(valid);
                 }
+                break;
+            }
+            case Msg.BULLET_DELETE_MSG: {
+                BulletDeleteMsg bulletDeleteMsg = new BulletDeleteMsg();
+                bulletDeleteMsg.parseMsg(inputStream);
+                int bulletKey = bulletDeleteMsg.getBulletKey();
+                if(bulletsHashMap.get(bulletKey) != null) {
+                    bulletsHashMap.get(bulletKey).setValid(false);
+                }
+                break;
+            }
+            case Msg.BULLET_CLOSE_ATTACK_MSG: {
+                BulletCloseAttackMsg bulletCloseAttackMsg = new BulletCloseAttackMsg();
+                bulletCloseAttackMsg.parseMsg(inputStream);
+                int sourceCreatureId = bulletCloseAttackMsg.getSourceCreatureId();
+                int targetCreatureId = bulletCloseAttackMsg.getTargetCreatureId();
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Creature sourceCreature = null;
+                        Creature targetCreature = null;
+                        if(CreatureId.MIN_GOURD_ID <= sourceCreatureId && sourceCreatureId <= CreatureId.MAX_GOURD_ID)
+                            sourceCreature = gourdFamily.get(sourceCreatureId);
+                        else
+                            sourceCreature = monsterFamily.get(sourceCreatureId);
+                        if(CreatureId.MIN_GOURD_ID <= targetCreatureId && targetCreatureId <= CreatureId.MAX_GOURD_ID)
+                            targetCreature = gourdFamily.get(targetCreatureId);
+                        else
+                            targetCreature = monsterFamily.get(targetCreatureId);
+                        if(sourceCreature != null && targetCreature != null) {
+                            targetCreature.getCloseAttackImageView().setImage(ImageUrl.closeAttackImageMap.get(sourceCreature.getClawType()));
+                            targetCreature.setLastCloseAttack(System.currentTimeMillis());
+                        }
+                    }
+                });
                 break;
             }
             default: {

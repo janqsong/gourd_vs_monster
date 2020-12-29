@@ -184,7 +184,6 @@ public class GameStartFight {
 
     public void start() {
         initGame();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -221,22 +220,22 @@ public class GameStartFight {
                                     Bullet bullet = bulletIterator.next();
                                     if(bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
                                         bullets.put(bulletKey, bullet);
-//                                        System.out.println("send bulletKey: " + bulletKey + " " +
-//                                                "sourceCreatureId: " + bullet.getSourceCreature().getCreatureId() + " " +
-//                                                "targetCreatureId: " + bullet.getTargetCreature().getCreatureId());
-                                        new BulletBuildMsg(campType, Constant.CampType.SERVER, bulletKey,
-                                                bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
-                                                bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
-                                                bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(out);
-                                        bulletKey += 2;
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
                                                 sceneController.getMapPane().getChildren().add(bullet.getCircleShape());
                                             }
                                         });
-                                    } else {
-
+                                    }
+                                    new BulletBuildMsg(bulletKey,
+                                            bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
+                                            bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
+                                            bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(out);
+                                    bulletKey += 2;
+                                    if(bulletKey > Integer.MAX_VALUE - 50) {
+                                        bulletKey = 0;
+                                        if (campType.equals(Constant.CampType.MONSTER))
+                                            bulletKey = 1;
                                     }
                                 }
                             }
@@ -265,30 +264,13 @@ public class GameStartFight {
                         while (bulletIterator.hasNext()) {
                             Bullet bullet = bulletIterator.next();
                             if (bullet.isValid()) {
-                                if(bullet.getCircleShape() != null)
-                                    bullet.draw();
-//                                Collision collision = bullet.update();
-//                                if (collision != null) {
-//                                    collision.collisionEvent();
-//                                    bulletIterator.remove();
-//                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
-//                                        Platform.runLater(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
-//                                            }
-//                                        });
-//                                    }
-//                                }
+                                bullet.draw();
                             } else {
-//                                MyLogger.log.info("bulletKey: " + bulletKey + " " +
-//                                        "sourceCreatureId: " + bullet.getSourceCreature().getCreatureId() + " " +
-//                                        "targetCreatureId: " + bullet.getTargetCreature().getCreatureId());
-                                bullet.setVisible(false);
                                 bulletIterator.remove();
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
+                                        bullet.setVisible(false);
                                         sceneController.getMapPane().getChildren().remove(bullet.getCircleShape());
                                     }
                                 });

@@ -181,7 +181,15 @@ public class MonsterCamp extends Camp{
                 e.printStackTrace();
             }
         }
-
+        for(Creature creature : monsterFamily.values()) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    sceneController.getFightScene().getChildren().remove(creature.getCloseAttackImageView());
+                    sceneController.getMapPane().getChildren().add(creature.getCloseAttackImageView());
+                }
+            });
+        }
         new GameStartFight(Constant.CampType.MONSTER, sceneController, in, out,
                 monsterFamily, gourdFamily, equipmentFactory).start();
     }

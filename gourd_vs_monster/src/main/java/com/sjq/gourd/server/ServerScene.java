@@ -206,6 +206,21 @@ public class ServerScene {
             for(Creature monsterCreature : monsterFamily.values()) {
                 monsterCreature.sendAllAttribute(outGourd);
             }
+
+            ArrayList<Bullet> closeBullets = gourdMsgController.getCloseBullets();
+            closeBullets.addAll(monsterMsgController.getCloseBullets());
+            for(Bullet tempBullet : closeBullets) {
+                if(tempBullet.isValid()) {
+                    Collision collision = tempBullet.update();
+                    collision.collisionEvent();
+                    BulletCloseAttackMsg bulletCloseAttackMsg = new BulletCloseAttackMsg(tempBullet.getSourceCreature().getCreatureId(),
+                            tempBullet.getTargetCreature().getCreatureId());
+                    bulletCloseAttackMsg.sendMsg(outGourd);
+                    bulletCloseAttackMsg.sendMsg(outMonster);
+                }
+            }
+
+
             HashMap<Integer, Bullet> buildBullets = gourdMsgController.getBuildBullets();
             if(buildBullets.size() != 0) {
                 Iterator<Map.Entry<Integer, Bullet>> bulletMapIterator = buildBullets.entrySet().iterator();
@@ -214,7 +229,7 @@ public class ServerScene {
                     int bulletKey = bulletEntry.getKey();
                     Bullet bullet = bulletEntry.getValue();
                     bullets.put(bulletKey, bullet);
-                    new BulletBuildMsg(Constant.CampType.SERVER, Constant.CampType.MONSTER, bulletKey,
+                    new BulletBuildMsg(bulletKey,
                                 bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
                                 bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
                                 bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(outMonster);
@@ -229,8 +244,7 @@ public class ServerScene {
                     int bulletKey = bulletEntry.getKey();
                     Bullet bullet = bulletEntry.getValue();
                     bullets.put(bulletKey, bullet);
-
-                    new BulletBuildMsg(Constant.CampType.SERVER, Constant.CampType.GOURD, bulletKey,
+                    new BulletBuildMsg(bulletKey,
                             bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
                             bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
                             bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(outGourd);
@@ -245,19 +259,17 @@ public class ServerScene {
                 if(bullet.isValid()) {
                     Collision collision = bullet.update();
                     if(collision != null) {
-//                        MyLogger.log.info("bulletKey: " + bulletKey + " " +
-//                                "sourceCreatureId: " + bullet.getSourceCreature().getCreatureId() + " " +
-//                                "targetCreatureId: " + bullet.getTargetCreature().getCreatureId());
                         hashMapIterator.remove();
                         bullet.setValid(false);
+                        new BulletDeleteMsg(bulletKey).sendMsg(outGourd);
+                        new BulletDeleteMsg(bulletKey).sendMsg(outMonster);
+                    } else {
+                        new BulletMoveMsg(bulletKey, bullet.getImagePosition().getLayoutX(),
+                                bullet.getImagePosition().getLayoutY()).sendMsg(outGourd);
+                        new BulletMoveMsg(bulletKey, bullet.getImagePosition().getLayoutX(),
+                                bullet.getImagePosition().getLayoutY()).sendMsg(outMonster);
                     }
                 }
-                new BulletMoveMsg(Constant.CampType.SERVER, Constant.CampType.GOURD, bulletKey,
-                        bullet.getImagePosition().getLayoutX(), bullet.getImagePosition().getLayoutY(),
-                        bullet.isValid()).sendMsg(outGourd);
-                new BulletMoveMsg(Constant.CampType.SERVER, Constant.CampType.MONSTER, bulletKey,
-                        bullet.getImagePosition().getLayoutX(), bullet.getImagePosition().getLayoutY(),
-                        bullet.isValid()).sendMsg(outMonster);
             }
             try {
                 Thread.yield();

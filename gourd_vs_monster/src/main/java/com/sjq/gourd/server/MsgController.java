@@ -22,6 +22,7 @@ public class MsgController {
     private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
     private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
     private HashMap<Integer, Bullet> buildBullets = new HashMap<>();
+    private ArrayList<Bullet> closeBullets = new ArrayList<>();
 
     private String campType;
     private int creatureId;
@@ -43,6 +44,12 @@ public class MsgController {
         HashMap<Integer, Bullet> tempBuildBullets = buildBullets;
         buildBullets = new HashMap<>();
         return tempBuildBullets;
+    }
+
+    public ArrayList<Bullet> getCloseBullets() {
+        ArrayList<Bullet> tempCloseBullets = closeBullets;
+        closeBullets = new ArrayList<>();
+        return tempCloseBullets;
     }
 
     public void getMsgClass(int msgType, ObjectInputStream inputStream) {
@@ -113,7 +120,6 @@ public class MsgController {
             case Msg.BULLET_BUILD_MSG: {
                 BulletBuildMsg bulletBuildMsg = new BulletBuildMsg();
                 bulletBuildMsg.parseMsg(inputStream);
-                String senderName = bulletBuildMsg.getSenderName();
                 int bulletKey = bulletBuildMsg.getBulletKey();
                 String sourceCamp = bulletBuildMsg.getSourceCamp();
                 int sourceCreatureId = bulletBuildMsg.getSourceCreatureId();
@@ -132,7 +138,10 @@ public class MsgController {
                 else
                     targetCreature = monsterFamily.get(targetCreatureId);
                 Bullet tempBullet = new Bullet(sourceCreature, targetCreature, bulletType, BulletState.values()[bulletState]);
-                buildBullets.put(bulletKey, tempBullet);
+                if(bulletType == Constant.REMOTE_BULLET_TYPE)
+                    buildBullets.put(bulletKey, tempBullet);
+                else
+                    closeBullets.add(tempBullet);
                 break;
             }
             default: {

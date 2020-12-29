@@ -195,6 +195,16 @@ public class GourdCamp extends Camp{
             }
         }
 
+        for(Creature creature : gourdFamily.values()) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    sceneController.getFightScene().getChildren().remove(creature.getCloseAttackImageView());
+                    sceneController.getMapPane().getChildren().add(creature.getCloseAttackImageView());
+                }
+            });
+        }
+
         new GameStartFight(Constant.CampType.GOURD, sceneController, in, out,
                 gourdFamily, monsterFamily, equipmentFactory).start();
     }

@@ -30,6 +30,8 @@ public interface Msg {
     public static final int BULLET_MOVE_MSG = 11;
     // 近战子弹协议
     public static final int BULLET_CLOSE_ATTACK_MSG = 12;
+    // 删除子弹协议
+    public static final int BULLET_DELETE_MSG = 13;
 
     public void sendMsg(ObjectOutputStream outStream);
     public void parseMsg(ObjectInputStream inStream);

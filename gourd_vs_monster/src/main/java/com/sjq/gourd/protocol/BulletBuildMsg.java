@@ -21,10 +21,8 @@ public class BulletBuildMsg implements Msg {
     public BulletBuildMsg() {
     }
 
-    public BulletBuildMsg(String senderName, String receiverName, int bulletKey, String sourceCamp, int sourceCreatureId,
+    public BulletBuildMsg(int bulletKey, String sourceCamp, int sourceCreatureId,
                           String targetCamp, int targetCreatureId, int bulletType, int bulletState) {
-        bulletBuild.senderName = senderName;
-        bulletBuild.receiverName = receiverName;
         bulletBuild.bulletKey = bulletKey;
         bulletBuild.sourceCamp = sourceCamp;
         bulletBuild.sourceCreatureId = sourceCreatureId;
@@ -52,14 +50,6 @@ public class BulletBuildMsg implements Msg {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String getSenderName() {
-        return bulletBuild.senderName;
-    }
-
-    public String getReceiverName() {
-        return bulletBuild.receiverName;
     }
 
     public int getBulletKey() {

@@ -402,16 +402,30 @@ public class Creature {
 
     //每回合不管死没死都要调用draw
     public void draw() {
-        drawCloseAttack();
+//        drawCloseAttack();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 if (isAlive()) {
                     creatureImageView.setVisible(true);
                     creatureImageView.setDisable(false);
+                    if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
+                        //显示近战攻击图片
+                        //正中心对齐
+                        ImagePosition pos = getCenterPos();
+                        double x = pos.getLayoutX() - closeAttackImageWidth / 2;
+                        double y = pos.getLayoutY() - closeAttackImageHeight / 2;
+                        closeAttackImageView.setLayoutX(x);
+                        closeAttackImageView.setLayoutY(y);
+                        closeAttackImageView.setVisible(true);
+                    } else {
+                        //否则不显示近战图片
+                        closeAttackImageView.setVisible(false);
+                    }
                     drawBar();
                     move();
                 } else {
+                    closeAttackImageView.setVisible(false);
                     creatureImageView.setVisible(false);
                     creatureImageView.setDisable(true);
                     healthProgressBar.setVisible(false);
