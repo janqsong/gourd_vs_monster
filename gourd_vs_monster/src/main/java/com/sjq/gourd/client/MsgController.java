@@ -2,17 +2,23 @@ package com.sjq.gourd.client;
 
 import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.bullet.BulletState;
+import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
+import com.sjq.gourd.creature.ImagePosition;
+import com.sjq.gourd.equipment.Equipment;
+import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.log.MyLogger;
 import com.sjq.gourd.protocol.*;
-import com.sjq.gourd.stage.SceneController;
+import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.checkerframework.checker.units.qual.A;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.DataInputStream;
 import java.io.ObjectInputStream;
@@ -24,9 +30,13 @@ public class MsgController {
     private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
     private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
     private HashMap<Integer, Bullet> buildBullets = new HashMap<>();
+    private HashMap<Integer, PositionXY> moveBullets = new HashMap<>();
+    private ArrayList<Integer> deleteBulletKeys = new ArrayList<>();
 
-    private ConcurrentHashMap<Integer, Bullet> bulletsHashMap = new ConcurrentHashMap<>();
-    private SceneController sceneController = null;
+    private HashMap<Integer, Equipment> buildEquipment = new HashMap<>();
+    EquipmentFactory equipmentFactory = null;
+
+    private HashMap<Creature, Integer> equipmentPickUp = new HashMap<>();
 
     Logger log = Logger.getLogger(MsgController.class.getName());
     private String campType;
@@ -43,11 +53,10 @@ public class MsgController {
     }
 
     public MsgController(HashMap<Integer, Creature> gourdFamily,
-                         HashMap<Integer, Creature> monsterFamily,
-                         ConcurrentHashMap<Integer, Bullet> bulletsHashMap) {
+                         HashMap<Integer, Creature> monsterFamily, EquipmentFactory equipmentFactory) {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
-        this.bulletsHashMap = bulletsHashMap;
+        this.equipmentFactory = equipmentFactory;
     }
 
     public String getCampType() {
@@ -62,6 +71,30 @@ public class MsgController {
         HashMap<Integer, Bullet> tempBullet = buildBullets;
         buildBullets = new HashMap<>();
         return tempBullet;
+    }
+
+    public HashMap<Integer, PositionXY> getMoveBullets() {
+        HashMap<Integer, PositionXY> tempMoveBullets = moveBullets;
+        moveBullets = new HashMap<>();
+        return tempMoveBullets;
+    }
+
+    public ArrayList<Integer> getDeleteBulletKeys() {
+        ArrayList<Integer> tempBulletKeys = deleteBulletKeys;
+        deleteBulletKeys = new ArrayList<>();
+        return tempBulletKeys;
+    }
+
+    public HashMap<Integer, Equipment> getBuildEquipment() {
+        HashMap<Integer, Equipment> tempEquipment = buildEquipment;
+        buildEquipment = new HashMap<>();
+        return tempEquipment;
+    }
+
+    public HashMap<Creature, Integer> getEquipmentPickUp() {
+        HashMap<Creature, Integer> tempRequestEquipment = equipmentPickUp;
+        equipmentPickUp = new HashMap<>();
+        return tempRequestEquipment;
     }
 
     public void getMsgClass(int msgType, ObjectInputStream inputStream) {
@@ -181,18 +214,14 @@ public class MsgController {
                 int bulletKey = bulletMoveMsg.getBulletKey();
                 double layoutX = bulletMoveMsg.getLayoutX();
                 double layoutY = bulletMoveMsg.getLayoutY();
-                if(bulletsHashMap.get(bulletKey) != null) {
-                    bulletsHashMap.get(bulletKey).setImagePosition(layoutX, layoutY);
-                }
+                moveBullets.put(bulletKey, new PositionXY(layoutX, layoutY));
                 break;
             }
             case Msg.BULLET_DELETE_MSG: {
                 BulletDeleteMsg bulletDeleteMsg = new BulletDeleteMsg();
                 bulletDeleteMsg.parseMsg(inputStream);
                 int bulletKey = bulletDeleteMsg.getBulletKey();
-                if(bulletsHashMap.get(bulletKey) != null) {
-                    bulletsHashMap.get(bulletKey).setValid(false);
-                }
+                deleteBulletKeys.add(bulletKey);
                 break;
             }
             case Msg.BULLET_CLOSE_ATTACK_MSG: {
@@ -200,6 +229,7 @@ public class MsgController {
                 bulletCloseAttackMsg.parseMsg(inputStream);
                 int sourceCreatureId = bulletCloseAttackMsg.getSourceCreatureId();
                 int targetCreatureId = bulletCloseAttackMsg.getTargetCreatureId();
+                BulletState bulletState = BulletState.values()[bulletCloseAttackMsg.getBulletState()];
 
                 Platform.runLater(new Runnable() {
                     @Override
@@ -217,14 +247,43 @@ public class MsgController {
                         if(sourceCreature != null && targetCreature != null) {
                             targetCreature.getCloseAttackImageView().setImage(ImageUrl.closeAttackImageMap.get(sourceCreature.getClawType()));
                             targetCreature.setLastCloseAttack(System.currentTimeMillis());
+                            Bullet bullet = new Bullet(sourceCreature, targetCreature, Constant.CLOSE_BULLET_TYPE, bulletState);
+                            Collision collision = new Collision(bullet);
+                            collision.collisionEvent();
                         }
                     }
                 });
+                break;
+            }
+            case Msg.EQUIPMENT_GENERATE_MSG: {
+                EquipmentGenerateMsg equipmentGenerateMsg = new EquipmentGenerateMsg();
+                equipmentGenerateMsg.parseMsg(inputStream);
+                int equipmentKey = equipmentGenerateMsg.getEquipmentMsg();
+                int randNum = equipmentGenerateMsg.getRandNum();
+                double layoutX = equipmentGenerateMsg.getLayoutX();
+                double layoutY = equipmentGenerateMsg.getLayoutY();
+                Equipment equipment = equipmentFactory.next(randNum, new ImagePosition(layoutX, layoutY));
+                buildEquipment.put(equipmentKey, equipment);
+                break;
+            }
+            case Msg.EQUIPMENT_REQUEST_MSG: {
+                EquipmentRequestMsg equipmentRequestMsg = new EquipmentRequestMsg();
+                equipmentRequestMsg.parseMsg(inputStream);
+                String campType = equipmentRequestMsg.getCampType();
+                int creatureId = equipmentRequestMsg.getCreatureId();
+                int equipmentKey = equipmentRequestMsg.getEquipmentKey();
+                Creature creature = null;
+                if(campType.equals(Constant.CampType.GOURD))
+                    creature = gourdFamily.get(creatureId);
+                else
+                    creature = monsterFamily.get(creatureId);
+                equipmentPickUp.put(creature, equipmentKey);
                 break;
             }
             default: {
                 break;
             }
         }
+
     }
 }

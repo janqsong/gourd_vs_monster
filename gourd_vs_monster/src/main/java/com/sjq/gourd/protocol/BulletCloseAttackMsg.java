@@ -5,6 +5,7 @@ import java.io.*;
 class BulletCloseAttack implements Serializable {
     public int sourceCreatureId;
     public int targetCreatureId;
+    public int bulletState;
 }
 
 public class BulletCloseAttackMsg implements Msg {
@@ -14,9 +15,10 @@ public class BulletCloseAttackMsg implements Msg {
     public BulletCloseAttackMsg() {
     }
 
-    public BulletCloseAttackMsg(int sourceCreatureId, int targetCreatureId) {
+    public BulletCloseAttackMsg(int sourceCreatureId, int targetCreatureId, int bulletState) {
         bulletCloseAttack.sourceCreatureId = sourceCreatureId;
         bulletCloseAttack.targetCreatureId = targetCreatureId;
+        bulletCloseAttack.bulletState = bulletState;
     }
 
     @Override
@@ -45,5 +47,9 @@ public class BulletCloseAttackMsg implements Msg {
 
     public int getTargetCreatureId() {
         return bulletCloseAttack.targetCreatureId;
+    }
+
+    public int getBulletState() {
+        return bulletCloseAttack.bulletState;
     }
 }

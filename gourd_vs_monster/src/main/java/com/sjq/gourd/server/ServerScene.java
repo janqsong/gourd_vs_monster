@@ -7,24 +7,25 @@ import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.CreatureFactory;
-import com.sjq.gourd.log.MyLogger;
+import com.sjq.gourd.creature.ImagePosition;
+import com.sjq.gourd.equipment.Equipment;
+import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.protocol.*;
 
-import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.checkerframework.checker.units.qual.C;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerScene {
-    private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
-    private HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
+    private HashMap<Integer, Creature> gourdFamily = new HashMap<>();
+    private HashMap<Integer, Creature> monsterFamily = new HashMap<>();
+
+    private EquipmentFactory equipmentFactory = null;
+    private HashMap<Integer, Equipment> equipmentList = new HashMap<>();
+    private int equipmentKey = 0;
+
     private ObjectInputStream inGourd;
     private ObjectOutputStream outGourd;
     private ObjectInputStream inMonster;
@@ -49,6 +50,16 @@ public class ServerScene {
 
     public void initScene() {
         ImageUrl.initImageUrl();
+
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            ImageView imageView = new ImageView();
+            imageView.setVisible(false);
+            imageView.setDisable(true);
+            imageViews.add(imageView);
+        }
+        equipmentFactory = new EquipmentFactory(imageViews);
+
         ArrayList<ImageView> gourdImageView = new ArrayList<>();
         ArrayList<ImageView> monsterImageView = new ArrayList<>();
         for (int i = 0; i <= 20; i++) {
@@ -212,9 +223,9 @@ public class ServerScene {
             for(Bullet tempBullet : closeBullets) {
                 if(tempBullet.isValid()) {
                     Collision collision = tempBullet.update();
-                    collision.collisionEvent();
+//                    collision.collisionEvent();
                     BulletCloseAttackMsg bulletCloseAttackMsg = new BulletCloseAttackMsg(tempBullet.getSourceCreature().getCreatureId(),
-                            tempBullet.getTargetCreature().getCreatureId());
+                            tempBullet.getTargetCreature().getCreatureId(), tempBullet.getBulletState().ordinal());
                     bulletCloseAttackMsg.sendMsg(outGourd);
                     bulletCloseAttackMsg.sendMsg(outMonster);
                 }
@@ -271,6 +282,36 @@ public class ServerScene {
                     }
                 }
             }
+            if(equipmentFactory.hasNext()) {
+                int randNum = equipmentFactory.nextInt();
+                ImagePosition imagePosition = equipmentFactory.nextImagePosition();
+                Equipment equipment = equipmentFactory.next(randNum, imagePosition);
+                equipmentList.put(equipmentKey, equipment);
+                EquipmentGenerateMsg equipmentGenerateMsg = new EquipmentGenerateMsg(equipmentKey, randNum,
+                        imagePosition.getLayoutX(), imagePosition.getLayoutY());
+                equipmentGenerateMsg.sendMsg(outMonster);
+                equipmentGenerateMsg.sendMsg(outGourd);
+                equipmentKey += 1;
+            }
+
+            HashMap<Creature, Integer> requestEquipment = gourdMsgController.getRequestEquipment();
+            requestEquipment.putAll(monsterMsgController.getRequestEquipment());
+            for(Map.Entry<Creature, Integer> entry : requestEquipment.entrySet()) {
+                Creature creature = entry.getKey();
+                int equipmentKey = entry.getValue();
+                if(equipmentList.get(equipmentKey) != null) {
+                    Equipment equipment = equipmentList.get(equipmentKey);
+                    creature.pickUpEquipment(equipment);
+                    new EquipmentRequestMsg(creature.getCampType(), creature.getCreatureId(), equipmentKey).sendMsg(outGourd);
+                    new EquipmentRequestMsg(creature.getCampType(), creature.getCreatureId(), equipmentKey).sendMsg(outMonster);
+                    equipmentList.remove(equipmentKey);
+                }
+            }
+
+            for(Equipment equipment : equipmentList.values()) {
+                equipment.draw();
+            }
+
             try {
                 Thread.yield();
                 Thread.sleep(Constant.FRAME_TIME);

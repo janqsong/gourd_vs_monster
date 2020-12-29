@@ -3,8 +3,6 @@ package com.sjq.gourd.protocol;
 import java.io.*;
 
 class BulletBuild implements Serializable {
-    public String senderName;
-    public String receiverName;
     public int bulletKey;
     public String sourceCamp;
     public int sourceCreatureId;

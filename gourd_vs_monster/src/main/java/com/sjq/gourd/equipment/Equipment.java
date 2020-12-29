@@ -52,12 +52,17 @@ public abstract class Equipment {
         imageView.setDisable(true);
     }
 
+
     public abstract void takeEffect(Creature creature);
 
     public abstract void giveUpTakeEffect(Creature creature);
 
     public void setImagePosition(ImagePosition imagePosition) {
         this.imagePosition = imagePosition;
+        if (imagePosition.getLayoutX() > Constant.FIGHT_PANE_WIDTH - WIDTH)
+            this.imagePosition.setLayoutX(Constant.FIGHT_PANE_WIDTH - WIDTH);
+        if (imagePosition.getLayoutY() > Constant.FIGHT_PANE_HEIGHT - HEIGHT)
+            this.imagePosition.setLayoutY(Constant.FIGHT_PANE_HEIGHT - HEIGHT);
     }
 
     public double getWIDTH() {

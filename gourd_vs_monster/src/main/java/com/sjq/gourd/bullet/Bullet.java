@@ -188,13 +188,8 @@ public class Bullet {
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         double sin = deltaY / distance;
         double cos = deltaX / distance;
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                imagePosition.setLayoutX(imagePosition.getLayoutX() + cos * SPEED);
-                imagePosition.setLayoutY(imagePosition.getLayoutY() + sin * SPEED);
-            }
-        });
+        imagePosition.setLayoutX(imagePosition.getLayoutX() + cos * SPEED);
+        imagePosition.setLayoutY(imagePosition.getLayoutY() + sin * SPEED);
 
         if (circleShape.intersects(targetCreature.getCreatureImageView().getBoundsInParent())) {
             valid = false;

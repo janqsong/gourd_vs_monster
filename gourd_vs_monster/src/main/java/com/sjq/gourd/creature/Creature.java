@@ -205,8 +205,8 @@ public class Creature {
                 imagePosition.setLayoutY(layoutY);
                 creatureImageView.setLayoutX(layoutX);
                 creatureImageView.setLayoutY(layoutY);
-                creatureImageView.setVisible(true);
-                creatureImageView.setDisable(false);
+//                creatureImageView.setVisible(true);
+//                creatureImageView.setDisable(false);
             }
         });
     }
@@ -336,14 +336,12 @@ public class Creature {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                healthProgressBar.setVisible(true);
                 healthProgressBar.setLayoutX(imagePosition.getLayoutX());
                 healthProgressBar.setLayoutY(imagePosition.getLayoutY() - 2 * Constant.BAR_HEIGHT);
                 double progressValue = (double) currentHealth / baseHealth;
                 double finalProgressValue = progressValue;
                 healthProgressBar.setProgress(finalProgressValue);
 
-                magicProgressBar.setVisible(true);
                 magicProgressBar.setLayoutX(imagePosition.getLayoutX());
                 magicProgressBar.setLayoutY(imagePosition.getLayoutY() - Constant.BAR_HEIGHT);
                 progressValue = (double) currentMagic / baseMagic;
@@ -422,6 +420,8 @@ public class Creature {
                         //否则不显示近战图片
                         closeAttackImageView.setVisible(false);
                     }
+                    healthProgressBar.setVisible(true);
+                    magicProgressBar.setVisible(true);
                     drawBar();
                     move();
                 } else {
@@ -484,6 +484,42 @@ public class Creature {
             }
         }
         return bullets;
+    }
+
+    public void notMyCampUpdate() {
+        setCreatureState();
+        drawCloseAttack();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isAlive()) {
+                    creatureImageView.setVisible(true);
+                    creatureImageView.setDisable(false);
+//                    if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
+//                        //显示近战攻击图片
+//                        //正中心对齐
+//                        ImagePosition pos = getCenterPos();
+//                        double x = pos.getLayoutX() - closeAttackImageWidth / 2;
+//                        double y = pos.getLayoutY() - closeAttackImageHeight / 2;
+//                        closeAttackImageView.setLayoutX(x);
+//                        closeAttackImageView.setLayoutY(y);
+//                        closeAttackImageView.setVisible(true);
+//                    } else {
+//                        //否则不显示近战图片
+//                        closeAttackImageView.setVisible(false);
+//                    }
+                    healthProgressBar.setVisible(true);
+                    magicProgressBar.setVisible(true);
+                    drawBar();
+                } else {
+                    closeAttackImageView.setVisible(false);
+                    creatureImageView.setVisible(false);
+                    creatureImageView.setDisable(true);
+                    healthProgressBar.setVisible(false);
+                    magicProgressBar.setVisible(false);
+                }
+            }
+        });
     }
 
     public void sendAllAttribute(ObjectOutputStream out) {
@@ -763,5 +799,38 @@ public class Creature {
 
     public Equipment getEquipment() {
         return equipment;
+    }
+
+    public String showMessage() {
+        StringBuilder message = new StringBuilder();
+        message.append("生命值: ").append((int) currentHealth).append("/").append((int) baseHealth).append("\n");
+        message.append("魔法值: ").append((int) currentMagic).append("/").append((int) baseMagic).append("\n");
+        message.append("攻击力: ").append((int) currentAttack).append("/").append((int) baseAttack).append("\n");
+        message.append("防御力: ").append((int) currentDefense).append("/").append((int) baseDefense).append("\n");
+        message.append("攻速: ").append(String.format("%.2f", currentAttackSpeed)).append("/").append(String.format("%.2f", baseAttackSpeed)).append("\n");
+        message.append("移速: ").append((int) currentMoveSpeed).append("/").append((int) baseMoveSpeed).append("\n");
+        message.append("攻击范围: ").append((int) shootRange).append("\n");
+        if (equipment != null)
+            message.append("装备: ").append(equipment.getName()).append("\n");
+        if (stateSet.size() != 0) {
+            message.append("状态: ");
+            for (CreatureStateWithClock creatureStateWithClock : stateSet) {
+                if (creatureStateWithClock.getCreatureState().equals(CreatureState.SPEED_CUT))
+                    message.append("残废").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.FROZEN))
+                    message.append("冰冻").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.FIRING))
+                    message.append("灼烧").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.IMPRISONMENT))
+                    message.append("禁锢").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.SERIOUS_INJURY))
+                    message.append("重伤").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.STIMULATED))
+                    message.append("振奋").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.CURE))
+                    message.append("治愈").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+            }
+        }
+        return message.toString();
     }
 }

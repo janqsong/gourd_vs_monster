@@ -32,8 +32,8 @@ import javafx.scene.text.TextAlignment;
 import org.json.*;
 
 public class Camp {
-    protected HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
-    protected HashMap<Integer, Creature> monsterFamily = new HashMap<Integer, Creature>();
+    protected HashMap<Integer, Creature> gourdFamily = new HashMap<>();
+    protected HashMap<Integer, Creature> monsterFamily = new HashMap<>();
 
     protected SceneController sceneController;
     protected ObjectInputStream in;

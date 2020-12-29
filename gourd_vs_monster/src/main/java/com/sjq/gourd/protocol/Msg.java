@@ -32,6 +32,10 @@ public interface Msg {
     public static final int BULLET_CLOSE_ATTACK_MSG = 12;
     // 删除子弹协议
     public static final int BULLET_DELETE_MSG = 13;
+    // 生成装备
+    public static final int EQUIPMENT_GENERATE_MSG = 14;
+    // 请求拾取装备与服务器分发装备信息
+    public static final int EQUIPMENT_REQUEST_MSG = 15;
 
     public void sendMsg(ObjectOutputStream outStream);
     public void parseMsg(ObjectInputStream inStream);

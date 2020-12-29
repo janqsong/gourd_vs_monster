@@ -5,19 +5,22 @@ import com.sjq.gourd.constant.Constant;
 public class CreatureStateWithClock {
     private CreatureState creatureState;
     //time是毫秒
-    private long count = 0;
+    private long lastMillis = 0;
+    private long gap = 0;
+    private long flag = 0;
 
     public CreatureStateWithClock(CreatureState creatureState, long time) {
         this.creatureState = creatureState;
-        this.count = time / Constant.FRAME_TIME;
+        this.gap = time;
+        this.lastMillis = System.currentTimeMillis();
     }
 
     public void update() {
-        count--;
+        flag = System.currentTimeMillis() - lastMillis;
     }
 
     public boolean isOver() {
-        return count <= 0;
+        return flag >= gap;
     }
 
     public CreatureState getCreatureState() {
@@ -27,5 +30,19 @@ public class CreatureStateWithClock {
     //消亡的时候执行
     public void dispose() {
 
+    }
+
+    public long getGap() {
+        return gap;
+    }
+
+    public void setGap(long gap) {
+        this.gap = gap;
+        //setGap是重置了这个buff,意味着这个buff的开始时间重置
+        lastMillis = System.currentTimeMillis();
+    }
+
+    public long getRemainTime() {
+        return lastMillis + gap - System.currentTimeMillis();
     }
 }

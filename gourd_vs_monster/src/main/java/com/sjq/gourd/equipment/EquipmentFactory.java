@@ -64,13 +64,63 @@ public class EquipmentFactory {
     }
 
     private ImageView findFreeImageView() {
+        ImageView tempImageView = null;
         for (ImageView imageView : imageViewArrayList) {
             if (!imageView.isVisible()) {
-                imageViewFlag = false;
-                return imageView;
+                if(tempImageView == null) {
+                    tempImageView = imageView;
+                } else {
+                    imageViewFlag = false;
+                    return tempImageView;
+                }
             }
         }
         imageViewFlag = true;
-        return null;
+        return tempImageView;
+    }
+
+    public int nextInt() {
+        return random.nextInt(5);
+    }
+
+    public ImagePosition nextImagePosition() {
+        return new ImagePosition(random.nextInt((int) (Constant.FIGHT_PANE_WIDTH)),
+                random.nextInt((int) (Constant.FIGHT_PANE_HEIGHT)));
+    }
+
+    public Equipment next(int rand, ImagePosition imagePosition) {
+        ImageView imageView = findFreeImageView();
+        if (imageView == null)
+            return null;
+
+        Equipment equipment = null;
+        switch (rand) {
+            case Constant.EquipmentType.JADE_BAR_ID: {
+                equipment = new JadeBar(count++, imageView);
+                break;
+            }
+            case Constant.EquipmentType.JADE_HAIRPIN_ID: {
+                equipment = new JadeHairpin(count++, imageView);
+                break;
+            }
+            case Constant.EquipmentType.MAGIC_MIRROR_ID: {
+                equipment = new MagicMirror(count++, imageView);
+                break;
+            }
+            case Constant.EquipmentType.RIGID_SOFT_SWORD_ID: {
+                equipment = new RigidSoftSword(count++, imageView);
+                break;
+            }
+            case Constant.EquipmentType.TREASURE_BAG_ID: {
+                equipment = new TreasureBag(count++, imageView);
+                break;
+            }
+            default:
+                break;
+        }
+        if (equipment != null) {
+            equipment.setImagePosition(imagePosition);
+        }
+        return equipment;
     }
 }

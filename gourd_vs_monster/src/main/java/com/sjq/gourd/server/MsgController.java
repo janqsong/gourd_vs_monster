@@ -24,6 +24,8 @@ public class MsgController {
     private HashMap<Integer, Bullet> buildBullets = new HashMap<>();
     private ArrayList<Bullet> closeBullets = new ArrayList<>();
 
+    private HashMap<Creature, Integer> requestEquipment = new HashMap<>();
+
     private String campType;
     private int creatureId;
     private double layoutX;
@@ -50,6 +52,12 @@ public class MsgController {
         ArrayList<Bullet> tempCloseBullets = closeBullets;
         closeBullets = new ArrayList<>();
         return tempCloseBullets;
+    }
+
+    public HashMap<Creature, Integer> getRequestEquipment() {
+        HashMap<Creature, Integer> tempRequestEquipment = requestEquipment;
+        requestEquipment = new HashMap<>();
+        return tempRequestEquipment;
     }
 
     public void getMsgClass(int msgType, ObjectInputStream inputStream) {
@@ -142,6 +150,20 @@ public class MsgController {
                     buildBullets.put(bulletKey, tempBullet);
                 else
                     closeBullets.add(tempBullet);
+                break;
+            }
+            case Msg.EQUIPMENT_REQUEST_MSG: {
+                EquipmentRequestMsg equipmentRequestMsg = new EquipmentRequestMsg();
+                equipmentRequestMsg.parseMsg(inputStream);
+                String campType = equipmentRequestMsg.getCampType();
+                int creatureId = equipmentRequestMsg.getCreatureId();
+                int equipmentKey = equipmentRequestMsg.getEquipmentKey();
+                Creature creature = null;
+                if(campType.equals(Constant.CampType.GOURD))
+                    creature = gourdFamily.get(creatureId);
+                else
+                    creature = monsterFamily.get(creatureId);
+                requestEquipment.put(creature, equipmentKey);
                 break;
             }
             default: {
