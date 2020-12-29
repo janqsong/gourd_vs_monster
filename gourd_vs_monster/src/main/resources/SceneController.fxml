@@ -79,7 +79,7 @@
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="127.0.0.1">
+            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="192.168.1.105">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>

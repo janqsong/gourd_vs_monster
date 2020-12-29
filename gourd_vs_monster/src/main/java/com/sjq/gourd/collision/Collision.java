@@ -26,8 +26,10 @@ public class Collision {
             return;
         } else if (bullet.getBulletState() == BulletState.THE_GOD_OF_HEALING_MAX) {
             targetCreature.setCurrentHealth(targetCreature.getCurrentHealth() + 1000);
-            sourceCreature.getStateSet().add(new CreatureStateWithClock(CreatureState.CURE, 5000));
+            targetCreature.getStateSet().add(new CreatureStateWithClock(CreatureState.CURE, 5000));
             //5s的治愈效果
+            bullet.setValid(false);
+            bullet.setVisible(false);
             return;
         }
 
@@ -40,9 +42,10 @@ public class Collision {
             damage = 1;
         damage = (double) Math.round(damage);
         targetCreature.setCurrentHealth(targetHealth - damage);
-        sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
         bullet.setValid(false);
         bullet.setVisible(false);
+        if (bullet.getBulletState() == BulletState.NONE)
+            sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
 
         if (bullet.getBulletState() == BulletState.THE_HEART_OF_ICE) {
             targetCreature.addState(new CreatureStateWithClock(CreatureState.FROZEN, 2000));
@@ -57,10 +60,10 @@ public class Collision {
 
 
         if (bullet.getBulletType() == Constant.CLOSE_BULLET_TYPE) {
-//            if (sourceCreature.getClawType() != Constant.ClawType.NONE_CLAW && targetCreature.isAlive()) {
+            if (sourceCreature.getClawType() != Constant.ClawType.NONE_CLAW && targetCreature.isAlive()) {
 //                targetCreature.getCloseAttackImageView().setImage(ImageUrl.closeAttackImageMap.get(sourceCreature.getClawType()));
 //                bullet.getTargetCreature().setLastCloseAttack(System.currentTimeMillis());
-//            }
+            }
         } else {
 
         }

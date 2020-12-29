@@ -154,7 +154,12 @@ public class Bullet {
 
     public void setVisible(boolean visible) {
         if (circleShape != null) {
-            circleShape.setVisible(visible);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    circleShape.setVisible(visible);
+                }
+            });
         }
     }
 

@@ -1,27 +1,17 @@
 package com.sjq.gourd.stage;
 
-import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.client.GameClient;
 import com.sjq.gourd.server.GameServer;
-import com.sjq.gourd.creature.Creature;
-import com.sjq.gourd.localtest.GameStart;
-import com.sjq.gourd.tool.PositionXY;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+
 import java.util.regex.Pattern;
 
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 
 
 public class SceneController {

@@ -8,7 +8,6 @@ import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
-import com.sjq.gourd.log.MyLogger;
 import com.sjq.gourd.protocol.BulletBuildMsg;
 import com.sjq.gourd.protocol.EquipmentRequestMsg;
 import com.sjq.gourd.protocol.Msg;
@@ -16,13 +15,11 @@ import com.sjq.gourd.stage.SceneController;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
-import org.graalvm.compiler.graph.Position;
 
 import java.io.*;
 import java.util.*;
@@ -223,7 +220,6 @@ public class GameStartFight {
                 while (true) {
                     try {
                         int msgType = in.readInt();
-//                        System.out.println("msgType: " + msgType);
                         if (msgType == Msg.UPDATE_FLAG_MSG) {
                             updateFlag = true;
                         } else {
@@ -352,8 +348,6 @@ public class GameStartFight {
                                 Equipment equipment = equipmentMap.getValue();
                                 if (equipment.getImageView().getBoundsInParent().intersects(myCreature.getCreatureImageView().getBoundsInParent())) {
                                     new EquipmentRequestMsg(campType, myCreature.getCreatureId(), equipmentKey).sendMsg(out);
-//                                    myCreature.pickUpEquipment(equipment);
-//                                    equipmentIterator.remove();
                                 }
                             }
                         }
@@ -363,7 +357,6 @@ public class GameStartFight {
                         for(Equipment equipment : equipmentHashMap.values()) {
                             equipment.draw();
                         }
-//                        System.out.println("size: " + bullets.size());
                         for (Creature myMember : myFamily.values()) {
                             myMember.sendAllAttribute(out);
                         }

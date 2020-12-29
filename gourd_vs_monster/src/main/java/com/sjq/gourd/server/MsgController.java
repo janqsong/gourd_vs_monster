@@ -4,6 +4,7 @@ import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.Creature;
+import com.sjq.gourd.creature.CreatureState;
 import com.sjq.gourd.log.MyLogger;
 import com.sjq.gourd.protocol.*;
 import javafx.scene.image.ImageView;
@@ -15,8 +16,13 @@ import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+
+class CreatureStateGroup {
+    public String campType;
+    public int creatureId;
+    public int creatureState;
+    public long gapTime;
+}
 
 public class MsgController {
     private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
@@ -25,6 +31,8 @@ public class MsgController {
     private ArrayList<Bullet> closeBullets = new ArrayList<>();
 
     private HashMap<Creature, Integer> requestEquipment = new HashMap<>();
+
+    private ArrayList<CreatureStateGroup> creatureStateGroupArrayList = new ArrayList<>();
 
     private String campType;
     private int creatureId;
@@ -58,6 +66,12 @@ public class MsgController {
         HashMap<Creature, Integer> tempRequestEquipment = requestEquipment;
         requestEquipment = new HashMap<>();
         return tempRequestEquipment;
+    }
+
+    public ArrayList<CreatureStateGroup> getCreatureStateGroupArrayList() {
+        ArrayList<CreatureStateGroup> tempCreatureState = creatureStateGroupArrayList;
+        creatureStateGroupArrayList = new ArrayList<>();
+        return tempCreatureState;
     }
 
     public void getMsgClass(int msgType, ObjectInputStream inputStream) {
@@ -164,6 +178,21 @@ public class MsgController {
                 else
                     creature = monsterFamily.get(creatureId);
                 requestEquipment.put(creature, equipmentKey);
+                break;
+            }
+            case Msg.CREATURE_STATE_MSG: {
+                CreatureStateMsg creatureStateMsg = new CreatureStateMsg();
+                creatureStateMsg.parseMsg(inputStream);
+                String campType = creatureStateMsg.getCampType();
+                int creatureId = creatureStateMsg.getCreatureId();
+                int creatureState = creatureStateMsg.getCreatureState();
+                long gapTime = creatureStateMsg.getGapTime();
+                CreatureStateGroup creatureStateGroup = new CreatureStateGroup();
+                creatureStateGroup.campType = campType;
+                creatureStateGroup.creatureId = creatureId;
+                creatureStateGroup.creatureState = creatureState;
+                creatureStateGroup.gapTime = gapTime;
+                creatureStateGroupArrayList.add(creatureStateGroup);
                 break;
             }
             default: {

@@ -36,6 +36,8 @@ public interface Msg {
     public static final int EQUIPMENT_GENERATE_MSG = 14;
     // 请求拾取装备与服务器分发装备信息
     public static final int EQUIPMENT_REQUEST_MSG = 15;
+    // 生物状态信息协议
+    public static final int CREATURE_STATE_MSG = 16;
 
     public void sendMsg(ObjectOutputStream outStream);
     public void parseMsg(ObjectInputStream inStream);

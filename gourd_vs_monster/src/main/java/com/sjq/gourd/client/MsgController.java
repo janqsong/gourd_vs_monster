@@ -7,23 +7,17 @@ import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
+import com.sjq.gourd.creature.CreatureState;
+import com.sjq.gourd.creature.CreatureStateWithClock;
 import com.sjq.gourd.creature.ImagePosition;
 import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
-import com.sjq.gourd.log.MyLogger;
 import com.sjq.gourd.protocol.*;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
-
-import java.io.DataInputStream;
 import java.io.ObjectInputStream;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class MsgController {
@@ -278,6 +272,21 @@ public class MsgController {
                 else
                     creature = monsterFamily.get(creatureId);
                 equipmentPickUp.put(creature, equipmentKey);
+                break;
+            }
+            case Msg.CREATURE_STATE_MSG: {
+                CreatureStateMsg creatureStateMsg = new CreatureStateMsg();
+                creatureStateMsg.parseMsg(inputStream);
+                String campType = creatureStateMsg.getCampType();
+                int creatureId = creatureStateMsg.getCreatureId();
+                CreatureState creatureState = CreatureState.values()[creatureStateMsg.getCreatureState()];
+                long gapTime = creatureStateMsg.getGapTime();
+                Creature creature = null;
+                if(campType.equals(Constant.CampType.GOURD))
+                    creature = gourdFamily.get(creatureId);
+                else
+                    creature = monsterFamily.get(creatureId);
+                creature.addState(new CreatureStateWithClock(creatureState, gapTime));
                 break;
             }
             default: {

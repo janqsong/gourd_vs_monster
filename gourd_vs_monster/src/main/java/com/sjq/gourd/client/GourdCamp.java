@@ -53,9 +53,9 @@ public class GourdCamp extends Camp{
             monsterImageView.add(imageView);
         }
         try {
-            CreatureFactory gourdFactory = new CreatureFactory(Constant.CampType.GOURD, Constant.Direction.RIGHT,
+            CreatureFactory gourdFactory = new CreatureFactory(out, Constant.CampType.GOURD, Constant.Direction.RIGHT,
                     gourdImageView);
-            CreatureFactory monsterFactory = new CreatureFactory(Constant.CampType.MONSTER, Constant.Direction.LEFT,
+            CreatureFactory monsterFactory = new CreatureFactory(out, Constant.CampType.MONSTER, Constant.Direction.LEFT,
                     monsterImageView);
 
             int id = CreatureId.MIN_GOURD_ID;

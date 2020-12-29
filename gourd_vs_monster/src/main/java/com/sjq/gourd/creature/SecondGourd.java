@@ -4,12 +4,12 @@ import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.protocol.CreatureStateMsg;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.checkerframework.framework.qual.QualifierArgument;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 public class SecondGourd extends Creature {
@@ -18,7 +18,9 @@ public class SecondGourd extends Creature {
     private long gap = 5000; //ms
     private long lastQActionMillis = 0;
 
-    public SecondGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    ObjectOutputStream out = null;
+
+    public SecondGourd(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SECOND_GOURD_ID, CreatureId.SECOND_GOURD_NAME,
                 2500, 150, 80, 30, 0.5, 10, 400.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
@@ -26,6 +28,7 @@ public class SecondGourd extends Creature {
                 ImageUrl.gourdLeftSelectImageMap.get(CreatureId.SECOND_GOURD_ID),
                 ImageUrl.gourdRightImageMap.get(CreatureId.SECOND_GOURD_ID),
                 ImageUrl.gourdRightSelectImageMap.get(CreatureId.SECOND_GOURD_ID));
+        this.out = out;
     }
 
     @Override
@@ -70,7 +73,9 @@ public class SecondGourd extends Creature {
         currentMagic = 0;
         for (Creature creature : myFamily.values()) {
             if (this.imagePosition.getDistance(creature.imagePosition) < 2 * shootRange)
-                creature.addState(new CreatureStateWithClock(CreatureState.STIMULATED, gap));
+                new CreatureStateMsg(creature.getCampType(), creature.getCreatureId(),
+                        CreatureState.STIMULATED.ordinal(), gap).sendMsg(out);
+//                creature.addState(new CreatureStateWithClock(CreatureState.STIMULATED, gap));
         }
         inQAction = true;
         lastQActionMillis = System.currentTimeMillis();

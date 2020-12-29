@@ -3,6 +3,7 @@ package com.sjq.gourd.equipment;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.ImagePosition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -30,26 +31,41 @@ public abstract class Equipment {
         this.isFree = true;
         imagePosition = new ImagePosition(random.nextInt((int) (Constant.FIGHT_PANE_WIDTH - width)),
                 random.nextInt((int) (Constant.FIGHT_PANE_HEIGHT - height)));
-        this.imageView.setImage(image);
-        this.imageView.setFitWidth(width);
-        this.imageView.setFitHeight(height);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setImage(image);
+                imageView.setFitWidth(width);
+                imageView.setFitHeight(height);
+            }
+        });
     }
 
     public void draw() {
-        if (isFree) {
-            imageView.setLayoutX(imagePosition.getLayoutX());
-            imageView.setLayoutY(imagePosition.getLayoutY());
-            imageView.setVisible(true);
-            imageView.setDisable(false);
-        } else {
-            imageView.setVisible(false);
-            imageView.setDisable(true);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isFree) {
+                    imageView.setLayoutX(imagePosition.getLayoutX());
+                    imageView.setLayoutY(imagePosition.getLayoutY());
+                    imageView.setVisible(true);
+                    imageView.setDisable(false);
+                } else {
+                    imageView.setVisible(false);
+                    imageView.setDisable(true);
+                }
+            }
+        });
     }
 
     public void dispose() {
-        imageView.setVisible(false);
-        imageView.setDisable(true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setVisible(false);
+                imageView.setDisable(true);
+            }
+        });
     }
 
 
@@ -58,6 +74,7 @@ public abstract class Equipment {
     public abstract void giveUpTakeEffect(Creature creature);
 
     public void setImagePosition(ImagePosition imagePosition) {
+
         this.imagePosition = imagePosition;
         if (imagePosition.getLayoutX() > Constant.FIGHT_PANE_WIDTH - WIDTH)
             this.imagePosition.setLayoutX(Constant.FIGHT_PANE_WIDTH - WIDTH);

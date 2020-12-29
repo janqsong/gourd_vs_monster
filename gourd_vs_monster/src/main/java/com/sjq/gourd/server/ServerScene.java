@@ -72,9 +72,9 @@ public class ServerScene {
         }
 
         try {
-            CreatureFactory gourdFactory = new CreatureFactory(Constant.CampType.GOURD, Constant.Direction.RIGHT,
+            CreatureFactory gourdFactory = new CreatureFactory(outGourd, Constant.CampType.GOURD, Constant.Direction.RIGHT,
                     gourdImageView);
-            CreatureFactory monsterFactory = new CreatureFactory(Constant.CampType.MONSTER, Constant.Direction.LEFT,
+            CreatureFactory monsterFactory = new CreatureFactory(outMonster, Constant.CampType.MONSTER, Constant.Direction.LEFT,
                     monsterImageView);
 
             int id = CreatureId.MIN_GOURD_ID;
@@ -260,6 +260,17 @@ public class ServerScene {
                             bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
                             bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(outGourd);
                 }
+            }
+
+            ArrayList<CreatureStateGroup> creatureStateList = gourdMsgController.getCreatureStateGroupArrayList();
+            for(CreatureStateGroup group : creatureStateList) {
+                String campType = group.campType;
+                int creatureId = group.creatureId;
+                int creatureState = group.creatureState;
+                long gapTime = group.gapTime;
+                CreatureStateMsg creatureStateMsg = new CreatureStateMsg(campType, creatureId, creatureState, gapTime);
+                creatureStateMsg.sendMsg(outGourd);
+                creatureStateMsg.sendMsg(outMonster);
             }
 
             Iterator<Map.Entry<Integer, Bullet>> hashMapIterator = bullets.entrySet().iterator();
