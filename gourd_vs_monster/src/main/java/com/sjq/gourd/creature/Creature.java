@@ -781,8 +781,13 @@ public class Creature {
         boolean flag = false;//集合里有没有
         while (creatureStateWithClockIterator.hasNext()) {
             CreatureStateWithClock creatureStateWithClock1 = creatureStateWithClockIterator.next();
-            if (creatureStateWithClock.getCreatureState() == creatureStateWithClock1.getCreatureState())
+            if (creatureStateWithClock.getCreatureState() == creatureStateWithClock1.getCreatureState()) {
                 flag = true;
+                long newGap = creatureStateWithClock.getGap();
+                long lastGap = creatureStateWithClock1.getRemainTime();
+                if (newGap > lastGap)
+                    creatureStateWithClock1.setGap(newGap);
+            }
         }
         if (!flag) stateSet.add(creatureStateWithClock);
     }
