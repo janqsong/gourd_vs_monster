@@ -28,7 +28,7 @@ public class SixthGourd extends Creature {
 
     public SixthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SIXTH_GOURD_ID, CreatureId.SIXTH_GOURD_NAME,
-                2500, 100, 150, 20, 0.5, 12, 90.0,
+                3500, 100, 150, 20, 1.0, 12, 90.0,
                 faceDirection, 70.0, true, Constant.ClawType.FIRST_CLAW,
                 imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.SIXTH_GOURD_ID),
                 ImageUrl.gourdLeftSelectImageMap.get(CreatureId.SIXTH_GOURD_ID),

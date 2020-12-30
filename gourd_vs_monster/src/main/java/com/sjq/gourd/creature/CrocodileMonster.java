@@ -14,7 +14,7 @@ public class CrocodileMonster extends Creature {
 
     public CrocodileMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.MONSTER3_ID, CreatureId.MONSTER3_NAME,
-                3500, 100, 100, 40, 0.5, 8, 80.0,
+                3500, 100, 100, 50, 0.5, 8, 80.0,
                 faceDirection, 80.0, true, Constant.ClawType.SECOND_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.MONSTER3_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.MONSTER3_ID),

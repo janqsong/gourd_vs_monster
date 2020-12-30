@@ -27,7 +27,7 @@ public class ScorpionMonster extends Creature {
 
     public ScorpionMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
-                10000, 100, 150, 55, 0.5, 8, 100.0,
+                7500, 150, 150, 55, 0.5, 10, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SCORPION_MONSTER_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID),

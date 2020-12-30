@@ -22,7 +22,7 @@ public class SecondGourd extends Creature {
 
     public SecondGourd(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SECOND_GOURD_ID, CreatureId.SECOND_GOURD_NAME,
-                2500, 150, 80, 30, 0.5, 10, 400.0,
+                3000, 150, 80, 35, 0.5, 10, 400.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.SECOND_GOURD_ID),
                 ImageUrl.gourdLeftSelectImageMap.get(CreatureId.SECOND_GOURD_ID),

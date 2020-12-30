@@ -14,7 +14,7 @@ public class CentipedeMonster extends Creature {
 
     public CentipedeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.MONSTER1_ID, CreatureId.MONSTER1_NAME,
-                3000, 100, 75, 20, 0.5, 8, 80.0,
+                3500, 100, 75, 30, 0.5, 8, 80.0,
                 faceDirection, 90.0, true, Constant.ClawType.FOURTH_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.MONSTER1_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.MONSTER1_ID),
