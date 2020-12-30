@@ -3,6 +3,7 @@ package com.sjq.gourd.stage;
 import com.sjq.gourd.constant.Constant;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;

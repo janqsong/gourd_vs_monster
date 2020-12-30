@@ -1,24 +1,28 @@
 package com.sjq.gourd.stage;
 
 import com.sjq.gourd.client.GameClient;
+import com.sjq.gourd.localplayback.LocalPlayBack;
 import com.sjq.gourd.server.GameServer;
 import javafx.fxml.FXML;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
-import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 
 public class SceneController {
     @FXML
-    private Pane StartScene;
+    private Pane basePane;
     @FXML
-    private Pane ConnectScene;
+    private Pane startScene;
+    @FXML
+    private Pane connectScene;
     @FXML
     private Pane fightScene;
     @FXML
@@ -42,15 +46,19 @@ public class SceneController {
 
     @FXML
     void LocalPlaybackMouseClickEvent(MouseEvent event) {
-        System.out.println("localplay");
+        Stage stage = (Stage) basePane.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open PlayBack File");
+        File file = fileChooser.showOpenDialog(stage);
+        new LocalPlayBack(file, this);
     }
 
     @FXML
     void NetPlayMouseClickEvent(MouseEvent event) {
-        StartScene.setVisible(false);
-        StartScene.setDisable(true);
-        ConnectScene.setVisible(true);
-        ConnectScene.setDisable(false);
+        startScene.setVisible(false);
+        startScene.setDisable(true);
+        connectScene.setVisible(true);
+        connectScene.setDisable(false);
     }
 
     @FXML
@@ -93,8 +101,8 @@ public class SceneController {
             System.out.println("请输入规范的ip和port地址");
         }
         try {
-            ConnectScene.setVisible(false);
-            ConnectScene.setDisable(true);
+            connectScene.setVisible(false);
+            connectScene.setDisable(true);
             fightScene.setVisible(true);
             fightScene.setDisable(false);
             System.out.println("ipString: " + ipString + " " + "portString: " + portString);
@@ -104,20 +112,8 @@ public class SceneController {
         }
     }
 
-    public void addImageViewToFightMapPane(ImageView tempImageView) {
-        fightScene.getChildren().add(tempImageView);
-    }
-
     public void addImageViewToMapPane(ImageView tempImageView) {
         mapPane.getChildren().add(tempImageView);
-    }
-
-    public void addProgressBarToMapPane(ProgressBar progressBar) {
-        mapPane.getChildren().add(progressBar);
-    }
-
-    public void addShapeToMapPane(Shape shape){
-        mapPane.getChildren().add(shape);
     }
 
     public Pane getMapPane() {

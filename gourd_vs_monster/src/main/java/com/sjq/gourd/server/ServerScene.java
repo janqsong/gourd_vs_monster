@@ -26,6 +26,8 @@ public class ServerScene {
     private HashMap<Integer, Equipment> equipmentList = new HashMap<>();
     private int equipmentKey = 0;
 
+    private ObjectOutputStream outFile;
+
     private ObjectInputStream inGourd;
     private ObjectOutputStream outGourd;
     private ObjectInputStream inMonster;
@@ -148,16 +150,20 @@ public class ServerScene {
                     int creatureId = entry.getKey();
                     Creature creature = entry.getValue();
                     ImageView tempImageView = creature.getCreatureImageView();
-                    new PositionNotifyMsg(Constant.CampType.GOURD, creatureId,
-                            tempImageView.getLayoutX(), tempImageView.getLayoutY()).sendMsg(outMonster);
+                    PositionNotifyMsg positionNotifyMsg = new PositionNotifyMsg(Constant.CampType.GOURD, creatureId,
+                            tempImageView.getLayoutX(), tempImageView.getLayoutY());
+                    positionNotifyMsg.sendMsg(outMonster);
+                    positionNotifyMsg.sendMsg(outFile);
                 }
 
                 for(Map.Entry<Integer, Creature> entry : monsterFamily.entrySet()) {
                     int creatureId = entry.getKey();
                     Creature creature = entry.getValue();
                     ImageView tempImageView = creature.getCreatureImageView();
-                    new PositionNotifyMsg(Constant.CampType.MONSTER, creatureId,
-                            tempImageView.getLayoutX(), tempImageView.getLayoutY()).sendMsg(outGourd);
+                    PositionNotifyMsg positionNotifyMsg = new PositionNotifyMsg(Constant.CampType.MONSTER, creatureId,
+                            tempImageView.getLayoutX(), tempImageView.getLayoutY());
+                    positionNotifyMsg.sendMsg(outGourd);
+                    positionNotifyMsg.sendMsg(outFile);
                 }
                 new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);
                 new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outMonster);

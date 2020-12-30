@@ -95,7 +95,7 @@ public class SocketController {
         }
 
         System.out.println("Server countDown");
-        for(int i = 0; i < 30; i++) {
+        for(int i = 0; i < 1; i++) {
             new CountDownMsg(30 - i).sendMsg(outGourd);
             new CountDownMsg(30 - i).sendMsg(outMonster);
             try {

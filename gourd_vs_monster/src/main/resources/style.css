@@ -1,9 +1,28 @@
-#StartScene{ 
-    -fx-background-image: url("/images/background.png");
+#startScene{
+    -fx-background-image: url("images/beginBackground.png");
     -fx-background-size: 1360 740;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
 }
 
-#ConnectScene{ 
-    -fx-background-image: url("/images/background.png");
+#connectScene{
+    -fx-background-image: url("images/createBackground.png");
     -fx-background-size: 1360 740;
-} 
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+#fightScene {
+    -fx-background-image: url("images/fightScene.png");
+    -fx-background-size: 1360 740;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+
+#mapPane {
+    -fx-background-image: url("images/gameBackground.png");
+    -fx-background-size: 1200 700;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}

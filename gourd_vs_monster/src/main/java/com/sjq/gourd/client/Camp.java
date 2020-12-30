@@ -108,6 +108,13 @@ public class Camp {
                             int timeRemaining = msgController.getTimeRemaining();
                             text.setText(String.valueOf(timeRemaining));
                         } else if (msgType == Msg.START_GAME_MSG) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    text.setVisible(false);
+                                    text.setDisable(true);
+                                }
+                            });
                             notifyServerImagePosition();
                             break;
                         }

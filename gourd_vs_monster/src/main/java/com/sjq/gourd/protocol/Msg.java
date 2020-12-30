@@ -1,7 +1,4 @@
 package com.sjq.gourd.protocol;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -38,6 +35,8 @@ public interface Msg {
     public static final int EQUIPMENT_REQUEST_MSG = 15;
     // 生物状态信息协议
     public static final int CREATURE_STATE_MSG = 16;
+    // 本地回放帧同步
+    public static final int FRAME_FINISH_FLAG = 17;
 
     public void sendMsg(ObjectOutputStream outStream);
     public void parseMsg(ObjectInputStream inStream);

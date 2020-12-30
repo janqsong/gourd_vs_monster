@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
+<Pane fx:id="basePane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
    <children>
-      <Pane fx:id="StartScene" prefHeight="740" prefWidth="1360" visible="false" disable="true">
+      <Pane fx:id="startScene" prefHeight="740" prefWidth="1360">
         <children>
-            <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="350.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@images/gourd_icon.png" />
                 </image>
             </ImageView>
-            <ImageView fitHeight="131.0" fitWidth="200.0" layoutX="215.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="200.0" layoutX="450.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@images/title.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="NetPlayImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="200.0" onMouseClicked="#NetPlayMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="200.0" onMouseClicked="#NetPlayMouseClickEvent" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@images/net_play.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="LocalPlaybackImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="300.0" onMouseClicked="#LocalPlaybackMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="300.0" onMouseClicked="#LocalPlaybackMouseClickEvent" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@images/local_playback.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="AboutUsImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="400.0" onMouseClicked="#AboutUsMouseClickEvent" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="400.0" onMouseClicked="#AboutUsMouseClickEvent" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@images/about_us.png" />
                 </image>
@@ -42,7 +41,7 @@
                 </image>
             </ImageView>
         </children></Pane>
-        <Pane fx:id="ConnectScene" prefHeight="740" prefWidth="1360">
+        <Pane fx:id="connectScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
          <children>
             <ImageView fitHeight="131.0" fitWidth="100.0" layoutX="115.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
                 <image>
@@ -79,7 +78,7 @@
                   <Font name="Calibri" size="27.0" />
                </font>
             </TextField>
-            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="192.168.1.105">
+            <TextField fx:id="ServerIpText" layoutX="922.0" layoutY="238.0" prefHeight="49.0" prefWidth="218.0" promptText="255.255.255.255" text="127.0.0.1">
                <font>
                   <Font name="Calibri" size="27.0" />
                </font>
@@ -96,7 +95,7 @@
             </ImageView>
             </children></Pane>
 
-        <Pane fx:id="fightScene" prefHeight="740" prefWidth="1360" visible="false" disable="true">
+        <Pane fx:id="fightScene" disable="true" prefHeight="740" prefWidth="1360" visible="false">
         <children>
             <Pane fx:id="mapPane" layoutX="140.0" layoutY="20.0" prefHeight="700.0" prefWidth="1200.0" style="-fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;"><children>
             </children></Pane>
