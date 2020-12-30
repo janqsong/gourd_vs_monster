@@ -116,12 +116,6 @@ public class MsgController {
                 int creatureId = positionNotifyMsg.getCreatureId();
                 double layoutX = positionNotifyMsg.getLayoutX();
                 double layoutY = positionNotifyMsg.getLayoutY();
-//                System.out.println("Msg.POSITION_NOTIFY_MSG\n" +
-//                        "campType: " + campType +
-//                        "\ncreatureId: " +creatureId +
-//                        "\nlayoutX: " + layoutX +
-//                        "\nlayoutY: " + layoutY);
-                ImageView tempImageView = null;
                 if (campType.equals(Constant.CampType.GOURD))
                     gourdFamily.get(creatureId).setCreatureImagePos(layoutX, layoutY);
                 else
@@ -131,7 +125,7 @@ public class MsgController {
             case Msg.ATTRIBUTE_VALUE_MSG: {
                 AttributeValueMsg attributeValueMsg = new AttributeValueMsg();
                 attributeValueMsg.parseMsg(inputStream);
-                campType = attributeValueMsg.getCampType();
+                String campType = attributeValueMsg.getCampType();
                 int creatureId = attributeValueMsg.getCreatureId();
                 double layoutX = attributeValueMsg.getLayoutX();
                 double layoutY = attributeValueMsg.getLayoutY();
@@ -147,11 +141,6 @@ public class MsgController {
                     creature = gourdFamily.get(creatureId);
                 else
                     creature = monsterFamily.get(creatureId);
-//                MyLogger.log.info("Msg.POSITION_NOTIFY_MSG\n" +
-//                        "campType: " + campType +
-//                        "\ncreatureId: " +creatureId +
-//                        "\nlayoutX: " + layoutX +
-//                        "\nlayoutY: " + layoutY);
                 creature.setCreatureImagePos(layoutX, layoutY);
                 creature.setDirection(direction);
                 creature.setCurrentHealth(currentHealth);
@@ -202,7 +191,6 @@ public class MsgController {
                 break;
             }
             case Msg.BULLET_MOVE_MSG: {
-//                System.out.println("Msg.BULLET_MOVE_MSG");
                 BulletMoveMsg bulletMoveMsg = new BulletMoveMsg();
                 bulletMoveMsg.parseMsg(inputStream);
                 int bulletKey = bulletMoveMsg.getBulletKey();

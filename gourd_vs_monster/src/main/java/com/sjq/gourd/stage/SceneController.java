@@ -50,7 +50,13 @@ public class SceneController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open PlayBack File");
         File file = fileChooser.showOpenDialog(stage);
-        new LocalPlayBack(file, this);
+        startScene.setVisible(false);
+        startScene.setDisable(true);
+        fightScene.setVisible(true);
+        fightScene.setDisable(false);
+        mapPane.setVisible(true);
+        mapPane.setDisable(false);
+        new LocalPlayBack(file, this).playBackGame();
     }
 
     @FXML

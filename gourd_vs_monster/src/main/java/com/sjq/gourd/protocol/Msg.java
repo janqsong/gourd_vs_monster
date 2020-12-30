@@ -36,7 +36,9 @@ public interface Msg {
     // 生物状态信息协议
     public static final int CREATURE_STATE_MSG = 16;
     // 本地回放帧同步
-    public static final int FRAME_FINISH_FLAG = 17;
+    public static final int FRAME_FINISH_FLAG_MSG = 17;
+    // 结束游戏
+    public static final int FINISH_GAME_FLAG_MSG = 18;
 
     public void sendMsg(ObjectOutputStream outStream);
     public void parseMsg(ObjectInputStream inStream);

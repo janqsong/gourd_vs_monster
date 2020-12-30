@@ -26,7 +26,7 @@ public class ServerScene {
     private HashMap<Integer, Equipment> equipmentList = new HashMap<>();
     private int equipmentKey = 0;
 
-    private ObjectOutputStream outFile;
+    private ObjectOutputStream outFile = null;
 
     private ObjectInputStream inGourd;
     private ObjectOutputStream outGourd;
@@ -47,6 +47,11 @@ public class ServerScene {
         this.outGourd = outGourd;
         this.inMonster = inMonster;
         this.outMonster = outMonster;
+        try {
+            outFile = new ObjectOutputStream(new FileOutputStream("C:/Users/Dlee/Desktop/playbackFiles/a"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initScene();
     }
 
@@ -218,10 +223,12 @@ public class ServerScene {
         while (true) {
             for(Creature gourdCreature : gourdFamily.values()) {
                 gourdCreature.sendAllAttribute(outMonster);
+                gourdCreature.sendAllAttribute(outFile);
             }
 
             for(Creature monsterCreature : monsterFamily.values()) {
                 monsterCreature.sendAllAttribute(outGourd);
+                monsterCreature.sendAllAttribute(outFile);
             }
 
             ArrayList<Bullet> closeBullets = gourdMsgController.getCloseBullets();
@@ -234,6 +241,7 @@ public class ServerScene {
                             tempBullet.getTargetCreature().getCreatureId(), tempBullet.getBulletState().ordinal());
                     bulletCloseAttackMsg.sendMsg(outGourd);
                     bulletCloseAttackMsg.sendMsg(outMonster);
+                    bulletCloseAttackMsg.sendMsg(outFile);
                 }
             }
 
@@ -246,10 +254,12 @@ public class ServerScene {
                     int bulletKey = bulletEntry.getKey();
                     Bullet bullet = bulletEntry.getValue();
                     bullets.put(bulletKey, bullet);
-                    new BulletBuildMsg(bulletKey,
+                    BulletBuildMsg bulletBuildMsg = new BulletBuildMsg(bulletKey,
                                 bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
                                 bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
-                                bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(outMonster);
+                                bullet.getBulletType(), bullet.getBulletState().ordinal());
+                    bulletBuildMsg.sendMsg(outMonster);
+                    bulletBuildMsg.sendMsg(outFile);
                 }
             }
 
@@ -261,10 +271,12 @@ public class ServerScene {
                     int bulletKey = bulletEntry.getKey();
                     Bullet bullet = bulletEntry.getValue();
                     bullets.put(bulletKey, bullet);
-                    new BulletBuildMsg(bulletKey,
+                    BulletBuildMsg bulletBuildMsg = new BulletBuildMsg(bulletKey,
                             bullet.getSourceCreature().getCampType(), bullet.getSourceCreature().getCreatureId(),
                             bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
-                            bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(outGourd);
+                            bullet.getBulletType(), bullet.getBulletState().ordinal());
+                    bulletBuildMsg.sendMsg(outGourd);
+                    bulletBuildMsg.sendMsg(outFile);
                 }
             }
 
@@ -277,6 +289,7 @@ public class ServerScene {
                 CreatureStateMsg creatureStateMsg = new CreatureStateMsg(campType, creatureId, creatureState, gapTime);
                 creatureStateMsg.sendMsg(outGourd);
                 creatureStateMsg.sendMsg(outMonster);
+                creatureStateMsg.sendMsg(outFile);
             }
 
             Iterator<Map.Entry<Integer, Bullet>> hashMapIterator = bullets.entrySet().iterator();
@@ -289,13 +302,17 @@ public class ServerScene {
                     if(collision != null) {
                         hashMapIterator.remove();
                         bullet.setValid(false);
-                        new BulletDeleteMsg(bulletKey).sendMsg(outGourd);
-                        new BulletDeleteMsg(bulletKey).sendMsg(outMonster);
+                        BulletDeleteMsg bulletDeleteMsg = new BulletDeleteMsg(bulletKey);
+                        bulletDeleteMsg.sendMsg(outGourd);
+                        bulletDeleteMsg.sendMsg(outMonster);
+                        bulletDeleteMsg.sendMsg(outFile);
+
                     } else {
-                        new BulletMoveMsg(bulletKey, bullet.getImagePosition().getLayoutX(),
-                                bullet.getImagePosition().getLayoutY()).sendMsg(outGourd);
-                        new BulletMoveMsg(bulletKey, bullet.getImagePosition().getLayoutX(),
-                                bullet.getImagePosition().getLayoutY()).sendMsg(outMonster);
+                        BulletMoveMsg bulletMoveMsg = new BulletMoveMsg(bulletKey, bullet.getImagePosition().getLayoutX(),
+                                bullet.getImagePosition().getLayoutY());
+                        bulletMoveMsg.sendMsg(outGourd);
+                        bulletMoveMsg.sendMsg(outMonster);
+                        bulletMoveMsg.sendMsg(outFile);
                     }
                 }
             }
@@ -308,6 +325,7 @@ public class ServerScene {
                         imagePosition.getLayoutX(), imagePosition.getLayoutY());
                 equipmentGenerateMsg.sendMsg(outMonster);
                 equipmentGenerateMsg.sendMsg(outGourd);
+                equipmentGenerateMsg.sendMsg(outFile);
                 equipmentKey += 1;
             }
 
@@ -319,8 +337,11 @@ public class ServerScene {
                 if(equipmentList.get(equipmentKey) != null) {
                     Equipment equipment = equipmentList.get(equipmentKey);
                     creature.pickUpEquipment(equipment);
-                    new EquipmentRequestMsg(creature.getCampType(), creature.getCreatureId(), equipmentKey).sendMsg(outGourd);
-                    new EquipmentRequestMsg(creature.getCampType(), creature.getCreatureId(), equipmentKey).sendMsg(outMonster);
+                    EquipmentRequestMsg equipmentRequestMsg = new EquipmentRequestMsg(creature.getCampType(),
+                            creature.getCreatureId(), equipmentKey);
+                    equipmentRequestMsg.sendMsg(outGourd);
+                    equipmentRequestMsg.sendMsg(outMonster);
+                    equipmentRequestMsg.sendMsg(outFile);
                     equipmentList.remove(equipmentKey);
                 }
             }
@@ -330,11 +351,48 @@ public class ServerScene {
             }
 
             try {
+                new NoParseMsg(Msg.FRAME_FINISH_FLAG_MSG).sendMsg(outFile);
                 Thread.yield();
                 Thread.sleep(Constant.FRAME_TIME);
-            } catch (InterruptedException e) {
+                int judge = judgeWin(Constant.CampType.GOURD, gourdFamily, monsterFamily);
+                if (judge != 2) {
+                    outFile.close();
+                    FinishGameFlagMsg finishGameFlagMsg = new FinishGameFlagMsg(Constant.CampType.GOURD);
+                    finishGameFlagMsg.sendMsg(outGourd);
+                    finishGameFlagMsg.sendMsg(outMonster);
+                    finishGameFlagMsg.sendMsg(outFile);
+                    break;
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private int judgeWin(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+        //todo -1 0 1 2 分别代表妖精胜利,平局,葫芦娃胜利,还没结束
+        int flag = 2;
+        boolean allMineDie = true, allEnemyDie = true;
+        for (Creature creature : myFamily.values())
+            if (creature.isAlive()) {
+                allMineDie = false;
+                break;
+            }
+
+        for (Creature creature : enemyFamily.values())
+            if (creature.isAlive()) {
+                allEnemyDie = false;
+                break;
+            }
+
+        if (allMineDie && allEnemyDie)
+            flag = 0;
+        else if (allMineDie)
+            flag = -1;
+        else if (allEnemyDie)
+            flag = 1;
+        if (camp.equals(Constant.CampType.MONSTER) && flag != 2)
+            flag = -flag;
+        return flag;
     }
 }

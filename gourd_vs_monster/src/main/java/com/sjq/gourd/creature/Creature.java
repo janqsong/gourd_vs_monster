@@ -412,7 +412,7 @@ public class Creature {
 
     //每回合不管死没死都要调用draw
     public void draw() {
-//        drawCloseAttack();
+        drawCloseAttack();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

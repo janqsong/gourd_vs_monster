@@ -220,8 +220,8 @@ public class GameStartFight {
                 while (true) {
                     try {
                         int msgType = in.readInt();
-                        if (msgType == Msg.UPDATE_FLAG_MSG) {
-                            updateFlag = true;
+                        if (msgType == Msg.FINISH_GAME_FLAG_MSG) {
+                            break;
                         } else {
                             msgController.getMsgClass(msgType, in);
                         }
