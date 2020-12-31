@@ -33,7 +33,7 @@ public class SecondGourd extends Creature {
 
     @Override
     //封装移动方式,画,攻击,返回子弹
-    public ArrayList<Bullet> update() {
+    public ArrayList<Bullet> update() throws IOException {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
@@ -65,7 +65,7 @@ public class SecondGourd extends Creature {
     }
 
     @Override
-    public ArrayList<Bullet> qAction() {
+    public ArrayList<Bullet> qAction() throws IOException {
         //老二的技能:兄弟们冲啊！给2.0倍攻速范围内所有友军增加振奋buff,20s内最多使用一次
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (currentMagic < baseMagic)

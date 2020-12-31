@@ -8,14 +8,12 @@ import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
-import com.sjq.gourd.protocol.BulletBuildMsg;
-import com.sjq.gourd.protocol.EquipmentRequestMsg;
-import com.sjq.gourd.protocol.Msg;
-import com.sjq.gourd.protocol.SameDestinyMsg;
+import com.sjq.gourd.protocol.*;
 import com.sjq.gourd.stage.SceneController;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -23,13 +21,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.*;
+import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameStartFight {
     private SceneController sceneController = null;
+    private Socket socket;
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
     private String campType = "";
@@ -53,8 +54,10 @@ public class GameStartFight {
     private boolean gameOverFlag = false;
     private long gameOverTimeMillis = 0;
 
+    private boolean abnormalDisconnect = false;
 
-    public GameStartFight(String campType, SceneController sceneController,
+
+    public GameStartFight(Socket socket, String campType, SceneController sceneController,
                           ObjectInputStream in, ObjectOutputStream out,
                           HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily,
                           EquipmentFactory equipmentFactory) {
@@ -105,20 +108,44 @@ public class GameStartFight {
                     try {
                         int msgType = in.readInt();
                         if (msgType == Msg.FINISH_GAME_FLAG_MSG) {
+                            msgController.getMsgClass(msgType, in);
                             if(campType.equals(msgController.getWinCampType()))
                                 gameOver(Constant.gameOverState.VICTORY);
                             else
                                 gameOver(Constant.gameOverState.DEFEAT);
                             gameOverTimeMillis = System.currentTimeMillis();
                             gameOverFlag = true;
+                        } else if(msgType == Msg.SOCKET_DISCONNECT_MSG) {
                             break;
-                        } else {
-                            msgController.getMsgClass(msgType, in);
                         }
+                        else
+                            msgController.getMsgClass(msgType, in);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        abnormalDisconnect = true;
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setHeaderText("连接失败");
+                                alert.setContentText("服务器断开连接或者对方断开连接");
+                                alert.show();
+                                sceneController.getFightScene().getChildren().clear();
+                                sceneController.getMapPane().getChildren().clear();
+                                sceneController.getFightScene().getChildren().add(sceneController.getMapPane());
+                                sceneController.getFightScene().setVisible(false);
+                                sceneController.getFightScene().setDisable(true);
+                                sceneController.getConnectScene().setVisible(true);
+                                sceneController.getConnectScene().setDisable(false);
+                                sceneController.backToConnectScene();
+                            }
+                        });
+                        try {
+                            socket.close();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        break;
                     }
-
                 }
             }
         }).start();
@@ -131,12 +158,11 @@ public class GameStartFight {
                     bulletKey = 1;
                 while (true) {
                     try {
+                        if(abnormalDisconnect) break;
                         if(gameOverFlag) {
-                            if(System.currentTimeMillis() - gameOverTimeMillis > 3000) {
-                                break;
-                            }
+                            new NoParseMsg(Msg.SOCKET_DISCONNECT_MSG).sendMsg(out);
+                            break;
                         }
-
                         for (Creature myMember : myFamily.values()) {
                             ArrayList<Bullet> tempBullet = myMember.update();
                             if (tempBullet.size() != 0) {
@@ -464,7 +490,6 @@ public class GameStartFight {
                 }
                 if (keyCode.isDigitKey()) {
                     int num = keyCode.ordinal() - 25;
-                    System.out.println(num);
                     if (0 <= num && num <= 8) {
                         Creature creature = myFamily.get(finalIdOffset + num);
                         if (myCreature != creature) {

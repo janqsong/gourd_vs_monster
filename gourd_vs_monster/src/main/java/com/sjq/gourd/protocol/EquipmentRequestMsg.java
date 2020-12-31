@@ -8,7 +8,7 @@ class EquipmentRequest implements Serializable {
     public int equipmentKey;
 }
 
-public class EquipmentRequestMsg implements Msg{
+public class EquipmentRequestMsg implements Msg {
     private static final int msgType = Msg.EQUIPMENT_REQUEST_MSG;
     EquipmentRequest equipmentRequest = new EquipmentRequest();
 
@@ -22,28 +22,24 @@ public class EquipmentRequestMsg implements Msg{
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(equipmentRequest);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(equipmentRequest);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            equipmentRequest = (EquipmentRequest) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        equipmentRequest = (EquipmentRequest) inStream.readObject();
     }
 
-    public String getCampType() {return equipmentRequest.campType;}
+    public String getCampType() {
+        return equipmentRequest.campType;
+    }
 
-    public int getCreatureId() {return equipmentRequest.creatureId;}
+    public int getCreatureId() {
+        return equipmentRequest.creatureId;
+    }
 
     public int getEquipmentKey() {
         return equipmentRequest.equipmentKey;

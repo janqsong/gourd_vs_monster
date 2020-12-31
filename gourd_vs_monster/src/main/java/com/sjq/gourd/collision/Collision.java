@@ -8,6 +8,8 @@ import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.CreatureState;
 import com.sjq.gourd.creature.CreatureStateWithClock;
 
+import java.io.IOException;
+
 public class Collision {
     private final Bullet bullet;
 

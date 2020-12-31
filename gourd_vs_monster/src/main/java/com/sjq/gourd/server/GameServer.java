@@ -14,7 +14,7 @@ public class GameServer extends Thread{
 
     @Override
     public void run() {
-        SocketController socketServerController = new SocketController();
+        SocketController socketServerController = new SocketController(serverSocket);
         int count = 1;
         while(true) {
             try {
@@ -32,6 +32,10 @@ public class GameServer extends Thread{
                 e.printStackTrace();
             }
         }
-        socketServerController.prepareFight();
+        try {
+            socketServerController.prepareFight();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

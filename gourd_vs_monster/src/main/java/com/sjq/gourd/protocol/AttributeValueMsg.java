@@ -1,10 +1,8 @@
 package com.sjq.gourd.protocol;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.*;
 
-class AttributeValue implements Serializable{
+class AttributeValue implements Serializable {
     public String campType;
     public int creatureId;
     public double layoutX;
@@ -42,23 +40,15 @@ public class AttributeValueMsg implements Msg {
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(attributeValue);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(attributeValue);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            attributeValue = (AttributeValue) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        attributeValue = (AttributeValue) inStream.readObject();
     }
 
     public String getCampType() {

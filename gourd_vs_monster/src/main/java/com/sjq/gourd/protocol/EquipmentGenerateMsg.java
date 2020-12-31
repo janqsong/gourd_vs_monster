@@ -26,23 +26,15 @@ public class EquipmentGenerateMsg implements Msg {
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(equipmentGenerate);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(equipmentGenerate);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            equipmentGenerate = (EquipmentGenerate) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        equipmentGenerate = (EquipmentGenerate) inStream.readObject();
     }
 
     public int getEquipmentMsg() {

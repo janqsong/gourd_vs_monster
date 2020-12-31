@@ -16,23 +16,15 @@ public class BulletDeleteMsg implements Msg {
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeInt(bulletKey);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeInt(bulletKey);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            bulletKey = inStream.readInt();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException {
+        bulletKey = inStream.readInt();
     }
 
     public int getBulletKey() {

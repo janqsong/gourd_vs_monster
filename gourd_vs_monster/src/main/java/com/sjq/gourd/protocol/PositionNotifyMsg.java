@@ -9,7 +9,7 @@ class PositionNotify implements Serializable {
     public double layoutY;
 }
 
-public class PositionNotifyMsg implements Msg{
+public class PositionNotifyMsg implements Msg {
     private static final int msgType = Msg.POSITION_NOTIFY_MSG;
     PositionNotify positionNotify = new PositionNotify();
 
@@ -25,27 +25,30 @@ public class PositionNotifyMsg implements Msg{
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(positionNotify);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(positionNotify);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            positionNotify = (PositionNotify) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        positionNotify = (PositionNotify) inStream.readObject();
     }
 
-    public String getCampType() {return positionNotify.campType;}
-    public int getCreatureId() {return positionNotify.creatureId;}
-    public double getLayoutX() {return positionNotify.layoutX;}
-    public double getLayoutY() {return positionNotify.layoutY;}
+    public String getCampType() {
+        return positionNotify.campType;
+    }
+
+    public int getCreatureId() {
+        return positionNotify.creatureId;
+    }
+
+    public double getLayoutX() {
+        return positionNotify.layoutX;
+    }
+
+    public double getLayoutY() {
+        return positionNotify.layoutY;
+    }
 }

@@ -242,7 +242,7 @@ public class Creature {
         }
     }
 
-    private double calculateEffectiveSpeed() {
+    private double calculateEffectiveSpeed() throws IOException {
         //根据当前状态计算实际有效的速度
         double speed = currentMoveSpeed;
         boolean notMoveFlag = false, speedCutFlag = false, speedAddFlag = false;
@@ -271,7 +271,7 @@ public class Creature {
     }
 
     //这个函数是发生位移的函数,每一帧只要没死,就发生一次位移
-    private void move() {
+    private void move() throws IOException {
         //死则返回
         if (!isAlive())
             return;
@@ -415,7 +415,11 @@ public class Creature {
                     magicProgressBar.setVisible(true);
                     drawCloseAttack();
                     drawBar();
-                    move();
+                    try {
+                        move();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     closeAttackImageView.setVisible(false);
                     creatureImageView.setVisible(false);
@@ -440,8 +444,8 @@ public class Creature {
         }
     }
 
-    //封装移动方式,绘制所有信息,攻击,返回子弹列表
-    public ArrayList<Bullet> update() {
+
+    public ArrayList<Bullet> update() throws IOException {
         ArrayList<Bullet> bullets = new ArrayList<>();
         //创建一个需要返回的子弹列表,保证返回值不会null
         if (!isControlled()) {
@@ -513,7 +517,7 @@ public class Creature {
         });
     }
 
-    public void sendAllAttribute(ObjectOutputStream out) {
+    public void sendAllAttribute(ObjectOutputStream out) throws IOException {
         new AttributeValueMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY(), direction,
                 currentHealth, currentMagic, currentAttack, currentDefense, currentAttackSpeed, currentMoveSpeed).sendMsg(out);
         //new PositionNotifyMsg(campType, creatureId, imagePosition.getLayoutX(), imagePosition.getLayoutY()).sendMsg(outputStream);
@@ -731,13 +735,13 @@ public class Creature {
         return currentAttackSpeed;
     }
 
-    public ArrayList<Bullet> qAction() {
+    public ArrayList<Bullet> qAction() throws IOException {
         //技能扣篮在这个位置扣,蓝不够直接返回一个size=0的list,一定不要返回null
         ArrayList<Bullet> bullets = new ArrayList<>();
         return bullets;
     }
 
-    public void eAction() {
+    public void eAction() throws IOException {
 
     }
 

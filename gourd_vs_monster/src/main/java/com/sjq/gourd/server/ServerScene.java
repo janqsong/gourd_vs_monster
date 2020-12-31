@@ -12,9 +12,12 @@ import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.protocol.*;
 
+import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,6 +30,10 @@ public class ServerScene {
     private int equipmentKey = 0;
 
     private ObjectOutputStream outFile = null;
+
+    private ServerSocket serverSocket;
+    private Socket gourdSocket = null;
+    private Socket monsterSocket = null;
 
     private ObjectInputStream inGourd;
     private ObjectOutputStream outGourd;
@@ -44,9 +51,14 @@ public class ServerScene {
     private long gameOverTimeMillis = 0;
 
     private boolean gameOverFlag = false;
+    private boolean abnormalDisconnect = false;
 
-    public ServerScene(ObjectInputStream inGourd, ObjectOutputStream outGourd,
+    public ServerScene(ServerSocket serverSocket, Socket gourdSocket, Socket monsterSocket,
+                       ObjectInputStream inGourd, ObjectOutputStream outGourd,
                        ObjectInputStream inMonster, ObjectOutputStream outMonster) {
+        this.serverSocket = serverSocket;
+        this.gourdSocket = gourdSocket;
+        this.monsterSocket = monsterSocket;
         this.inGourd = inGourd;
         this.outGourd = outGourd;
         this.inMonster = inMonster;
@@ -115,7 +127,7 @@ public class ServerScene {
         }
     }
 
-    public void startGame() {
+    public void startGame() throws IOException {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -189,7 +201,7 @@ public class ServerScene {
         startFight();
     }
 
-    public void startFight() {
+    public void startFight() throws IOException {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -198,15 +210,35 @@ public class ServerScene {
                         int gourdMsgType = inGourd.readInt();
                         if (gourdMsgType == Msg.FINISH_FLAG_MSG) {
                             gourdFinishFlag = true;
-                        } else {
+                        } else if(gourdMsgType == Msg.SOCKET_DISCONNECT_MSG) {
+                            Thread.sleep(3000);
+                            inGourd.close();
+                            outGourd.close();
+                            gourdSocket.close();
+                            if(!serverSocket.isClosed())
+                                serverSocket.close();
+                            break;
+                        }
+                        else {
                             gourdMsgController.getMsgClass(gourdMsgType, inGourd);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        try {
+                            abnormalDisconnect = true;
+                            inGourd.close();
+                            outGourd.close();
+                            gourdSocket.close();
+                            inMonster.close();
+                            outMonster.close();
+                            monsterSocket.close();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
             }
         }).start();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -215,17 +247,50 @@ public class ServerScene {
                         int monsterMsgType = inMonster.readInt();
                         if (monsterMsgType == Msg.FINISH_FLAG_MSG) {
                             monsterFinishFlag = true;
-                        } else {
+                        } else if(monsterMsgType == Msg.SOCKET_DISCONNECT_MSG) {
+                            Thread.sleep(3000);
+                            inMonster.close();
+                            outMonster.close();
+                            monsterSocket.close();
+                            if(!serverSocket.isClosed())
+                                serverSocket.close();
+                            break;
+                        }
+                        else {
                             monsterMsgController.getMsgClass(monsterMsgType, inMonster);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        try {
+                            abnormalDisconnect = true;
+                            inGourd.close();
+                            outGourd.close();
+                            gourdSocket.close();
+                            inMonster.close();
+                            outMonster.close();
+                            monsterSocket.close();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+
                     }
                 }
             }
         }).start();
         while (true) {
-            if(gameOverFlag && System.currentTimeMillis() - gameOverTimeMillis > 3000) break;
+            if(abnormalDisconnect) {
+                try {
+                    outFile.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            }
+            if(gameOverFlag) {
+                new NoParseMsg(Msg.SOCKET_DISCONNECT_MSG).sendMsg(outGourd);
+                new NoParseMsg(Msg.SOCKET_DISCONNECT_MSG).sendMsg(outMonster);
+                break;
+            }
+
             for(Creature gourdCreature : gourdFamily.values()) {
                 gourdCreature.sendAllAttribute(outMonster);
                 gourdCreature.sendAllAttribute(outFile);
@@ -364,8 +429,6 @@ public class ServerScene {
 
             try {
                 new NoParseMsg(Msg.FRAME_FINISH_FLAG_MSG).sendMsg(outFile);
-                Thread.yield();
-                Thread.sleep(Constant.FRAME_TIME);
                 int judge = judgeWin(gourdFamily, monsterFamily);
                 if (judge != 2) {
                     FinishGameFlagMsg finishGameFlagMsg = null;
@@ -387,6 +450,8 @@ public class ServerScene {
                     gameOverTimeMillis = System.currentTimeMillis();
                     gameOverFlag = true;
                 }
+                Thread.yield();
+                Thread.sleep(Constant.FRAME_TIME);
             } catch (Exception e) {
                 e.printStackTrace();
             }

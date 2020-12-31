@@ -1,16 +1,11 @@
 package com.sjq.gourd.client;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.net.Socket;
 import java.util.*;
 
-import com.sjq.gourd.bullet.Bullet;
-import com.sjq.gourd.collision.Collision;
 import com.sjq.gourd.constant.Constant;
-import com.sjq.gourd.constant.CreatureId;
-import com.sjq.gourd.constant.ImageUrl;
 import com.sjq.gourd.creature.Creature;
-import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.protocol.NoParseMsg;
@@ -20,16 +15,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import org.json.*;
 
 public class Camp {
     protected HashMap<Integer, Creature> gourdFamily = new HashMap<>();
@@ -38,14 +28,16 @@ public class Camp {
     protected SceneController sceneController;
     protected ObjectInputStream in;
     protected ObjectOutputStream out;
+    protected Socket socket;
 
     protected EquipmentFactory equipmentFactory = null;
     MsgController msgController = null;
 
     protected final Random randomNum = new Random(System.currentTimeMillis());
 
-    public Camp(SceneController sceneController,
+    public Camp(Socket socket, SceneController sceneController,
                 ObjectInputStream in, ObjectOutputStream out) {
+        this.socket = socket;
         this.sceneController = sceneController;
         this.in = in;
         this.out = out;
@@ -70,7 +62,11 @@ public class Camp {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(out);
+                try {
+                    new NoParseMsg(Msg.FINISH_FLAG_MSG).sendMsg(out);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 button.setVisible(false);
                 button.setDisable(true);
                 prepareCountDown();
@@ -118,7 +114,7 @@ public class Camp {
                             notifyServerImagePosition();
                             break;
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
@@ -130,7 +126,7 @@ public class Camp {
         System.out.println("Camp Event");
     }
 
-    public void notifyServerImagePosition() {
+    public void notifyServerImagePosition() throws IOException {
         System.out.println("notify server image position");
     }
 }
