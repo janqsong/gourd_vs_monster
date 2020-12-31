@@ -79,6 +79,7 @@ public class SecondGourd extends Creature {
         }
         inQAction = true;
         lastQActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION, 20000));
         return bullets;
     }
 

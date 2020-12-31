@@ -13,7 +13,7 @@ public class JadeHairpin extends Equipment {
     private final double attackIncrement = 20;
 
 
-    private static Image image = new Image("/images/equipmentImages/jadeHairpin.png");
+    private static final Image image = new Image("/images/equipmentImages/jadeHairpin.png");
     private static final double width = 50, height = 50;
 
     JadeHairpin(int id, ImageView imageView) {

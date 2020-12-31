@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.HashMap;
 import java.util.Random;
 
 public abstract class Equipment {
@@ -19,7 +18,6 @@ public abstract class Equipment {
     protected Creature myCreature = null;
     protected boolean isFree = false;
     private final double WIDTH, HEIGHT;
-    private Random random = new Random(System.currentTimeMillis());
 
     Equipment(String name, int id, Image image, ImageView imageView, double width, double height) {
         this.name = name;
@@ -29,6 +27,7 @@ public abstract class Equipment {
         this.WIDTH = width;
         this.HEIGHT = height;
         this.isFree = true;
+        Random random = new Random(System.currentTimeMillis());
         imagePosition = new ImagePosition(random.nextInt((int) (Constant.FIGHT_PANE_WIDTH - width)),
                 random.nextInt((int) (Constant.FIGHT_PANE_HEIGHT - height)));
         Platform.runLater(new Runnable() {

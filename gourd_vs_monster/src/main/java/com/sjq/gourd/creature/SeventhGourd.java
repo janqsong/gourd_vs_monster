@@ -74,6 +74,7 @@ public class SeventhGourd extends Creature {
         currentAttackSpeed += 3.0 * baseAttackSpeed;
         shootRange += shootRangeIncrement;
         lastQAction = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,gap));
         return bullets;
     }
 

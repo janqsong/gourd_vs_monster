@@ -82,6 +82,7 @@ public class ThirdGourd extends Creature {
         } else
             moveSpeedDecrement = 3;
         lastQActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,gap));
         return arrayList;
     }
 

@@ -108,6 +108,7 @@ public class ScorpionMonster extends Creature {
         }
         setCurrentMagic(0);
         lastQActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,qGap));
         return arrayList;
     }
 
@@ -125,6 +126,7 @@ public class ScorpionMonster extends Creature {
         setShootRange(shootRange + shootRangeIncrement);
         setCurrentMoveSpeed(currentMoveSpeed + moveSpeedIncrement);
         lastEActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.E_ACTION,eGap));
     }
 
     @Override
@@ -136,6 +138,7 @@ public class ScorpionMonster extends Creature {
         inRAction = true;
         selectThree();
         lastRActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.R_ACTION,rGap));
     }
 
     @Override

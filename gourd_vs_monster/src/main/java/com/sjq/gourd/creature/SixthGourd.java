@@ -103,6 +103,7 @@ public class SixthGourd extends Creature {
         currentMoveSpeed += moveSpeedIncrement;
         currentDefense += defenseIncrement;
         lastTransfigurationMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,gap));
         return arrayList;
     }
 

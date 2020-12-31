@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class TreasureBag extends Equipment {
-    private static Image image = new Image("/images/equipmentImages/treasureBag.png");
+    private static final Image image = new Image("/images/equipmentImages/treasureBag.png");
     private static final double width = 50, height = 50;
 
     TreasureBag(int id, ImageView imageView) {

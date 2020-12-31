@@ -446,15 +446,12 @@ public class Creature {
         //创建一个需要返回的子弹列表,保证返回值不会null
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-//                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
             }
         } else {
-//            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -478,29 +475,16 @@ public class Creature {
     }
 
     public void notMyCampUpdate() {
-        setCreatureState();
-        drawCloseAttack();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 if (isAlive()) {
                     creatureImageView.setVisible(true);
                     creatureImageView.setDisable(false);
-//                    if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
-//                        //显示近战攻击图片
-//                        //正中心对齐
-//                        ImagePosition pos = getCenterPos();
-//                        double x = pos.getLayoutX() - closeAttackImageWidth / 2;
-//                        double y = pos.getLayoutY() - closeAttackImageHeight / 2;
-//                        closeAttackImageView.setLayoutX(x);
-//                        closeAttackImageView.setLayoutY(y);
-//                        closeAttackImageView.setVisible(true);
-//                    } else {
-//                        //否则不显示近战图片
-//                        closeAttackImageView.setVisible(false);
-//                    }
                     healthProgressBar.setVisible(true);
                     magicProgressBar.setVisible(true);
+                    drawCloseAttack();
+                    setCreatureState();
                     drawBar();
                 } else {
                     closeAttackImageView.setVisible(false);
@@ -733,8 +717,7 @@ public class Creature {
 
     public ArrayList<Bullet> qAction() {
         //技能扣篮在这个位置扣,蓝不够直接返回一个size=0的list,一定不要返回null
-        ArrayList<Bullet> bullets = new ArrayList<>();
-        return bullets;
+        return new ArrayList<>();
     }
 
     public void eAction() {
@@ -778,9 +761,7 @@ public class Creature {
     }
 
     public boolean containState(CreatureState creatureState) {
-        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
-        while (creatureStateWithClockIterator.hasNext()) {
-            CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
+        for (CreatureStateWithClock creatureStateWithClock : stateSet) {
             if (creatureStateWithClock.getCreatureState() == creatureState)
                 return true;
         }
@@ -819,6 +800,12 @@ public class Creature {
                     message.append("振奋").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
                 else if (creatureStateWithClock.getCreatureState().equals(CreatureState.CURE))
                     message.append("治愈").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.Q_ACTION))
+                    message.append("Q技能").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.E_ACTION))
+                    message.append("E技能").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
+                else if (creatureStateWithClock.getCreatureState().equals(CreatureState.R_ACTION))
+                    message.append("R技能").append(String.format("%.1f", (double) creatureStateWithClock.getRemainTime() / 1000.0)).append("s\n");
             }
         }
         return message.toString();

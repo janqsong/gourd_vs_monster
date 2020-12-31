@@ -14,8 +14,8 @@ public class FirstGourd extends Creature {
 
     private long lastTransfigurationMillis;
     private boolean inQAction = false;
-    private double moveSpeedIncrement = 5;
-    private double attackDecrement = 20;
+    private final double moveSpeedIncrement = 5;
+    private final double attackDecrement = 20;
     private final long gap = 5000; //5000ms时间
 
     public FirstGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
@@ -77,6 +77,7 @@ public class FirstGourd extends Creature {
         currentAttack -= attackDecrement;
         currentMoveSpeed += moveSpeedIncrement;
         lastTransfigurationMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION, gap));
         return arrayList;
     }
 
