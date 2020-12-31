@@ -7,6 +7,7 @@ import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.protocol.*;
 
 public class SocketController {
+    private ServerSocket serverSocket;
     private Socket socketPlayerGourd;
     private Socket socketPlayerMonster;
     private ObjectInputStream inGourd;
@@ -17,7 +18,8 @@ public class SocketController {
     boolean gourdFinishFlag = false;
     boolean monsterFinishFlag = false;
 
-    public SocketController() {
+    public SocketController(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
     }
 
     public void addGourdPlayer(Socket socket) {
@@ -44,7 +46,7 @@ public class SocketController {
     }
 
 
-    public void prepareFight(){
+    public void prepareFight() throws IOException {
         System.out.println("prepareFight");
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outMonster);
@@ -106,18 +108,7 @@ public class SocketController {
         }
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outMonster);
-        new ServerScene(inGourd, outGourd, inMonster, outMonster).startGame();
-        try {
-            Thread.sleep(1000);
-            socketPlayerGourd.shutdownInput();
-            socketPlayerGourd.shutdownOutput();
-            socketPlayerMonster.shutdownInput();
-            socketPlayerMonster.shutdownOutput();
-            socketPlayerGourd.close();
-            socketPlayerMonster.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new ServerScene(serverSocket, socketPlayerGourd, socketPlayerMonster, inGourd, outGourd, inMonster, outMonster).startGame();
 
     }
 

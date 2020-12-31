@@ -1,9 +1,6 @@
 package com.sjq.gourd.protocol;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class DistributionCampMsg implements Msg {
     private static final int msgType = Msg.DISTRIBUTION_OF_CAMP_MSG;
@@ -17,24 +14,16 @@ public class DistributionCampMsg implements Msg {
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeUTF(campType);
-            outStream.flush();
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeUTF(campType);
+        outStream.flush();
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            campType = inStream.readUTF();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException {
+        campType = inStream.readUTF();
     }
 
     public String getCampType() {

@@ -44,11 +44,11 @@ public class GameClient {
         ImageUrl.initImageUrl();
         if(campType.equals(Constant.CampType.GOURD)) {
             System.out.println(Constant.CampType.GOURD + " startGame");
-            GourdCamp gourdCamp = new GourdCamp(sceneController, in, out);
+            GourdCamp gourdCamp = new GourdCamp(clientSocket, sceneController, in, out);
             gourdCamp.startGame();
         } else if(campType.equals(Constant.CampType.MONSTER)) {
             System.out.println(Constant.CampType.MONSTER + " startGame");
-            MonsterCamp monsterCamp = new MonsterCamp(sceneController, in, out);
+            MonsterCamp monsterCamp = new MonsterCamp(clientSocket, sceneController, in, out);
             monsterCamp.startGame();
         }
     }

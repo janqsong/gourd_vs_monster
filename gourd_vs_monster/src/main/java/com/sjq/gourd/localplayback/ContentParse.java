@@ -17,6 +17,7 @@ import com.sjq.gourd.stage.SceneController;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class ContentParse {
         this.sceneController = sceneController;
     }
 
-    public void parsePlayBackContent(ObjectInputStream inputStream, int contentType) {
+    public void parsePlayBackContent(ObjectInputStream inputStream, int contentType) throws IOException, ClassNotFoundException {
         switch(contentType) {
             case Msg.POSITION_NOTIFY_MSG: {
                 PositionNotifyMsg positionNotifyMsg = new PositionNotifyMsg();

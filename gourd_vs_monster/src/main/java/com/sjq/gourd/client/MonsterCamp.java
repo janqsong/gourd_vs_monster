@@ -1,9 +1,7 @@
 package com.sjq.gourd.client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +28,9 @@ public class MonsterCamp extends Camp{
     private Creature selectCreature = null;
     PositionXY beginPosition = new PositionXY(0, 0);
 
-    public MonsterCamp(SceneController sceneController,
+    public MonsterCamp(Socket socket, SceneController sceneController,
                        ObjectInputStream in, ObjectOutputStream out) {
-        super(sceneController, in, out);
+        super(socket, sceneController, in, out);
         ArrayList<ImageView> gourdImageView = new ArrayList<>();
         ArrayList<ImageView> monsterImageView = new ArrayList<>();
         for (int i = 0; i <= 20; i++) {
@@ -139,7 +137,7 @@ public class MonsterCamp extends Camp{
         }
     }
 
-    public void notifyServerImagePosition() {
+    public void notifyServerImagePosition() throws IOException {
         System.out.println("monster notify server image position");
         for (Map.Entry<Integer, Creature> entry : monsterFamily.entrySet()) {
             int creatureId = entry.getKey();
@@ -190,7 +188,7 @@ public class MonsterCamp extends Camp{
                 }
             });
         }
-        new GameStartFight(Constant.CampType.MONSTER, sceneController, in, out,
+        new GameStartFight(socket, Constant.CampType.MONSTER, sceneController, in, out,
                 monsterFamily, gourdFamily, equipmentFactory).start();
     }
 }

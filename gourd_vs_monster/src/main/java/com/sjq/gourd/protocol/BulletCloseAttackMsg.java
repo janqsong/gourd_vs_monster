@@ -22,23 +22,15 @@ public class BulletCloseAttackMsg implements Msg {
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(bulletCloseAttack);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(bulletCloseAttack);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            bulletCloseAttack = (BulletCloseAttack) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        bulletCloseAttack = (BulletCloseAttack) inStream.readObject();
     }
 
     public int getSourceCreatureId() {

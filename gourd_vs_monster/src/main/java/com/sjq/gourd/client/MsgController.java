@@ -16,6 +16,8 @@ import com.sjq.gourd.protocol.*;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
+
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.*;
 import java.util.logging.Logger;
@@ -101,7 +103,7 @@ public class MsgController {
         return tempSameDestinyHashMap;
     }
 
-    public void getMsgClass(int msgType, ObjectInputStream inputStream) {
+    public void getMsgClass(int msgType, ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         switch (msgType) {
             case Msg.DISTRIBUTION_OF_CAMP_MSG: {
                 DistributionCampMsg distributionCampMsg = new DistributionCampMsg();
@@ -160,20 +162,6 @@ public class MsgController {
                 creature.setCurrentAttackSpeed(currentAttackSpeed);
                 creature.setCurrentMoveSpeed(currentMoveSpeed);
                 creature.drawBar();
-                break;
-            }
-            case Msg.IMAGE_DIRECTION_MSG: {
-                ImageDirectionMsg imageDirectionMsg = new ImageDirectionMsg();
-                imageDirectionMsg.parseMsg(inputStream);
-                campType = imageDirectionMsg.getCampType();
-                int creatureId = imageDirectionMsg.getCreatureId();
-                int direction = imageDirectionMsg.getDirection();
-                Creature creature = null;
-                if (campType.equals(Constant.CampType.GOURD))
-                    creature = gourdFamily.get(creatureId);
-                else
-                    creature = monsterFamily.get(creatureId);
-                creature.setDirection(direction);
                 break;
             }
             case Msg.BULLET_BUILD_MSG: {

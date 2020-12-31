@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class ScorpionMonster extends Creature {
 
     @Override
     //封装移动方式,画,攻击,返回子弹
-    public ArrayList<Bullet> update() {
+    public ArrayList<Bullet> update() throws IOException {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
@@ -113,7 +114,7 @@ public class ScorpionMonster extends Creature {
     }
 
     @Override
-    public void eAction() {
+    public void eAction() throws IOException {
         //狂暴之心,移速加快,攻击力加强,防御力提高,加一定攻速,加一定血量
         if (currentMagic < 0.5 * baseMagic)
             return;
@@ -147,8 +148,12 @@ public class ScorpionMonster extends Creature {
         if (delta < 0 && inRAction) {
             for (int i = 0; i < 3; i++) {
                 if (creatures[i] != null && creatures[i].isAlive())
-                    new SameDestinyMsg(creatures[i].getCampType(), creatures[i].getCreatureId(),
-                            -delta).sendMsg(out);
+                    try {
+                        new SameDestinyMsg(creatures[i].getCampType(), creatures[i].getCreatureId(),
+                                -delta).sendMsg(out);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
             }
         } else
             super.setCurrentHealth(healthVal);

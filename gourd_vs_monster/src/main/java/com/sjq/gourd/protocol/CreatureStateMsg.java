@@ -24,30 +24,30 @@ public class CreatureStateMsg implements Msg {
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(creatureState);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(creatureState);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            creatureState = (CreatureState) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        creatureState = (CreatureState) inStream.readObject();
     }
 
-    public String getCampType() {return creatureState.campType;}
+    public String getCampType() {
+        return creatureState.campType;
+    }
 
-    public int getCreatureId() {return creatureState.creatureId;}
+    public int getCreatureId() {
+        return creatureState.creatureId;
+    }
 
-    public int getCreatureState() {return creatureState.creatureState;}
+    public int getCreatureState() {
+        return creatureState.creatureState;
+    }
 
-    public long getGapTime() {return creatureState.gapTime;}
+    public long getGapTime() {
+        return creatureState.gapTime;
+    }
 }

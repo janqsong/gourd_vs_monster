@@ -8,11 +8,12 @@ class SameDestiny implements Serializable {
     public double deltaHealth;
 }
 
-public class SameDestinyMsg implements Msg{
+public class SameDestinyMsg implements Msg {
     private final static int msgType = Msg.SAME_DESTINY_MSG;
     private SameDestiny sameDestiny = new SameDestiny();
 
-    public SameDestinyMsg() {}
+    public SameDestinyMsg() {
+    }
 
     public SameDestinyMsg(String campType, int creatureId, double deltaHealth) {
         sameDestiny.campType = campType;
@@ -21,22 +22,15 @@ public class SameDestinyMsg implements Msg{
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeObject(sameDestiny);
-            outStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeObject(sameDestiny);
+        outStream.flush();
     }
+
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            sameDestiny = (SameDestiny) inStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        sameDestiny = (SameDestiny) inStream.readObject();
     }
 
     public String getCampType() {

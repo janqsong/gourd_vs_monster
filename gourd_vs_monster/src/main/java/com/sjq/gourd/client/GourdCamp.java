@@ -1,29 +1,21 @@
 package com.sjq.gourd.client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.CreatureFactory;
-import com.sjq.gourd.log.MyLogger;
-import com.sjq.gourd.protocol.CountDownMsg;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.protocol.NoParseMsg;
 import com.sjq.gourd.protocol.PositionNotifyMsg;
 import com.sjq.gourd.stage.SceneController;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
@@ -33,9 +25,9 @@ public class GourdCamp extends Camp{
     private Creature selectCreature = null;
     PositionXY beginPosition = new PositionXY(0, 0);
 
-    public GourdCamp(SceneController sceneController,
+    public GourdCamp(Socket socket, SceneController sceneController,
                      ObjectInputStream in, ObjectOutputStream out) {
-        super(sceneController, in, out);
+        super(socket, sceneController, in, out);
         ArrayList<ImageView> gourdImageView = new ArrayList<>();
         ArrayList<ImageView> monsterImageView = new ArrayList<>();
         for (int i = 0; i <= 20; i++) {
@@ -152,7 +144,7 @@ public class GourdCamp extends Camp{
         }
     }
 
-    public void notifyServerImagePosition() {
+    public void notifyServerImagePosition() throws IOException {
         System.out.println("gourd notify server image position");
         for (Map.Entry<Integer, Creature> entry : gourdFamily.entrySet()) {
             int creatureId = entry.getKey();
@@ -205,7 +197,7 @@ public class GourdCamp extends Camp{
             });
         }
 
-        new GameStartFight(Constant.CampType.GOURD, sceneController, in, out,
+        new GameStartFight(socket, Constant.CampType.GOURD, sceneController, in, out,
                 gourdFamily, monsterFamily, equipmentFactory).start();
     }
 }

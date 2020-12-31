@@ -14,23 +14,15 @@ public class CountDownMsg implements Msg{
     }
 
     @Override
-    public void sendMsg(ObjectOutputStream outStream) {
-        try {
-            outStream.writeInt(msgType);
-            outStream.writeInt(timeRemaining);
-            outStream.flush();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType);
+        outStream.writeInt(timeRemaining);
+        outStream.flush();
     }
 
     @Override
-    public void parseMsg(ObjectInputStream inStream) {
-        try {
-            timeRemaining = inStream.readInt();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+    public void parseMsg(ObjectInputStream inStream) throws IOException {
+        timeRemaining = inStream.readInt();
     }
 
     public int getTimeRemaining() {return timeRemaining;}
