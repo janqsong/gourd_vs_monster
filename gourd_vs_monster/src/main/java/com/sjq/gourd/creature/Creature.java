@@ -357,22 +357,20 @@ public class Creature {
     }
 
     //根据新的生命值信息更新当前生命值,如果生命值<=0,则=0,如果超出最大生命值,则等于最大生命值
+    //如果此时处于重伤状态并且要加血,就只能加10%的血量
     public void setCurrentHealth(double healthVal) {
         double delta = healthVal - currentHealth;
-        if (delta < 0) {
-            if (healthVal < 0)
-                currentHealth = 0;
-            else
-                currentHealth = healthVal;
-        } else {
-            //加血要算重伤buff
-            if (containState(CreatureState.SERIOUS_INJURY))
-                currentHealth += delta * 0.1;
-            else
-                currentHealth = healthVal;
-            if (currentHealth > baseHealth)
-                currentHealth = baseHealth;
-        }
+        double finalHealth = currentHealth;
+        if (containState(CreatureState.SERIOUS_INJURY) && delta > 0)
+            finalHealth += 0.1 * delta;//如果是重伤且加血
+        else
+            finalHealth = healthVal;//如果只是加血
+
+        if (finalHealth > baseHealth)
+            finalHealth = baseHealth;
+        if (finalHealth < 0)
+            finalHealth = 0;
+        currentHealth = finalHealth;
     }
 
     //获得图片正中心
@@ -382,10 +380,12 @@ public class Creature {
         return new ImagePosition(x + WIDTH / 2, y + HEIGHT / 2);
     }
 
+    //绘制被近战攻击的爪子
     public void drawCloseAttack() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                //如果距离上次被近战攻击的时间小于近战攻击图片存续时间,就显示
                 if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
                     //显示近战攻击图片
                     //正中心对齐
@@ -405,28 +405,15 @@ public class Creature {
 
     //每回合不管死没死都要调用draw
     public void draw() {
-        drawCloseAttack();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 if (isAlive()) {
                     creatureImageView.setVisible(true);
                     creatureImageView.setDisable(false);
-                    if (System.currentTimeMillis() - lastCloseAttack <= Constant.CLAW_IMAGE_EXIST_TIME) {
-                        //显示近战攻击图片
-                        //正中心对齐
-                        ImagePosition pos = getCenterPos();
-                        double x = pos.getLayoutX() - closeAttackImageWidth / 2;
-                        double y = pos.getLayoutY() - closeAttackImageHeight / 2;
-                        closeAttackImageView.setLayoutX(x);
-                        closeAttackImageView.setLayoutY(y);
-                        closeAttackImageView.setVisible(true);
-                    } else {
-                        //否则不显示近战图片
-                        closeAttackImageView.setVisible(false);
-                    }
                     healthProgressBar.setVisible(true);
                     magicProgressBar.setVisible(true);
+                    drawCloseAttack();
                     drawBar();
                     move();
                 } else {
