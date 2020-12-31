@@ -64,4 +64,9 @@ public class Constant {
     public static final class CreatureState {
         public static final int NONE_STATE = 0;
     }
+
+    public static final class gameOverState {
+        public static final int VICTORY = 1;
+        public static final int DEFEAT = 0;
+    }
 }

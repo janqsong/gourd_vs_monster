@@ -49,6 +49,9 @@ public class GameStartFight {
 
     private boolean updateFlag = false;
 
+    private final int judgeWin[] = {3};
+    // judgeWin[0]是当前游戏状态标志
+
 
     public GameStartFight(String campType, SceneController sceneController,
                           ObjectInputStream in, ObjectOutputStream out,
@@ -214,6 +217,7 @@ public class GameStartFight {
     public void start() {
 //        initGame();
         init(campType, myFamily, enemyFamily);
+        gameOverListenerThread(campType);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -234,6 +238,10 @@ public class GameStartFight {
         }).start();
 
         new Thread(new Runnable() {
+
+            boolean gameOverFlag = false;
+            long gameOverTimeMillis = 0;
+
             @Override
             public void run() {
                 int bulletKey = 0;
@@ -247,7 +255,7 @@ public class GameStartFight {
                                 Iterator<Bullet> bulletIterator = tempBullet.listIterator();
                                 while (bulletIterator.hasNext()) {
                                     Bullet bullet = bulletIterator.next();
-                                    if(bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
+                                    if (bullet.getBulletType() == Constant.REMOTE_BULLET_TYPE) {
                                         bullets.put(bulletKey, bullet);
                                         Platform.runLater(new Runnable() {
                                             @Override
@@ -261,7 +269,7 @@ public class GameStartFight {
                                             bullet.getTargetCreature().getCampType(), bullet.getTargetCreature().getCreatureId(),
                                             bullet.getBulletType(), bullet.getBulletState().ordinal()).sendMsg(out);
                                     bulletKey += 2;
-                                    if(bulletKey > Integer.MAX_VALUE - 50) {
+                                    if (bulletKey > Integer.MAX_VALUE - 50) {
                                         bulletKey = 0;
                                         if (campType.equals(Constant.CampType.MONSTER))
                                             bulletKey = 1;
@@ -294,20 +302,20 @@ public class GameStartFight {
                         }
 
                         HashMap<Integer, PositionXY> moveBullets = msgController.getMoveBullets();
-                        for(Map.Entry<Integer, PositionXY> entry : moveBullets.entrySet()) {
+                        for (Map.Entry<Integer, PositionXY> entry : moveBullets.entrySet()) {
                             int key = entry.getKey();
                             PositionXY positionXY = entry.getValue();
-                            if(bullets.get(key) != null)
+                            if (bullets.get(key) != null)
                                 bullets.get(key).setImagePosition(positionXY.X, positionXY.Y);
                         }
 
                         ArrayList<Integer> deleteBulletKeys = msgController.getDeleteBulletKeys();
-                        for(int key : deleteBulletKeys) {
+                        for (int key : deleteBulletKeys) {
                             bullets.get(key).setValid(false);
                         }
 
                         HashMap<Integer, Equipment> buildEquipment = msgController.getBuildEquipment();
-                        for(Map.Entry<Integer, Equipment> entry : buildEquipment.entrySet()) {
+                        for (Map.Entry<Integer, Equipment> entry : buildEquipment.entrySet()) {
                             equipmentHashMap.put(entry.getKey(), entry.getValue());
                         }
 
@@ -330,10 +338,10 @@ public class GameStartFight {
                         }
 
                         HashMap<Creature, Integer> equipmentPickUp = msgController.getEquipmentPickUp();
-                        for(Map.Entry<Creature, Integer> entry : equipmentPickUp.entrySet()) {
+                        for (Map.Entry<Creature, Integer> entry : equipmentPickUp.entrySet()) {
                             Creature creature = entry.getKey();
                             int equipmentKey = entry.getValue();
-                            if(equipmentHashMap.get(equipmentKey) != null) {
+                            if (equipmentHashMap.get(equipmentKey) != null) {
                                 Equipment equipment = equipmentHashMap.get(equipmentKey);
                                 creature.pickUpEquipment(equipment);
                                 equipmentHashMap.remove(equipmentKey);
@@ -353,13 +361,26 @@ public class GameStartFight {
                             }
                         }
 
-                        for(Equipment equipment : equipmentHashMap.values()) {
+                        for (Equipment equipment : equipmentHashMap.values()) {
                             equipment.draw();
                         }
                         for (Creature myMember : myFamily.values()) {
                             myMember.sendAllAttribute(out);
                         }
                         Thread.sleep(Constant.FRAME_TIME);
+
+                        int judge = judgeWin(campType, myFamily, enemyFamily);
+                        if (judge != 2) {
+                            judgeWin[0] = judge;
+                            if (!gameOverFlag) {
+                                gameOverFlag = true;
+                                gameOverTimeMillis = System.currentTimeMillis();
+                            } else if (System.currentTimeMillis() - gameOverTimeMillis > 3000) {
+                                judgeWin[0] = 3;
+                                Thread.interrupted();
+                                break;
+                            }
+                        }
                     } catch (Exception e) {
                         System.out.println("while(true)出错");
                         e.printStackTrace();
@@ -375,7 +396,7 @@ public class GameStartFight {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if(camp.equals(Constant.CampType.GOURD)) {
+                if (camp.equals(Constant.CampType.GOURD)) {
                     myCreatureImageView.setLayoutX(5);
                     enemyCreatureImageView.setLayoutX(5);
                     myCreatureText.setLayoutX(5);
@@ -601,4 +622,106 @@ public class GameStartFight {
 
     }
 
+    //根据阵营以及两个family判断是谁获胜了,-1,0,1,2返回值只可能是这四种状态
+    private int judgeWin(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+        //todo -1 0 1 2 分别代表妖精胜利,平局,葫芦娃胜利,还没结束
+        int flag = 2;
+        boolean allMineDie = true, allEnemyDie = true;
+        for (Creature creature : myFamily.values())
+            if (creature.isAlive()) {
+                allMineDie = false;
+                break;
+            }
+
+        for (Creature creature : enemyFamily.values())
+            if (creature.isAlive()) {
+                allEnemyDie = false;
+                break;
+            }
+
+        if (allMineDie && allEnemyDie)
+            flag = 0;
+        else if (allMineDie && !allEnemyDie)
+            flag = -1;
+        else if (!allMineDie && allEnemyDie)
+            flag = 1;
+        if (camp.equals(Constant.CampType.MONSTER) && flag != 2)
+            flag = -flag;
+        return flag;
+    }
+
+    //传入状态播放动画
+    private void gameOver(int gameOverState) {
+        ImageView imageView = new ImageView();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setImage(ImageUrl.gameOverImageMap.get(gameOverState));
+                imageView.setPreserveRatio(true);
+                double width = 40;
+                double targetWidth = 500;
+                imageView.setFitWidth(width);
+                imageView.setLayoutX((Constant.FIGHT_PANE_WIDTH - width) / 2);
+                imageView.setLayoutY((Constant.FIGHT_PANE_HEIGHT - imageView.getBoundsInLocal().getMaxY()) / 2);
+                sceneController.getMapPane().getChildren().add(imageView);
+                imageView.setVisible(true);
+
+            }
+        });
+
+        double width = 40;
+        double targetWidth = 550;
+        while (width <= targetWidth) {
+            double finalWidth = width;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setFitWidth(finalWidth);
+                    imageView.setLayoutX((Constant.FIGHT_PANE_WIDTH - finalWidth) / 2);
+                    imageView.setLayoutY((Constant.FIGHT_PANE_HEIGHT - imageView.getBoundsInLocal().getMaxY()) / 2);
+                }
+            });
+            width += 5;
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        //todo,在这个地方加上选择重新开始或者返回菜单之类的选择
+    }
+
+    //监听judgeWin[0],如果发生改变,播放获胜或失败,并暂停5s线程后结束线程
+    private void gameOverListenerThread(String myCamp) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (judgeWin[0] != 3) {
+                        if (myCamp.equals(Constant.CampType.GOURD)) {
+                            if (judgeWin[0] >= 0)
+                                gameOver(Constant.gameOverState.VICTORY);
+                            else
+                                gameOver(Constant.gameOverState.DEFEAT);
+                        } else if (judgeWin[0] <= 0)
+                            gameOver(Constant.gameOverState.VICTORY);
+                        else
+                            gameOver(Constant.gameOverState.DEFEAT);
+                        judgeWin[0] = 3;
+                        try {
+                            Thread.sleep(5000);
+                            break;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
 }

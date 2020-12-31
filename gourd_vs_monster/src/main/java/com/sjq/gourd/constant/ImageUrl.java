@@ -18,6 +18,8 @@ public class ImageUrl {
     public static HashMap<Integer, Image> closeAttackImageMap = new HashMap<>();
     public static HashMap<Integer, Image> equipmentImageMap = new HashMap<>();
 
+    public static HashMap<Integer, Image> gameOverImageMap = new HashMap<>();
+
     public static void initImageUrl() {
         gourdRightImageMap.put(CreatureId.FIRST_GOURD_ID, new Image("/images/gourdImages/firstGourdRight.png"));
         gourdRightImageMap.put(CreatureId.SECOND_GOURD_ID, new Image("/images/gourdImages/secondGourdRight.png"));
@@ -99,16 +101,19 @@ public class ImageUrl {
         monsterLeftSelectImageMap.put(CreatureId.MONSTER6_ID, new Image("/images/monsterImages/centipedeMonsterLeftSelect.png"));
         monsterLeftSelectImageMap.put(CreatureId.MONSTER7_ID, new Image("/images/monsterImages/centipedeMonsterLeftSelect.png"));
 
-        closeAttackImageMap.put(Constant.ClawType.FIRST_CLAW,new Image("/images/attackImages/firstClaw.png"));
-        closeAttackImageMap.put(Constant.ClawType.SECOND_CLAW,new Image("/images/attackImages/secondClaw.png"));
-        closeAttackImageMap.put(Constant.ClawType.THIRD_CLAW,new Image("/images/attackImages/thirdClaw.png"));
-        closeAttackImageMap.put(Constant.ClawType.FOURTH_CLAW,new Image("/images/attackImages/fourthClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.FIRST_CLAW, new Image("/images/attackImages/firstClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.SECOND_CLAW, new Image("/images/attackImages/secondClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.THIRD_CLAW, new Image("/images/attackImages/thirdClaw.png"));
+        closeAttackImageMap.put(Constant.ClawType.FOURTH_CLAW, new Image("/images/attackImages/fourthClaw.png"));
         //closeAttackImageMap.put(Constant.ClawType.NONE_CLAW,new Image("/images/attackImages/noneClaw.png"));
 
-        equipmentImageMap.put(Constant.EquipmentType.JADE_BAR_ID,new Image("/images/equipmentImages/jadeBar.png"));
-        equipmentImageMap.put(Constant.EquipmentType.JADE_HAIRPIN_ID,new Image("/images/equipmentImages/jadeHairpin.png"));
-        equipmentImageMap.put(Constant.EquipmentType.MAGIC_MIRROR_ID,new Image("/images/equipmentImages/magicMirror.png"));
-        equipmentImageMap.put(Constant.EquipmentType.RIGID_SOFT_SWORD_ID,new Image("/images/equipmentImages/rigidSoftSword.png"));
-        equipmentImageMap.put(Constant.EquipmentType.TREASURE_BAG_ID,new Image("/images/equipmentImages/treasureBag.png"));
+        equipmentImageMap.put(Constant.EquipmentType.JADE_BAR_ID, new Image("/images/equipmentImages/jadeBar.png"));
+        equipmentImageMap.put(Constant.EquipmentType.JADE_HAIRPIN_ID, new Image("/images/equipmentImages/jadeHairpin.png"));
+        equipmentImageMap.put(Constant.EquipmentType.MAGIC_MIRROR_ID, new Image("/images/equipmentImages/magicMirror.png"));
+        equipmentImageMap.put(Constant.EquipmentType.RIGID_SOFT_SWORD_ID, new Image("/images/equipmentImages/rigidSoftSword.png"));
+        equipmentImageMap.put(Constant.EquipmentType.TREASURE_BAG_ID, new Image("/images/equipmentImages/treasureBag.png"));
+
+        gameOverImageMap.put(Constant.gameOverState.DEFEAT, new Image("/images/gameOverImages/defeat.png"));
+        gameOverImageMap.put(Constant.gameOverState.VICTORY, new Image("/images/gameOverImages/victory.png"));
     }
 }
