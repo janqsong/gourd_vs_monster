@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class FifthGourd extends Creature {
 
-    public FifthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    FifthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.FIFTH_GOURD_ID, CreatureId.FIFTH_GOURD_NAME,
                 3000, 150, 80, 40, 0.5, 12, 400.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,

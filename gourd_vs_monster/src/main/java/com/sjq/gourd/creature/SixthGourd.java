@@ -26,7 +26,7 @@ public class SixthGourd extends Creature {
     private static Image imageRight = new Image("/images/gourdImages/sixthGourdRightLucency.png");
     private static Image imageRightSelect = new Image("/images/gourdImages/sixthGourdRightSelectLucency.png");
 
-    public SixthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    SixthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SIXTH_GOURD_ID, CreatureId.SIXTH_GOURD_NAME,
                 3500, 100, 150, 20, 1.0, 12, 90.0,
                 faceDirection, 70.0, true, Constant.ClawType.FIRST_CLAW,

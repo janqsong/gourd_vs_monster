@@ -30,7 +30,7 @@ public class ScorpionMonster extends Creature {
 
     private ObjectOutputStream out = null;
 
-    public ScorpionMonster(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    ScorpionMonster(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
                 7500, 150, 150, 55, 0.5, 10, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,

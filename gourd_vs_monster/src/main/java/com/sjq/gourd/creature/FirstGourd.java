@@ -18,7 +18,7 @@ public class FirstGourd extends Creature {
     private final double attackDecrement = 20;
     private final long gap = 5000; //5000ms时间
 
-    public FirstGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    FirstGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.FIRST_GOURD_ID, CreatureId.FIRST_GOURD_NAME,
                 3500, 100, 120, 40, 0.5, 10, 80.0,
                 faceDirection, 100.0, true, Constant.ClawType.FIRST_CLAW,

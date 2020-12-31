@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Grandpa extends Creature {
 
-    public Grandpa(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    Grandpa(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.GRANDPA_ID, CreatureId.GRANDPA_NAME,
                 3000, 200, 75, 10, 0.5, 12, 300.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,

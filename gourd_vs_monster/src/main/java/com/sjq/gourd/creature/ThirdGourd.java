@@ -19,7 +19,7 @@ public class ThirdGourd extends Creature {
     private double moveSpeedDecrement;//基础移速的20%,如果减到0就是当前移速
     private double lastQActionMillis;//上次Q技能的时间
 
-    public ThirdGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    ThirdGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.THIRD_GOURD_ID, CreatureId.THIRD_GOURD_NAME,
                 4500, 100, 150, 60, 0.4, 10, 80.0,
                 faceDirection, 70.0, true, Constant.ClawType.FIRST_CLAW,
