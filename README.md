@@ -111,49 +111,209 @@ public interface AiInterface {
 
 #### 2.4.3 `Creature`类的设计
 
- 
+ `Creature`类的主要功能被封装在`update()`和`notMyCampUpdate()`两个方法中，分别用来更新本地我的阵营和敌方阵营的生物信息
 
-#### 2.4.4 `CreatureFactory`类的设计
+`Creature`内部的主要功能包括
 
+生物图像绘制`draw()`
 
+生物移动`move()`
 
-#### 2.4.5 `Creature`子类的设计
+生物攻击`ai`对象实现
 
+生物状态信息更新`setCreatureState()`
 
+生物技能实现`QAction(),EAction(),RAction()`
+
+生物信息显示`showMessage()`
+
+......
+
+由于这部分内容过多，这里不详细介绍，具体可见`Creature.java`,此类中有详细注释
+
+#### 2.4.4 `Creature`子类的设计
+
+这里以`SnakeMonster`为例,介绍一下Creature子类的设计方法
+
+```java
+public class SnakeMonster extends Creature {
+	//数据域:包括技能标志位,技能使用时间,技能效果时长,技能冷却时间,技能属性改变量等信息
+
+    public SnakeMonster(...) {
+        super(...)
+    }
+
+    @Override
+    //重写父类update()方法,加入技能的使用和技能状态的更新
+    public ArrayList<Bullet> update() {
+        ...
+    }
+	
+    //更新技能状态，技能持续时间是否结束
+    private void updateActionState() {
+        ...
+    }
+
+    //重写父类的QER三项技能
+    @Override
+    public ArrayList<Bullet> qAction() {
+        ...
+    }
+
+    @Override
+    public void eAction() {
+        ...
+    }
+
+    @Override
+    public void rAction() {
+        ...
+    }
+
+    //技能失效时调用相关方法
+    private void disposeQAction() {
+        ...
+    }
+
+    private void disposeEAction() {
+        ...
+    }
+
+    private void disposeRAction() {
+        ...
+    }
+}
+```
+
+只要子类的行为方式和父类不相同的地方，就可以重写父类方法
+
+但父类方法没有必要定义成`abstract`因为有些子类会重写它，而另一些不会(不是所有生物都有三个技能)
+
+#### 2.4.5 `CreatureFactory`类的设计
+
+`CreatureFactory`中有两个对外接口
+
+其一是`hasNext()`询问此阵营是否还会有下一个对象
+
+其二是`next()`返回下一个`Creature`对象
+
+通过这个工厂的设计，我们将生物对象和外部分离开来，使它具有良好的封装性
 
 #### 2.4.6 `CreatureStateWithClock`and `CreatureState`
 
+`CreatureState` 是个枚举类型,其中包含了多种多样的生物状态,还包括了生物技能状态
 
+`CreatureStateWithClock`是一个含有时钟的状态类
+
+它可以通过`update()`方法对状态时钟进行实时更新
+
+这个类帮助`Creature`实现了各种`buff`和`debuff`功能，已经这些功能的倒计时,同时也实现了技能的`cd`倒计时
 
 #### 2.4.7 `ImagePosition`类的设计
 
-
+这个类表示的是一个位置信息,`Creature`和`Bullet`以及`Equipment`都会用到它
 
 ### 2.5 包`com.sjq.gourd.Equipment`
 
 #### 2.5.1 内容
 
+这个包内包含了各种装备的信息以及装备生成工厂
+
 #### 2.5.2 各个类的关系
+
+1.`Equipment`是一个抽象类,游戏中存在的5种装备都继承自这个类并且实现了这个类中的抽象方法
+
+2.`EquipmentFactory`是装备对象的生成工厂
 
 #### 2.5.3 `Equipment`抽象类的设计
 
+这个类中有四个较为重要的方法
+
+`draw()`绘制装备,属于各个装备的共有方法
+
+`dispose()`擦除装备,属于各个装备的共有方法
+
+`takeEffect()`装备生效,属于具体装备的方法
+
+`giveUpTakeEffect()`装备移除生效,属于具体装备的方法
+
+因此后两者被设计成抽象方法,`Equipment`被设计成抽象类
+
+与`Creature`不同的是，`Equipment`的每个装备都需要重写`takeEffect()`和`giveUpTakeEffect()`方法,所以将其设计为抽象类
+
+`Creature`类的子类只有部分会重写`update()``QAction()`等方法,所以Creature没有被设计为抽象类
+
 #### 2.5.4 `Equipment`子类设计
+
+针对每个`Equipment`子类,我们重写`takeEffect()`和`giveUpTakeEffect()`方法
+
+在装备生效和装备失效时调用它们
+
+
 
 #### 2.5.5 `EquipmentFactory`装备工厂设计
 
+`EquipmentFactory`与`CreatureFactory`的设计原则是一样的
 
+基于实现包内的装备与外部完全分离,将装备的产生完全封装在`EquipmentFactory`中
+
+同是`hasNext()`和`next()`方法,其使用方式并无多大区别
+
+内部实现与思想略有区别
+
+`EquipmentFactory`的`hasNext()`是综合基于对窗口中装备上限显示以及装备显示间隔的考量
+
+`CreatureFactory`的`hasNext()`是因为阵营的生物个数是恒定的
 
 ### 2.6 包`com.sjq.gourd.constant`
 
 #### 2.6.1 内容
 
+这个包中包含了游戏过程中各种常量信息,以及很多静态数据
 
+1.各种长度信息,窗口大小信息等
+
+2.各种时间信息,帧时间信息,`ai`方向锁定时间信息等
+
+3.各种常量参数,胜败状态，方向状态，爪痕状态等
+
+4.各种生物及装备的`ID`
+
+5.静态加载的图片信息
 
 ## 3 游戏测试
 
+### 3.1 单元测试
+
+### 3.2 胜率测试
+
+#### 3.2.1 预期目标
+
+由于葫芦娃阵营的生物较多，人为操控技能释放难度高于妖精阵营，故而预期要达到纯`ai`操作胜率六四开，葫芦娃6，妖精4
+
+#### 3.2.2 游戏测试数据
+
+当前数据下共进行了511局,妖精胜利213局,葫芦娃胜利298局,双方都可以使用技能，都可以拾取装备,完全`ai`控制
+
+妖精胜率41.68%,葫芦娃胜率58.32%，几乎符合预期
+
+#### 3.2.3 游戏测试文件
+
+游戏测试文件在`jlog`文件夹下，此数据是在单机情况下测试的
+
+详细测试代码请看`github`地址 https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/sjq/gourd/localtest
+
 ## 4 开发过程
 
+### 4.1 需求分析与策划
 
+### 4.2 模块划分与任务分配
+
+### 4.3 单机版实现
+
+### 4.4 联机同步实现
+
+### 4.5 功能和文档完善
 
 
 
