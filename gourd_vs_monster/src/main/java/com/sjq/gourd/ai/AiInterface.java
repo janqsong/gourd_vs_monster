@@ -4,7 +4,6 @@ import com.sjq.gourd.bullet.Bullet;
 import com.sjq.gourd.creature.Creature;
 
 import java.util.HashMap;
-import java.util.List;
 
 //ai接口,需要实现观测,移动,攻击
 public interface AiInterface {

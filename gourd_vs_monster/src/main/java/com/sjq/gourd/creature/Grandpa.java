@@ -72,7 +72,7 @@ public class Grandpa extends Creature {
                 return null;
             setLastAttackTimeMillis(System.currentTimeMillis());
 
-            return new Bullet(this, playerAttackTarget, 5, Color.GREEN, BulletState.THE_GOD_OF_HEALING);
+            return selectBullet(playerAttackTarget);
         }
         return null;
     }
@@ -85,7 +85,8 @@ public class Grandpa extends Creature {
         currentMagic = 0;
         for (Creature creature : myFamily.values()) {
             if (creature.isAlive() && imagePosition.getDistance(creature.imagePosition) <= 1.5 * shootRange) {
-                bulletArrayList.add(new Bullet(this, creature, 10, Color.GREEN, BulletState.THE_GOD_OF_HEALING_MAX));
+                bulletArrayList.add(new Bullet(this, creature,
+                        Constant.REMOTE_BULLET_TYPE, BulletState.THE_GOD_OF_HEALING_MAX));
             }
         }
         return bulletArrayList;

@@ -92,7 +92,8 @@ public class SnakeMonster extends Creature {
         inQAction = true;
         for (Creature creature : enemyFamily.values()) {
             if (this.imagePosition.getDistance(creature.imagePosition) < 2.0 * shootRange)
-                arrayList.add(new Bullet(this, creature, 10, Color.BLACK, BulletState.THE_TEETH_OF_POISONOUS));
+                arrayList.add(new Bullet(this, creature,
+                        Constant.REMOTE_BULLET_TYPE, BulletState.THE_TEETH_OF_POISONOUS));
         }
         lastQActionMillis = System.currentTimeMillis();
         return arrayList;

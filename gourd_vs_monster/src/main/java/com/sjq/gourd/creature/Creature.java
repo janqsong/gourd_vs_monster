@@ -719,13 +719,7 @@ public class Creature {
                 return null;
 
             setLastAttackTimeMillis(System.currentTimeMillis());
-            if (isCloseAttack()) {
-                return new Bullet(this, playerAttackTarget,
-                        new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()));
-            } else {
-                return new Bullet(this, playerAttackTarget,
-                        new ImagePosition(imagePosition.getLayoutX(), imagePosition.getLayoutY()), null);
-            }
+            return selectBullet(playerAttackTarget);
         }
         return null;
     }

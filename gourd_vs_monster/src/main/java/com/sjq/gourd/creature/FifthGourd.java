@@ -33,7 +33,8 @@ public class FifthGourd extends Creature {
         currentMagic = 0;
         for (Creature creature : enemyFamily.values()) {
             if (this.imagePosition.getDistance(creature.imagePosition) < 1.5 * shootRange)
-                bullets.add(new Bullet(this, creature, 10, Color.BLUE, BulletState.THE_HEART_OF_ICE));
+                bullets.add(new Bullet(this, creature,
+                        Constant.REMOTE_BULLET_TYPE, BulletState.THE_HEART_OF_ICE));
         }
         return bullets;
     }

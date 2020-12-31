@@ -103,7 +103,7 @@ public class ScorpionMonster extends Creature {
         inQAction = true;
         for (Creature creature : enemyFamily.values()) {
             if (this.imagePosition.getDistance(creature.imagePosition) < 5.0 * shootRange) {
-                arrayList.add(new Bullet(this, creature, BulletState.SPEED_CUT_CLAW, Constant.CLOSE_BULLET_TYPE));
+                arrayList.add(new Bullet(this, creature, Constant.CLOSE_BULLET_TYPE, BulletState.SPEED_CUT_CLAW));
             }
         }
         setCurrentMagic(0);
@@ -145,7 +145,7 @@ public class ScorpionMonster extends Creature {
             for (int i = 0; i < 3; i++) {
                 if (creatures[i] != null && creatures[i].isAlive())
                     new SameDestinyMsg(creatures[i].getCampType(), creatures[i].getCreatureId(),
-                            - delta).sendMsg(out);
+                            -delta).sendMsg(out);
             }
         } else
             super.setCurrentHealth(healthVal);

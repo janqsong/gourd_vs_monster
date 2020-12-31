@@ -34,7 +34,8 @@ public class FourthGourd extends Creature {
         currentMagic = 0;
         for (Creature creature : enemyFamily.values()) {
             if (this.imagePosition.getDistance(creature.imagePosition) < 1.5 * shootRange)
-                bullets.add(new Bullet(this, creature, 10, Color.RED, BulletState.THE_SON_OF_FLAME));
+                bullets.add(new Bullet(this, creature,
+                        Constant.REMOTE_BULLET_TYPE, BulletState.THE_SON_OF_FLAME));
         }
         return bullets;
     }
