@@ -14,11 +14,11 @@ public class FirstGourd extends Creature {
 
     private long lastTransfigurationMillis;
     private boolean inQAction = false;
-    private double moveSpeedIncrement = 5;
-    private double attackDecrement = 20;
+    private final double moveSpeedIncrement = 5;
+    private final double attackDecrement = 20;
     private final long gap = 5000; //5000ms时间
 
-    public FirstGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    FirstGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.FIRST_GOURD_ID, CreatureId.FIRST_GOURD_NAME,
                 3500, 100, 120, 40, 0.5, 10, 80.0,
                 faceDirection, 100.0, true, Constant.ClawType.FIRST_CLAW,
@@ -34,19 +34,14 @@ public class FirstGourd extends Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 if (inQAction && (double) System.currentTimeMillis() - lastTransfigurationMillis > gap)
                     disposeQAction();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -58,6 +53,7 @@ public class FirstGourd extends Creature {
             if (inQAction && (double) System.currentTimeMillis() - lastTransfigurationMillis > gap)
                 disposeQAction();
         }
+        draw();
         return bullets;
     }
 
@@ -77,6 +73,7 @@ public class FirstGourd extends Creature {
         currentAttack -= attackDecrement;
         currentMoveSpeed += moveSpeedIncrement;
         lastTransfigurationMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION, gap));
         return arrayList;
     }
 

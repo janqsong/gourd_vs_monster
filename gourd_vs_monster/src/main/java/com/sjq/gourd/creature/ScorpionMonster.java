@@ -31,7 +31,7 @@ public class ScorpionMonster extends Creature {
 
     private ObjectOutputStream out = null;
 
-    public ScorpionMonster(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    ScorpionMonster(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
                 7500, 150, 150, 55, 0.5, 10, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
@@ -109,6 +109,7 @@ public class ScorpionMonster extends Creature {
         }
         setCurrentMagic(0);
         lastQActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,qGap));
         return arrayList;
     }
 
@@ -126,6 +127,7 @@ public class ScorpionMonster extends Creature {
         setShootRange(shootRange + shootRangeIncrement);
         setCurrentMoveSpeed(currentMoveSpeed + moveSpeedIncrement);
         lastEActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.E_ACTION,eGap));
     }
 
     @Override
@@ -137,6 +139,7 @@ public class ScorpionMonster extends Creature {
         inRAction = true;
         selectThree();
         lastRActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.R_ACTION,rGap));
     }
 
     @Override

@@ -17,7 +17,7 @@ public class SeventhGourd extends Creature {
     private long gap = 5000;
     private final double shootRangeIncrement = 400.0;
 
-    public SeventhGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    SeventhGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SEVENTH_GOURD_ID, CreatureId.SEVENTH_GOURD_NAME,
                 2500, 100, 80, 20, 0.9, 15, 600.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
@@ -34,19 +34,14 @@ public class SeventhGourd extends Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 if (inQAction && (double) System.currentTimeMillis() - lastQAction > gap)
                     disposeQAction();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -58,6 +53,7 @@ public class SeventhGourd extends Creature {
             if (inQAction && System.currentTimeMillis() - lastQAction > gap)
                 disposeQAction();
         }
+        draw();
         return bullets;
     }
 
@@ -74,6 +70,7 @@ public class SeventhGourd extends Creature {
         currentAttackSpeed += 3.0 * baseAttackSpeed;
         shootRange += shootRangeIncrement;
         lastQAction = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,gap));
         return bullets;
     }
 

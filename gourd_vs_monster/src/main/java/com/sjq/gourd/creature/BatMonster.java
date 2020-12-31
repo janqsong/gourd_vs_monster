@@ -11,7 +11,7 @@ import java.io.DataOutputStream;
 public class BatMonster extends Creature {
     Creature[] creatures = new Creature[4];
 
-    public BatMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    BatMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.MONSTER2_ID, CreatureId.MONSTER2_NAME,
                 3500, 100, 70, 15, 1.0, 18, 600.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,

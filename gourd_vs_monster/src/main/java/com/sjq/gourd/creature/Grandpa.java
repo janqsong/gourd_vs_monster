@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Grandpa extends Creature {
 
-    public Grandpa(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    Grandpa(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.GRANDPA_ID, CreatureId.GRANDPA_NAME,
                 3000, 200, 75, 10, 0.5, 12, 300.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
@@ -31,16 +31,12 @@ public class Grandpa extends Creature {
         if (!isControlled()) {
             if (isAlive()) {
                 aiInterface.moveMod(this, myFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, myFamily);
                 if (bullet != null) {
                     bullets.add(bullet);
                 }
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -52,6 +48,7 @@ public class Grandpa extends Creature {
             }
             qFlag = false;
         }
+        draw();
         return bullets;
     }
 

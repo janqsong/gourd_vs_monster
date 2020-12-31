@@ -12,7 +12,7 @@ public class CentipedeMonster extends Creature {
 
     Creature[] creatures = new Creature[4];
 
-    public CentipedeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    CentipedeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.MONSTER1_ID, CreatureId.MONSTER1_NAME,
                 3500, 100, 75, 30, 0.5, 8, 80.0,
                 faceDirection, 90.0, true, Constant.ClawType.FOURTH_CLAW,

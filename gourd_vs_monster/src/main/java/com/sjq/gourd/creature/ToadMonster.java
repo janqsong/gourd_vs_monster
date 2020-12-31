@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ToadMonster extends Creature {
     Creature[] creatures = new Creature[4];
 
-    public ToadMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    ToadMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.MONSTER4_ID, CreatureId.MONSTER4_NAME,
                 3500, 100, 75, 40, 0.5, 10, 500.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
@@ -23,33 +23,6 @@ public class ToadMonster extends Creature {
                 ImageUrl.monsterRightSelectImageMap.get(CreatureId.MONSTER4_ID));
     }
 
-//    @Override
-//    //封装移动方式,画,攻击,返回子弹
-//    public ArrayList<Bullet> update() {
-//        ArrayList<Bullet> bullets = new ArrayList<>();
-//        if (!isControlled()) {
-//            if (isAlive()) {
-////                setCreatureState();这东西在move里更新就能保证
-//                aiInterface.moveMod(this, enemyFamily);
-//                draw();
-//                Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
-//                if (bullet != null)
-//                    bullets.add(bullet);
-//            } else {
-//                draw();
-//            }
-//        } else {
-//            draw();
-//            Bullet bullet = playerAttack();
-//            if (bullet != null)
-//                bullets.add(bullet);
-//            if (rFlag) {
-//                rAction();
-//            }
-//            rFlag = false;
-//        }
-//        return bullets;
-//    }
 
     @Override
     public void rAction() {

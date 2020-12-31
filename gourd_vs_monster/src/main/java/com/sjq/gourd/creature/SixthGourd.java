@@ -26,7 +26,7 @@ public class SixthGourd extends Creature {
     private static Image imageRight = new Image("/images/gourdImages/sixthGourdRightLucency.png");
     private static Image imageRightSelect = new Image("/images/gourdImages/sixthGourdRightSelectLucency.png");
 
-    public SixthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    SixthGourd(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SIXTH_GOURD_ID, CreatureId.SIXTH_GOURD_NAME,
                 3500, 100, 150, 20, 1.0, 12, 90.0,
                 faceDirection, 70.0, true, Constant.ClawType.FIRST_CLAW,
@@ -61,19 +61,14 @@ public class SixthGourd extends Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 if (inQAction && (double) System.currentTimeMillis() - lastTransfigurationMillis > gap)
                     disposeQAction();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -85,6 +80,7 @@ public class SixthGourd extends Creature {
             if (inQAction && (double) System.currentTimeMillis() - lastTransfigurationMillis > gap)
                 disposeQAction();
         }
+        draw();
         return bullets;
     }
 
@@ -103,6 +99,7 @@ public class SixthGourd extends Creature {
         currentMoveSpeed += moveSpeedIncrement;
         currentDefense += defenseIncrement;
         lastTransfigurationMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,gap));
         return arrayList;
     }
 

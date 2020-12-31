@@ -10,7 +10,7 @@ public class JadeBar extends Equipment {
     private final double attackIncrement = 20;
     private final double defenseIncrement = 20;
 
-    private static Image image = new Image("/images/equipmentImages/jadeBar.png");
+    private static final Image image = new Image("/images/equipmentImages/jadeBar.png");
     private static final double width = 50, height = 50;
 
     JadeBar(int id, ImageView imageView) {

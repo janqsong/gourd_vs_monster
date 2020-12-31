@@ -20,7 +20,7 @@ public class SecondGourd extends Creature {
 
     ObjectOutputStream out = null;
 
-    public SecondGourd(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    SecondGourd(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.GOURD, CreatureId.SECOND_GOURD_ID, CreatureId.SECOND_GOURD_NAME,
                 3000, 150, 80, 35, 0.5, 10, 400.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
@@ -39,17 +39,13 @@ public class SecondGourd extends Creature {
             if (isAlive()) {
 //                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 if (inQAction && (double) System.currentTimeMillis() - lastQActionMillis > gap)
                     disposeQAction();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -61,6 +57,7 @@ public class SecondGourd extends Creature {
             if (inQAction && (double) System.currentTimeMillis() - lastQActionMillis > 4 * gap)
                 disposeQAction();
         }
+        draw();
         return bullets;
     }
 
@@ -79,6 +76,7 @@ public class SecondGourd extends Creature {
         }
         inQAction = true;
         lastQActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION, 20000));
         return bullets;
     }
 

@@ -21,7 +21,7 @@ public class SnakeMonster extends Creature {
     private final double healthIncrement = 1000;
     private final double defenseIncrement = 30;
 
-    public SnakeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    SnakeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.SNAKE_MONSTER_ID, CreatureId.SNAKE_MONSTER_NAME,
                 5000, 200, 120, 30, 0.7, 15, 500.0,
                 faceDirection, 100.0, false, Constant.ClawType.NONE_CLAW,
@@ -37,18 +37,13 @@ public class SnakeMonster extends Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 updateActionState();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -67,6 +62,7 @@ public class SnakeMonster extends Creature {
             }
             rFlag = false;
         }
+        draw();
         updateActionState();
         return bullets;
     }
@@ -96,6 +92,7 @@ public class SnakeMonster extends Creature {
                         Constant.REMOTE_BULLET_TYPE, BulletState.THE_TEETH_OF_POISONOUS));
         }
         lastQActionMillis = System.currentTimeMillis();
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION, qGap));
         return arrayList;
     }
 
@@ -107,6 +104,7 @@ public class SnakeMonster extends Creature {
             return;
         currentMagic = 0;
         inEAction = true;
+        addState(new CreatureStateWithClock(CreatureState.E_ACTION, eGap));
         for (Creature creature : myFamily.values()) {
             if (creature != this && !creature.isAlive()) {
                 if (creature.getCreatureId() == CreatureId.SCORPION_MONSTER_ID) {
@@ -130,6 +128,7 @@ public class SnakeMonster extends Creature {
         inRAction = true;
         setCurrentHealth(currentHealth + healthIncrement);
         setCurrentDefense(currentDefense + defenseIncrement);
+        addState(new CreatureStateWithClock(CreatureState.R_ACTION, rGap));
     }
 
     private void disposeQAction() {
