@@ -49,7 +49,13 @@ public class LoadPlayBackFiles {
     public void startPlayBackGame(File file) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open PlayBack File");
-        new GamePlayBack(file, sceneController).playBackGame();
+        new GamePlayBack(file, sceneController, this).playBackGame();
+    }
+
+    public void backToSelectFile() {
+        playbackPane.setVisible(true);
+        playbackPane.setDisable(false);
+        this.sceneController.getMapPane().getChildren().add(playbackPane);
     }
 
     public ArrayList<PlayBackFile> getPlaybackFileList(File dirFile) {

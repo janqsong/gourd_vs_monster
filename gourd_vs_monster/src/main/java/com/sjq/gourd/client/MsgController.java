@@ -36,6 +36,7 @@ public class MsgController {
     Logger log = Logger.getLogger(MsgController.class.getName());
     private String campType;
     private int timeRemaining;
+    private String winCampType;
 
     public MsgController() {
 
@@ -61,6 +62,8 @@ public class MsgController {
     public int getTimeRemaining() {
         return timeRemaining;
     }
+
+    public String getWinCampType() {return winCampType;}
 
     public HashMap<Integer, Bullet> getBullets() {
         HashMap<Integer, Bullet> tempBullet = buildBullets;
@@ -291,6 +294,13 @@ public class MsgController {
                 double deltaHealth = sameDestinyMsg.getDeltaHealth();
                 Creature creature = gourdFamily.get(creatureId);
                 sameDestinyHashMap.put(creature, deltaHealth);
+                break;
+            }
+            case Msg.FINISH_GAME_FLAG_MSG: {
+                FinishGameFlagMsg finishGameFlagMsg = new FinishGameFlagMsg();
+                finishGameFlagMsg.parseMsg(inputStream);
+                winCampType = finishGameFlagMsg.getWinCampType();
+                System.out.println("winCampType: " + winCampType);
                 break;
             }
             default: {

@@ -35,6 +35,7 @@ public class GamePlayBack {
     private HashMap<Integer, Creature> monsterFamily = new HashMap<>();
 
     private SceneController sceneController = null;
+    private LoadPlayBackFiles loadPlayBackFiles = null;
 
     private EquipmentFactory equipmentFactory = null;
     private HashMap<Integer, Equipment> equipmentHashMap = new HashMap<>();
@@ -51,11 +52,14 @@ public class GamePlayBack {
     private int frameTime = Constant.FRAME_TIME;
 
     private boolean gameOverFlag = false;
+    private boolean stopPlayBack = false;
+    private boolean backFlag = false;
 
-    public GamePlayBack(File file, SceneController sceneController) {
+    public GamePlayBack(File file, SceneController sceneController, LoadPlayBackFiles loadPlayBackFiles) {
         try {
             inputStream = new ObjectInputStream(new FileInputStream(file));
             this.sceneController = sceneController;
+            this.loadPlayBackFiles = loadPlayBackFiles;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,6 +74,7 @@ public class GamePlayBack {
             imageView.setVisible(false);
             imageView.setDisable(true);
             imageViews.add(imageView);
+            sceneController.addImageViewToMapPane(imageView);
         }
         equipmentFactory = new EquipmentFactory(imageViews);
 
@@ -176,6 +181,13 @@ public class GamePlayBack {
                 while(true) {
                     try {
                         Thread.sleep(frameTime);
+                        if(stopPlayBack) {
+                            continue;
+                        }
+                        if(backFlag) {
+                            inputStream.close();
+                            break;
+                        }
                         while(true) {
                             int contentType = inputStream.readInt();
                             if(contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
@@ -228,8 +240,9 @@ public class GamePlayBack {
     }
 
     private void init() {
-        System.out.println("初始化绑定事件");
+        // 初始化绑定事件函数
 
+        // 初始化界面上的button，主要用来控制回放速度和暂停回放以及返回上一层
         Button halfSpeedButton = new Button();
         halfSpeedButton.setText("0.5x");
         Button normalSpeedButton = new Button();
@@ -240,18 +253,28 @@ public class GamePlayBack {
         tripleSpeedButton.setText("3.0x");
         Button fivefoldSpeedButton = new Button();
         fivefoldSpeedButton.setText("5.0x");
+        Button stopButton = new Button();
+        stopButton.setText("暂停");
+        Button backButton = new Button();
+        backButton.setText("返回");
 
         halfSpeedButton.setLayoutX(50);
         normalSpeedButton.setLayoutX(50);
         doubleSpeedButton.setLayoutX(50);
         tripleSpeedButton.setLayoutX(50);
         fivefoldSpeedButton.setLayoutX(50);
+        stopButton.setLayoutX(20);
+        backButton.setLayoutX(80);
+
 
         halfSpeedButton.setLayoutY(350);
         normalSpeedButton.setLayoutY(380);
         doubleSpeedButton.setLayoutY(410);
         tripleSpeedButton.setLayoutY(440);
         fivefoldSpeedButton.setLayoutY(470);
+        stopButton.setLayoutY(500);
+        backButton.setLayoutY(500);
+
 
         halfSpeedButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -288,17 +311,42 @@ public class GamePlayBack {
             }
         });
 
+        stopButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(stopPlayBack) {
+                    stopPlayBack = false;
+                    stopButton.setText("暂停");
+                }
+                else {
+                    stopPlayBack = true;
+                    stopButton.setText("开始");
+                }
+            }
+        });
+
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                backFlag = true;
+                sceneController.getFightScene().getChildren().clear();
+                sceneController.getFightScene().getChildren().add(sceneController.getMapPane());
+                sceneController.getMapPane().getChildren().clear();
+                loadPlayBackFiles.backToSelectFile();
+            }
+        });
+
         sceneController.getFightScene().getChildren().addAll(halfSpeedButton, normalSpeedButton,
-                doubleSpeedButton, tripleSpeedButton, fivefoldSpeedButton);
+                doubleSpeedButton, tripleSpeedButton, fivefoldSpeedButton, stopButton, backButton);
 
         sceneController.getFightScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if(gameOverFlag) {
-                    sceneController.getMapPane().setVisible(false);
-                    sceneController.getMapPane().setDisable(true);
-                    sceneController.getFightScene().setVisible(true);
-                    sceneController.getFightScene().setDisable(false);
+                    sceneController.getFightScene().getChildren().clear();
+                    sceneController.getFightScene().getChildren().add(sceneController.getMapPane());
+                    sceneController.getMapPane().getChildren().clear();
+                    loadPlayBackFiles.backToSelectFile();
                 }
             }
         });

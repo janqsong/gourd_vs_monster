@@ -107,6 +107,18 @@ public class SocketController {
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outMonster);
         new ServerScene(inGourd, outGourd, inMonster, outMonster).startGame();
+        try {
+            Thread.sleep(1000);
+            socketPlayerGourd.shutdownInput();
+            socketPlayerGourd.shutdownOutput();
+            socketPlayerMonster.shutdownInput();
+            socketPlayerMonster.shutdownOutput();
+            socketPlayerGourd.close();
+            socketPlayerMonster.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

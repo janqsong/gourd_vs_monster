@@ -113,6 +113,10 @@ public class SceneController {
         }
     }
 
+    public void backToConnectScene() {
+
+    }
+
     public void addImageViewToMapPane(ImageView tempImageView) {
         mapPane.getChildren().add(tempImageView);
     }
@@ -122,4 +126,8 @@ public class SceneController {
     }
 
     public Pane getFightScene() {return fightScene;}
+
+    public Pane getConnectScene() {
+        return connectScene;
+    }
 }

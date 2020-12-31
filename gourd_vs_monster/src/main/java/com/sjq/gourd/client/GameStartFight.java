@@ -50,10 +50,8 @@ public class GameStartFight {
 
     private MsgController msgController;
 
-    private boolean updateFlag = false;
-
-    private final int judgeWin[] = {3};
-    // judgeWin[0]是当前游戏状态标志
+    private boolean gameOverFlag = false;
+    private long gameOverTimeMillis = 0;
 
 
     public GameStartFight(String campType, SceneController sceneController,
@@ -98,131 +96,8 @@ public class GameStartFight {
         });
     }
 
-//    public void initGame() {
-//        int idOffset = CreatureId.MIN_GOURD_ID;
-//        if (this.campType.equals(Constant.CampType.MONSTER))
-//            idOffset = CreatureId.MIN_MONSTER_ID;
-//        for (Creature creature : myFamily.values()) {
-//            ImageView imageView = creature.getCreatureImageView();
-//            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent event) {
-//                    if (enemyCreature != creature && myCreature != null
-//                            && myCreature.isAlive() && myCreature.getCreatureId() == CreatureId.GRANDPA_ID) {
-//                        enemyCreature = creature;
-//                        myCreature.setPlayerAttackTarget(enemyCreature);
-//                    }
-//                    if (myCreature == null || !myCreature.isAlive()) {
-//                        myCreature = creature;
-//                        myCreature.flipControlled();
-//                    } else if (myCreature != creature) {
-//                        myCreature.flipControlled();
-//                        myCreature = creature;
-//                        myCreature.flipControlled();
-//                    } else if (!myCreature.isControlled()) {
-//                        myCreature.flipControlled();
-//                    }
-//                }
-//            });
-//        }
-//        for (Creature creature : enemyFamily.values()) {
-//            ImageView imageView = creature.getCreatureImageView();
-//            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent event) {
-//                    if (enemyCreature != creature) {
-//                        enemyCreature = creature;
-//                        if (myCreature != null && myCreature.isAlive())
-//                            myCreature.setPlayerAttackTarget(enemyCreature);
-//                    }
-//                }
-//            });
-//        }
-//        sceneController.getMapPane().setFocusTraversable(true);
-//
-//        final boolean[] isUpPressOn = {false};
-//        final boolean[] isDownPressOn = {false};
-//        final boolean[] isLeftPressOn = {false};
-//        final boolean[] isRightPressOn = {false};
-//        final int[] lastPressOn = {Constant.Direction.STOP};
-//        int finalIdOffset = idOffset;
-//        sceneController.getMapPane().setOnKeyPressed(new EventHandler<KeyEvent>() {
-//            @Override
-//            public void handle(KeyEvent event) {
-//                KeyCode keyCode = event.getCode();
-//                if (keyCode == KeyCode.W) {
-//                    isUpPressOn[0] = true;
-//                    lastPressOn[0] = Constant.Direction.UP;
-//                } else if (keyCode == KeyCode.S) {
-//                    isDownPressOn[0] = true;
-//                    lastPressOn[0] = Constant.Direction.DOWN;
-//                } else if (keyCode == KeyCode.A) {
-//                    isLeftPressOn[0] = true;
-//                    lastPressOn[0] = Constant.Direction.LEFT;
-//                } else if (keyCode == KeyCode.D) {
-//                    isRightPressOn[0] = true;
-//                    lastPressOn[0] = Constant.Direction.RIGHT;
-//                } else if (keyCode == KeyCode.Q) {
-//                    if (myCreature != null && myCreature.isAlive()) {
-//                        myCreature.setQFlag(true);
-//                    }
-//                } else if (keyCode == KeyCode.E) {
-//                    if (myCreature != null && myCreature.isAlive())
-//                        myCreature.setEFlag(true);
-//                } else if (keyCode == KeyCode.R) {
-//                    if (myCreature != null && myCreature.isAlive())
-//                        myCreature.setRFlag(true);
-//                }
-//                if (myCreature != null) {
-//                    if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
-//                        myCreature.setDirection(lastPressOn[0]);
-//                    else
-//                        myCreature.setDirection(Constant.Direction.STOP);
-//                }
-//                if (keyCode.isDigitKey()) {
-//                    int num = keyCode.ordinal() - 25;
-//                    System.out.println(num);
-//                    if (0 <= num && num <= 8) {
-//                        Creature creature = myFamily.get(finalIdOffset + num);
-//                        if (myCreature != creature) {
-//                            if (creature != null && creature.isAlive()) {
-//                                if (myCreature != null && myCreature.isAlive() && myCreature.isControlled())
-//                                    myCreature.flipControlled();
-//                                if (!creature.isControlled())
-//                                    creature.flipControlled();
-//                                myCreature = creature;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//
-//        sceneController.getMapPane().setOnKeyReleased(new EventHandler<KeyEvent>() {
-//            @Override
-//            public void handle(KeyEvent event) {
-//                KeyCode keyCode = event.getCode();
-//                if (keyCode == KeyCode.W)
-//                    isUpPressOn[0] = false;
-//                else if (keyCode == KeyCode.S)
-//                    isDownPressOn[0] = false;
-//                else if (keyCode == KeyCode.A)
-//                    isLeftPressOn[0] = false;
-//                else if (keyCode == KeyCode.D)
-//                    isRightPressOn[0] = false;
-//                if (myCreature != null) {
-//                    if (isLeftPressOn[0] || isRightPressOn[0] || isUpPressOn[0] || isDownPressOn[0])
-//                        myCreature.setDirection(lastPressOn[0]);
-//                    else
-//                        myCreature.setDirection(Constant.Direction.STOP);
-//                }
-//            }
-//        });
-//    }
-
     public void start() {
         init(campType, myFamily, enemyFamily);
-        gameOverListenerThread(campType);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -230,6 +105,12 @@ public class GameStartFight {
                     try {
                         int msgType = in.readInt();
                         if (msgType == Msg.FINISH_GAME_FLAG_MSG) {
+                            if(campType.equals(msgController.getWinCampType()))
+                                gameOver(Constant.gameOverState.VICTORY);
+                            else
+                                gameOver(Constant.gameOverState.DEFEAT);
+                            gameOverTimeMillis = System.currentTimeMillis();
+                            gameOverFlag = true;
                             break;
                         } else {
                             msgController.getMsgClass(msgType, in);
@@ -243,10 +124,6 @@ public class GameStartFight {
         }).start();
 
         new Thread(new Runnable() {
-
-            boolean gameOverFlag = false;
-            long gameOverTimeMillis = 0;
-
             @Override
             public void run() {
                 int bulletKey = 0;
@@ -254,6 +131,12 @@ public class GameStartFight {
                     bulletKey = 1;
                 while (true) {
                     try {
+                        if(gameOverFlag) {
+                            if(System.currentTimeMillis() - gameOverTimeMillis > 3000) {
+                                break;
+                            }
+                        }
+
                         for (Creature myMember : myFamily.values()) {
                             ArrayList<Bullet> tempBullet = myMember.update();
                             if (tempBullet.size() != 0) {
@@ -316,6 +199,7 @@ public class GameStartFight {
 
                         ArrayList<Integer> deleteBulletKeys = msgController.getDeleteBulletKeys();
                         for (int key : deleteBulletKeys) {
+                            if(bullets.get(key) == null) continue;
                             bullets.get(key).setValid(false);
                         }
 
@@ -380,19 +264,6 @@ public class GameStartFight {
                             myMember.sendAllAttribute(out);
                         }
                         Thread.sleep(Constant.FRAME_TIME);
-
-                        int judge = judgeWin(campType, myFamily, enemyFamily);
-                        if (judge != 2) {
-                            judgeWin[0] = judge;
-                            if (!gameOverFlag) {
-                                gameOverFlag = true;
-                                gameOverTimeMillis = System.currentTimeMillis();
-                            } else if (System.currentTimeMillis() - gameOverTimeMillis > 3000) {
-                                judgeWin[0] = 3;
-                                Thread.interrupted();
-                                break;
-                            }
-                        }
                     } catch (Exception e) {
                         System.out.println("while(true)出错");
                         e.printStackTrace();
@@ -632,34 +503,23 @@ public class GameStartFight {
             }
         });
 
-    }
-
-    //根据阵营以及两个family判断是谁获胜了,-1,0,1,2返回值只可能是这四种状态
-    private int judgeWin(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
-        //todo -1 0 1 2 分别代表妖精胜利,平局,葫芦娃胜利,还没结束
-        int flag = 2;
-        boolean allMineDie = true, allEnemyDie = true;
-        for (Creature creature : myFamily.values())
-            if (creature.isAlive()) {
-                allMineDie = false;
-                break;
+        // 游戏结束之后，任意点击屏幕回到连接服务器界面
+        sceneController.getFightScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(gameOverFlag) {
+                    sceneController.getFightScene().getChildren().clear();
+                    sceneController.getMapPane().getChildren().clear();
+                    sceneController.getFightScene().getChildren().add(sceneController.getMapPane());
+                    sceneController.getFightScene().setVisible(false);
+                    sceneController.getFightScene().setDisable(true);
+                    sceneController.getConnectScene().setVisible(true);
+                    sceneController.getConnectScene().setDisable(false);
+                    sceneController.backToConnectScene();
+                }
             }
+        });
 
-        for (Creature creature : enemyFamily.values())
-            if (creature.isAlive()) {
-                allEnemyDie = false;
-                break;
-            }
-
-        if (allMineDie && allEnemyDie)
-            flag = 0;
-        else if (allMineDie && !allEnemyDie)
-            flag = -1;
-        else if (!allMineDie && allEnemyDie)
-            flag = 1;
-        if (camp.equals(Constant.CampType.MONSTER) && flag != 2)
-            flag = -flag;
-        return flag;
     }
 
     //传入状态播放动画
@@ -701,39 +561,5 @@ public class GameStartFight {
             }
         }
         //todo,在这个地方加上选择重新开始或者返回菜单之类的选择
-    }
-
-    //监听judgeWin[0],如果发生改变,播放获胜或失败,并暂停5s线程后结束线程
-    private void gameOverListenerThread(String myCamp) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (judgeWin[0] != 3) {
-                        if (myCamp.equals(Constant.CampType.GOURD)) {
-                            if (judgeWin[0] >= 0)
-                                gameOver(Constant.gameOverState.VICTORY);
-                            else
-                                gameOver(Constant.gameOverState.DEFEAT);
-                        } else if (judgeWin[0] <= 0)
-                            gameOver(Constant.gameOverState.VICTORY);
-                        else
-                            gameOver(Constant.gameOverState.DEFEAT);
-                        judgeWin[0] = 3;
-                        try {
-                            Thread.sleep(5000);
-                            break;
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
     }
 }

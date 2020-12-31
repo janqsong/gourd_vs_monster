@@ -41,6 +41,10 @@ public class ServerScene {
 
     private ConcurrentHashMap<Integer, Bullet> bullets = new ConcurrentHashMap<>();
 
+    private long gameOverTimeMillis = 0;
+
+    private boolean gameOverFlag = false;
+
     public ServerScene(ObjectInputStream inGourd, ObjectOutputStream outGourd,
                        ObjectInputStream inMonster, ObjectOutputStream outMonster) {
         this.inGourd = inGourd;
@@ -221,6 +225,7 @@ public class ServerScene {
             }
         }).start();
         while (true) {
+            if(gameOverFlag && System.currentTimeMillis() - gameOverTimeMillis > 3000) break;
             for(Creature gourdCreature : gourdFamily.values()) {
                 gourdCreature.sendAllAttribute(outMonster);
                 gourdCreature.sendAllAttribute(outFile);
@@ -361,14 +366,26 @@ public class ServerScene {
                 new NoParseMsg(Msg.FRAME_FINISH_FLAG_MSG).sendMsg(outFile);
                 Thread.yield();
                 Thread.sleep(Constant.FRAME_TIME);
-                int judge = judgeWin(Constant.CampType.GOURD, gourdFamily, monsterFamily);
+                int judge = judgeWin(gourdFamily, monsterFamily);
                 if (judge != 2) {
-                    FinishGameFlagMsg finishGameFlagMsg = new FinishGameFlagMsg(Constant.CampType.GOURD);
+                    FinishGameFlagMsg finishGameFlagMsg = null;
+                    if(judge == -1)
+                        finishGameFlagMsg = new FinishGameFlagMsg(Constant.CampType.MONSTER);
+                    else if(judge == 1)
+                        finishGameFlagMsg = new FinishGameFlagMsg(Constant.CampType.GOURD);
+                    else {
+                        new FinishGameFlagMsg(Constant.CampType.MONSTER).sendMsg(outMonster);
+                        new FinishGameFlagMsg(Constant.CampType.GOURD).sendMsg(outGourd);
+                        new FinishGameFlagMsg("").sendMsg(outFile);
+                        outFile.close();
+                        break;
+                    }
                     finishGameFlagMsg.sendMsg(outGourd);
                     finishGameFlagMsg.sendMsg(outMonster);
                     finishGameFlagMsg.sendMsg(outFile);
                     outFile.close();
-                    break;
+                    gameOverTimeMillis = System.currentTimeMillis();
+                    gameOverFlag = true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -376,30 +393,29 @@ public class ServerScene {
         }
     }
 
-    private int judgeWin(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+    //根据阵营以及两个family判断是谁获胜了,-1,0,1,2返回值只可能是这四种状态
+    private int judgeWin(HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
         //todo -1 0 1 2 分别代表妖精胜利,平局,葫芦娃胜利,还没结束
         int flag = 2;
-        boolean allMineDie = true, allEnemyDie = true;
+        boolean allGourdDie = true, allMonsterDie = true;
         for (Creature creature : myFamily.values())
             if (creature.isAlive()) {
-                allMineDie = false;
+                allGourdDie = false;
                 break;
             }
 
         for (Creature creature : enemyFamily.values())
             if (creature.isAlive()) {
-                allEnemyDie = false;
+                allMonsterDie = false;
                 break;
             }
 
-        if (allMineDie && allEnemyDie)
+        if (allGourdDie && allMonsterDie)
             flag = 0;
-        else if (allMineDie)
+        else if (allGourdDie)
             flag = -1;
-        else if (allEnemyDie)
+        else if (allMonsterDie)
             flag = 1;
-        if (camp.equals(Constant.CampType.MONSTER) && flag != 2)
-            flag = -flag;
         return flag;
     }
 }
