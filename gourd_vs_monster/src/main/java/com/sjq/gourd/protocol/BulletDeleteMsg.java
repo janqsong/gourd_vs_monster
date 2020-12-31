@@ -1,7 +1,5 @@
 package com.sjq.gourd.protocol;
 
-import com.sjq.gourd.log.MyLogger;
-
 import java.io.*;
 
 public class BulletDeleteMsg implements Msg {

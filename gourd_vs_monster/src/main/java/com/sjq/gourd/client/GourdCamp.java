@@ -3,25 +3,19 @@ package com.sjq.gourd.client;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.CreatureFactory;
-import com.sjq.gourd.log.MyLogger;
-import com.sjq.gourd.protocol.CountDownMsg;
 import com.sjq.gourd.protocol.Msg;
 import com.sjq.gourd.protocol.NoParseMsg;
 import com.sjq.gourd.protocol.PositionNotifyMsg;
 import com.sjq.gourd.stage.SceneController;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 

@@ -276,24 +276,8 @@ public class MsgTest {
         }
     }
 
-    @Test
-    public void test_same_name() {
-
-    }
-
-    @Test
-    public void test_classify_validity() {
-        System.out.println("测试葫芦娃根据性别分类是否正确。");
-
-    }
-
     @Test(timeout = 50)
     public void test_sort_validity() {
 
-    }
-
-    @Test
-    public void test_iterator_validity() {
-        System.out.println("测试使用迭代器的输出是否正确。");
     }
 }
