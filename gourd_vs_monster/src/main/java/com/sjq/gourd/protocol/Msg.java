@@ -39,6 +39,8 @@ public interface Msg {
     public static final int FRAME_FINISH_FLAG_MSG = 17;
     // 结束游戏
     public static final int FINISH_GAME_FLAG_MSG = 18;
+    // 蝎子精扣血操作
+    public static final int SAME_DESTINY_MSG = 19;
 
     public void sendMsg(ObjectOutputStream outStream);
     public void parseMsg(ObjectInputStream inStream);

@@ -1,7 +1,7 @@
 package com.sjq.gourd.stage;
 
 import com.sjq.gourd.client.GameClient;
-import com.sjq.gourd.localplayback.LocalPlayBack;
+import com.sjq.gourd.localplayback.LoadPlayBackFiles;
 import com.sjq.gourd.server.GameServer;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -9,10 +9,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-import java.io.File;
 import java.util.regex.Pattern;
 
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
@@ -47,16 +45,13 @@ public class SceneController {
     @FXML
     void LocalPlaybackMouseClickEvent(MouseEvent event) {
         Stage stage = (Stage) basePane.getScene().getWindow();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open PlayBack File");
-        File file = fileChooser.showOpenDialog(stage);
         startScene.setVisible(false);
         startScene.setDisable(true);
         fightScene.setVisible(true);
         fightScene.setDisable(false);
         mapPane.setVisible(true);
         mapPane.setDisable(false);
-        new LocalPlayBack(file, this).playBackGame();
+        new LoadPlayBackFiles(stage, this).loadFiles();
     }
 
     @FXML

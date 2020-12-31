@@ -5,10 +5,13 @@ import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.constant.ImageUrl;
+import com.sjq.gourd.protocol.CreatureStateMsg;
+import com.sjq.gourd.protocol.SameDestinyMsg;
 import javafx.scene.image.ImageView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class ScorpionMonster extends Creature {
@@ -25,7 +28,9 @@ public class ScorpionMonster extends Creature {
     private final double healthIncrement = 1000;
     private Creature[] creatures = new Creature[3];
 
-    public ScorpionMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
+    private ObjectOutputStream out = null;
+
+    public ScorpionMonster(ObjectOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
                 7500, 150, 150, 55, 0.5, 10, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
@@ -36,6 +41,7 @@ public class ScorpionMonster extends Creature {
         creatures[0] = null;
         creatures[1] = null;
         creatures[2] = null;
+        this.out = out;
     }
 
     @Override
@@ -138,7 +144,8 @@ public class ScorpionMonster extends Creature {
         if (delta < 0 && inRAction) {
             for (int i = 0; i < 3; i++) {
                 if (creatures[i] != null && creatures[i].isAlive())
-                    creatures[i].setCurrentHealth(creatures[i].getCurrentHealth() - delta);
+                    new SameDestinyMsg(creatures[i].getCampType(), creatures[i].getCreatureId(),
+                            - delta).sendMsg(out);
             }
         } else
             super.setCurrentHealth(healthVal);

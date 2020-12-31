@@ -48,7 +48,7 @@ public class ServerScene {
         this.inMonster = inMonster;
         this.outMonster = outMonster;
         try {
-            outFile = new ObjectOutputStream(new FileOutputStream("C:/Users/Dlee/Desktop/playbackFiles/a"));
+            outFile = new ObjectOutputStream(new FileOutputStream("C:/Users/Dlee/Desktop/playbackFiles/a.back"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -292,6 +292,13 @@ public class ServerScene {
                 creatureStateMsg.sendMsg(outFile);
             }
 
+            HashMap<Creature, Double> sameDestinyHashMap = monsterMsgController.getSameDestinyHashMap();
+            for(Map.Entry<Creature, Double> entry : sameDestinyHashMap.entrySet()) {
+                Creature creature = entry.getKey();
+                double deltaHealth = entry.getValue();
+                new SameDestinyMsg(creature.getCampType(), creature.getCreatureId(), deltaHealth).sendMsg(outGourd);
+            }
+
             Iterator<Map.Entry<Integer, Bullet>> hashMapIterator = bullets.entrySet().iterator();
             while(hashMapIterator.hasNext()) {
                 Map.Entry<Integer, Bullet> mapEntry = hashMapIterator.next();
@@ -356,11 +363,11 @@ public class ServerScene {
                 Thread.sleep(Constant.FRAME_TIME);
                 int judge = judgeWin(Constant.CampType.GOURD, gourdFamily, monsterFamily);
                 if (judge != 2) {
-                    outFile.close();
                     FinishGameFlagMsg finishGameFlagMsg = new FinishGameFlagMsg(Constant.CampType.GOURD);
                     finishGameFlagMsg.sendMsg(outGourd);
                     finishGameFlagMsg.sendMsg(outMonster);
                     finishGameFlagMsg.sendMsg(outFile);
+                    outFile.close();
                     break;
                 }
             } catch (Exception e) {

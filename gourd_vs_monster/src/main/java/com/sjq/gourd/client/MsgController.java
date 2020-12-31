@@ -31,6 +31,7 @@ public class MsgController {
     EquipmentFactory equipmentFactory = null;
 
     private HashMap<Creature, Integer> equipmentPickUp = new HashMap<>();
+    private HashMap<Creature, Double> sameDestinyHashMap = new HashMap<>();
 
     Logger log = Logger.getLogger(MsgController.class.getName());
     private String campType;
@@ -89,6 +90,12 @@ public class MsgController {
         HashMap<Creature, Integer> tempRequestEquipment = equipmentPickUp;
         equipmentPickUp = new HashMap<>();
         return tempRequestEquipment;
+    }
+
+    public HashMap<Creature, Double> getSameDestinyHashMap() {
+        HashMap<Creature, Double> tempSameDestinyHashMap = sameDestinyHashMap;
+        sameDestinyHashMap = new HashMap<>();
+        return tempSameDestinyHashMap;
     }
 
     public void getMsgClass(int msgType, ObjectInputStream inputStream) {
@@ -275,6 +282,15 @@ public class MsgController {
                 else
                     creature = monsterFamily.get(creatureId);
                 creature.addState(new CreatureStateWithClock(creatureState, gapTime));
+                break;
+            }
+            case Msg.SAME_DESTINY_MSG: {
+                SameDestinyMsg sameDestinyMsg = new SameDestinyMsg();
+                sameDestinyMsg.parseMsg(inputStream);
+                int creatureId = sameDestinyMsg.getCreatureId();
+                double deltaHealth = sameDestinyMsg.getDeltaHealth();
+                Creature creature = gourdFamily.get(creatureId);
+                sameDestinyHashMap.put(creature, deltaHealth);
                 break;
             }
             default: {

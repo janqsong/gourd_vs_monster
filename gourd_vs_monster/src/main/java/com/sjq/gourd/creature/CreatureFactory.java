@@ -69,7 +69,7 @@ public class CreatureFactory {
             if (currentId == CreatureId.SNAKE_MONSTER_ID)
                 return new SnakeMonster(faceDirection, a, b);
             if (currentId == CreatureId.SCORPION_MONSTER_ID)
-                return new ScorpionMonster(faceDirection, a, b);
+                return new ScorpionMonster(out, faceDirection, a, b);
             if (currentId == CreatureId.MONSTER1_ID)
                 return new CentipedeMonster(faceDirection, a, b);
             if (currentId == CreatureId.MONSTER2_ID)

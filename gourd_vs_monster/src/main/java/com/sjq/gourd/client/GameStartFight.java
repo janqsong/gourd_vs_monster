@@ -11,6 +11,7 @@ import com.sjq.gourd.equipment.EquipmentFactory;
 import com.sjq.gourd.protocol.BulletBuildMsg;
 import com.sjq.gourd.protocol.EquipmentRequestMsg;
 import com.sjq.gourd.protocol.Msg;
+import com.sjq.gourd.protocol.SameDestinyMsg;
 import com.sjq.gourd.stage.SceneController;
 import com.sjq.gourd.tool.PositionXY;
 import javafx.application.Platform;
@@ -19,6 +20,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.*;
@@ -86,8 +89,11 @@ public class GameStartFight {
                 enemyCreatureImageView.setPreserveRatio(true);
                 enemyCreatureImageView.setFitWidth(80);
                 myCreatureText.setVisible(false);
+                myCreatureText.setFont(Font.font ("Verdana", 13));
+                myCreatureText.setFill(Color.RED);
                 enemyCreatureText.setVisible(false);
-
+                enemyCreatureText.setFont(Font.font ("Verdana", 13));
+                enemyCreatureText.setFill(Color.RED);
             }
         });
     }
@@ -215,7 +221,6 @@ public class GameStartFight {
 //    }
 
     public void start() {
-//        initGame();
         init(campType, myFamily, enemyFamily);
         gameOverListenerThread(campType);
         new Thread(new Runnable() {
@@ -348,6 +353,13 @@ public class GameStartFight {
                             }
                         }
 
+                        HashMap<Creature, Double> sameDestinyHashMap = msgController.getSameDestinyHashMap();
+                        for(Map.Entry<Creature, Double> entry : sameDestinyHashMap.entrySet()) {
+                            Creature creature = entry.getKey();
+                            double deltaHealth = entry.getValue();
+                            creature.setCurrentHealth(creature.getCurrentHealth() - deltaHealth);
+                        }
+
 
                         if (myCreature != null && myCreature.isAlive()) {
                             Iterator<Map.Entry<Integer, Equipment>> equipmentHashIterator = equipmentHashMap.entrySet().iterator();
@@ -402,8 +414,8 @@ public class GameStartFight {
                     myCreatureText.setLayoutX(5);
                     enemyCreatureText.setLayoutX(5);
                 } else {
-                    myCreatureImageView.setLayoutX(5 + Constant.SCENE_MARGIN_SIZE + Constant.FIGHT_PANE_WIDTH);
-                    enemyCreatureImageView.setLayoutX(5 + Constant.SCENE_MARGIN_SIZE + Constant.FIGHT_PANE_WIDTH);
+                    myCreatureImageView.setLayoutX(10 + Constant.SCENE_MARGIN_SIZE + Constant.FIGHT_PANE_WIDTH);
+                    enemyCreatureImageView.setLayoutX(10 + Constant.SCENE_MARGIN_SIZE + Constant.FIGHT_PANE_WIDTH);
                     myCreatureText.setLayoutX(5 + Constant.SCENE_MARGIN_SIZE + Constant.FIGHT_PANE_WIDTH);
                     enemyCreatureText.setLayoutX(5 + Constant.SCENE_MARGIN_SIZE + Constant.FIGHT_PANE_WIDTH);
                 }

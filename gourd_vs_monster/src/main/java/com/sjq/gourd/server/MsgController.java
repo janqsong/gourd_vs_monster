@@ -34,6 +34,8 @@ public class MsgController {
 
     private ArrayList<CreatureStateGroup> creatureStateGroupArrayList = new ArrayList<>();
 
+    private HashMap<Creature, Double> sameDestinyHashMap = new HashMap<>();
+
     private String campType;
     private int creatureId;
     private double layoutX;
@@ -72,6 +74,12 @@ public class MsgController {
         ArrayList<CreatureStateGroup> tempCreatureState = creatureStateGroupArrayList;
         creatureStateGroupArrayList = new ArrayList<>();
         return tempCreatureState;
+    }
+
+    public HashMap<Creature, Double> getSameDestinyHashMap() {
+        HashMap<Creature, Double> tempSameDestinyHashMap = sameDestinyHashMap;
+        sameDestinyHashMap = new HashMap<>();
+        return tempSameDestinyHashMap;
     }
 
     public void getMsgClass(int msgType, ObjectInputStream inputStream) {
@@ -193,6 +201,15 @@ public class MsgController {
                 creatureStateGroup.creatureState = creatureState;
                 creatureStateGroup.gapTime = gapTime;
                 creatureStateGroupArrayList.add(creatureStateGroup);
+                break;
+            }
+            case Msg.SAME_DESTINY_MSG: {
+                SameDestinyMsg sameDestinyMsg = new SameDestinyMsg();
+                sameDestinyMsg.parseMsg(inputStream);
+                int creatureId = sameDestinyMsg.getCreatureId();
+                double deltaHealth = sameDestinyMsg.getDeltaHealth();
+                Creature creature = gourdFamily.get(creatureId);
+                sameDestinyHashMap.put(creature, deltaHealth);
                 break;
             }
             default: {
