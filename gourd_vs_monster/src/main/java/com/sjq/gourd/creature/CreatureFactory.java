@@ -14,7 +14,7 @@ public class CreatureFactory {
     private final int maxId;
     private int currentId;
     //确保size至少有2*(maxId-minId+1)
-    private ArrayList<ImageView> imageViews;
+    private final ArrayList<ImageView> imageViews;
 
     ObjectOutputStream out = null;
 
@@ -22,10 +22,10 @@ public class CreatureFactory {
         this.out = out;
         this.camp = camp;
         this.faceDirection = faceDirection;
-        if (camp == Constant.CampType.GOURD) {
+        if (camp.equals(Constant.CampType.GOURD)) {
             minId = CreatureId.MIN_GOURD_ID;
             maxId = CreatureId.MAX_GOURD_ID;
-        } else if (camp == Constant.CampType.MONSTER) {
+        } else if (camp.equals(Constant.CampType.MONSTER)) {
             minId = CreatureId.MIN_MONSTER_ID;
             maxId = CreatureId.MAX_MONSTER_ID;
         } else throw new Exception("CreatureFactory camp参数错误");
@@ -46,7 +46,7 @@ public class CreatureFactory {
         currentId++;
         ImageView a = imageViews.get(2 * (currentId - minId));
         ImageView b = imageViews.get(2 * (currentId - minId) + 1);
-        if (camp == Constant.CampType.GOURD) {
+        if (camp.equals(Constant.CampType.GOURD)) {
             if (currentId == CreatureId.FIRST_GOURD_ID)
                 return new FirstGourd(faceDirection, a, b);
             if (currentId == CreatureId.SECOND_GOURD_ID)

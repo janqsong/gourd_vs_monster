@@ -110,7 +110,7 @@ public class Creature {
 
     private double showSpeed = 0;
 
-    public Creature(String campType, int creatureId, String creatureName,
+    Creature(String campType, int creatureId, String creatureName,
                     double baseHealth, double baseMagic, double baseAttack, double baseDefense, double baseAttackSpeed,
                     double baseMoveSpeed, double shootRange, int faceDirection, double width, boolean isCloseAttack, int clawType,
                     ImageView imageView, ImageView closeAttackImageView,
