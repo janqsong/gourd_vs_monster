@@ -16,6 +16,8 @@ public class FirstGourd extends Creature {
     private boolean inQAction = false;
     private double moveSpeedIncrement = 5;
     private double attackDecrement = 20;
+    private double attackSpeedIncrement;
+    private double shootRangeIncrement = 100;
     private final long gap = 5000; //5000ms时间
 
     public FirstGourd(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
@@ -114,6 +116,9 @@ public class FirstGourd extends Creature {
         inQAction = true;
         currentAttack -= attackDecrement;
         currentMoveSpeed += moveSpeedIncrement;
+        attackSpeedIncrement = 2.0 * baseAttackSpeed;
+        currentAttackSpeed += attackSpeedIncrement;
+        shootRange += shootRangeIncrement;
         lastTransfigurationMillis = System.currentTimeMillis();
         return arrayList;
     }
@@ -126,5 +131,7 @@ public class FirstGourd extends Creature {
         inQAction = false;
         currentMoveSpeed -= moveSpeedIncrement;
         currentAttack += attackDecrement;
+        currentAttackSpeed -= attackSpeedIncrement;
+        shootRange -= shootRangeIncrement;
     }
 }

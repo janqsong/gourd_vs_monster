@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 public class MagicMirror extends Equipment {
     private final double shootRangeIncrement = 200;
 
-    private static Image image = new Image("/images/equipmentImages/magicMirror.png");
+    private static final Image image = new Image("/images/equipmentImages/magicMirror.png");
     private static final double width = 50, height = 50;
 
     MagicMirror(int id, ImageView imageView) {

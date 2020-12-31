@@ -16,7 +16,7 @@ public class Grandpa extends Creature {
 
     public Grandpa(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(in, out, Constant.CampType.GOURD, CreatureId.GRANDPA_ID, CreatureId.GRANDPA_NAME,
-                2000, 200, 75, 10, 0.5, 12, 300.0,
+                3000, 200, 75, 10, 0.5, 12, 300.0,
                 faceDirection, 70.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.gourdLeftImageMap.get(CreatureId.GRANDPA_ID),
                 ImageUrl.gourdLeftSelectImageMap.get(CreatureId.GRANDPA_ID),

@@ -8,7 +8,7 @@ public class RigidSoftSword extends Equipment {
     private double attackSpeedIncrement = 0;
     private final double attackIncrement = 20;
 
-    private static Image image = new Image("/images/equipmentImages/rigidSoftSword.png");
+    private static final Image image = new Image("/images/equipmentImages/rigidSoftSword.png");
     private static final double width = 50, height = 50;
 
     RigidSoftSword(int id, ImageView imageView) {

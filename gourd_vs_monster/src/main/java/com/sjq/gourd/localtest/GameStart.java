@@ -245,47 +245,47 @@ public class GameStart {
             }
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (judgeWin[0] != 3) {
-                        String string = "获胜方是: ";
-                        if (judgeWin[0] == -1)
-                            string += "妖精";
-                        else if (judgeWin[0] == 1)
-                            string += "葫芦娃";
-                        else if (judgeWin[0] == 0)
-                            string = "平局";
-                        String finalString = string;
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                winText.setText(finalString);
-                                winText.setVisible(true);
-                            }
-                        });
-                    }
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    if (judgeWin[0] != 3) {
+//                        String string = "获胜方是: ";
+//                        if (judgeWin[0] == -1)
+//                            string += "妖精";
+//                        else if (judgeWin[0] == 1)
+//                            string += "葫芦娃";
+//                        else if (judgeWin[0] == 0)
+//                            string = "平局";
+//                        String finalString = string;
+//                        Platform.runLater(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                winText.setText(finalString);
+//                                winText.setVisible(true);
+//                            }
+//                        });
+//                    }
+//                    try {
+//                        Thread.sleep(20);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }).start();
 
-        logger.debug("测试条件:葫芦娃和妖精双方完全由ai控制,都会使用技能,都会拾取装备");
-
-        logger.debug("开始第1场游戏:");
+//        logger.debug("测试条件:葫芦娃和妖精双方完全由ai控制,都会使用技能,都会拾取装备,第三次数据改动");
+//
+//        logger.debug("开始第1场游戏:");
         if (camp.equals(Constant.CampType.GOURD)) {
             myGameStart(camp, gourdFamily, monsterFamily);
-            debugView(camp, gourdFamily, monsterFamily);
-            testWinRate(camp, gourdFamily, monsterFamily);
+//            debugView(camp, gourdFamily, monsterFamily);
+//            testWinRate(camp, gourdFamily, monsterFamily);
         } else {
             myGameStart(camp, monsterFamily, gourdFamily);
-            debugView(camp, monsterFamily, gourdFamily);
-            testWinRate(camp, monsterFamily, gourdFamily);
+//            debugView(camp, monsterFamily, gourdFamily);
+//            testWinRate(camp, monsterFamily, gourdFamily);
         }
     }
 
@@ -331,22 +331,24 @@ public class GameStart {
                                 + numberFormat.format(monsterRate) + " 平局: " + numberFormat.format(allLoseAndWinRate));
                         judgeWin[0] = 3;
                         for (Creature creature : myFamily.values()) {
+                            creature.removeAllState();
+                            creature.giveUpEquipment();
                             creature.setCurrentHealth(creature.getBaseHealth());
                             creature.setCurrentMagic(0);
                             creature.setCurrentDefense(creature.getBaseDefense());
                             creature.setCurrentAttack(creature.getBaseAttack());
                             creature.setCurrentMoveSpeed(creature.getBaseMoveSpeed());
                             creature.setCurrentAttackSpeed(creature.getBaseAttackSpeed());
-                            creature.giveUpEquipment();
                         }
                         for (Creature creature : enemyFamily.values()) {
+                            creature.removeAllState();
+                            creature.giveUpEquipment();
                             creature.setCurrentHealth(creature.getBaseHealth());
                             creature.setCurrentMagic(0);
                             creature.setCurrentDefense(creature.getBaseDefense());
                             creature.setCurrentAttack(creature.getBaseAttack());
                             creature.setCurrentMoveSpeed(creature.getBaseMoveSpeed());
                             creature.setCurrentAttackSpeed(creature.getBaseAttackSpeed());
-                            creature.giveUpEquipment();
                         }
 
                         logger.debug("开始第" + (count + 1) + "场游戏:");
@@ -363,8 +365,11 @@ public class GameStart {
     }
 
     public void myGameStart(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
-//        init(camp, myFamily, enemyFamily);//鼠标键盘交互逻辑
+        init(camp, myFamily, enemyFamily);//鼠标键盘交互逻辑
         new Thread(new Runnable() {
+            boolean gameOverFlag = false;
+            long gameOverTimeMillis = 0;
+
             @Override
             public void run() {
                 while (true) {
@@ -500,7 +505,15 @@ public class GameStart {
                         int judge = judgeWin(camp, myFamily, enemyFamily);
                         if (judge != 2) {
                             judgeWin[0] = judge;
-                            break;
+                            if (!gameOverFlag) {
+                                gameOverFlag = true;
+                                gameOverTimeMillis = System.currentTimeMillis();
+                            } else if (System.currentTimeMillis() - gameOverTimeMillis > 3000) {
+                                System.out.println("哈哈哈啊哈哈哈");
+                                judgeWin[0] = 3;
+                                Thread.interrupted();
+                                break;
+                            }
                         }
                     } catch (Exception e) {
                         System.out.println("while(true)出错");
@@ -538,6 +551,45 @@ public class GameStart {
         if (camp.equals(Constant.CampType.MONSTER) && flag != 2)
             flag = -flag;
         return flag;
+    }
+
+    private void gameOver(int gameOverState) {
+        ImageView imageView = new ImageView();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setImage(ImageUrl.gameOverImageMap.get(gameOverState));
+                imageView.setPreserveRatio(true);
+                double width = 40;
+                double targetWidth = 500;
+                imageView.setFitWidth(width);
+                imageView.setLayoutX((Constant.FIGHT_PANE_WIDTH - width) / 2);
+                imageView.setLayoutY((Constant.FIGHT_PANE_HEIGHT - imageView.getBoundsInLocal().getMaxY()) / 2);
+                sceneController.getMapPane().getChildren().add(imageView);
+                imageView.setVisible(true);
+
+            }
+        });
+
+        double width = 40;
+        double targetWidth = 550;
+        while (width <= targetWidth) {
+            double finalWidth = width;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setFitWidth(finalWidth);
+                    imageView.setLayoutX((Constant.FIGHT_PANE_WIDTH - finalWidth) / 2);
+                    imageView.setLayoutY((Constant.FIGHT_PANE_HEIGHT - imageView.getBoundsInLocal().getMaxY()) / 2);
+                }
+            });
+            width += 5;
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void init(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
@@ -595,6 +647,36 @@ public class GameStart {
                             }
                         }
                     });
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (judgeWin[0] != 3) {
+                        if (camp.equals(Constant.CampType.GOURD)) {
+                            if (judgeWin[0] >= 0)
+                                gameOver(Constant.gameOverState.VICTORY_ID);
+                            else
+                                gameOver(Constant.gameOverState.DEFEAT_ID);
+                        } else if (judgeWin[0] <= 0)
+                            gameOver(Constant.gameOverState.VICTORY_ID);
+                        else
+                            gameOver(Constant.gameOverState.DEFEAT_ID);
+                        judgeWin[0] = 3;
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     try {
                         Thread.sleep(20);
                     } catch (InterruptedException e) {

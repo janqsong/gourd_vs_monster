@@ -18,12 +18,12 @@ public class SnakeMonster extends Creature {
     private long lastQActionMillis = 0, qGap = 5000;
     private long lastEActionMillis = 0, eGap = 5000;
     private long lastRActionMillis = 0, rGap = 5000;
-    private final double healthIncrement = 1000;
+    private final double healthIncrement = 600;
     private final double defenseIncrement = 30;
 
     public SnakeMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(in, out, Constant.CampType.MONSTER, CreatureId.SNAKE_MONSTER_ID, CreatureId.SNAKE_MONSTER_NAME,
-                4000, 200, 120, 30, 0.7, 15, 500.0,
+                5000, 200, 120, 30, 0.7, 15, 500.0,
                 faceDirection, 100.0, false, Constant.ClawType.NONE_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SNAKE_MONSTER_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SNAKE_MONSTER_ID),

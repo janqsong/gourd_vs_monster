@@ -25,7 +25,7 @@ public class Collision {
             sourceCreature.setCurrentMagic(sourceCreature.getCurrentMagic() + sourceCreature.getMagicIncrementOnce());
             return;
         } else if (bullet.getBulletState() == BulletState.THE_GOD_OF_HEALING_MAX) {
-            targetCreature.setCurrentHealth(targetCreature.getCurrentHealth() + 1000);
+            targetCreature.setCurrentHealth(targetCreature.getCurrentHealth() + 500);
             targetCreature.getStateSet().add(new CreatureStateWithClock(CreatureState.CURE, 5000));
             //5s的治愈效果
             bullet.setValid(false);

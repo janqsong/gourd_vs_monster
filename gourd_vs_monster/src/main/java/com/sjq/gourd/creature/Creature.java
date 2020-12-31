@@ -857,4 +857,12 @@ public class Creature {
     public double getBaseMoveSpeed() {
         return baseMoveSpeed;
     }
+
+    public void removeAllState() {
+        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
+        while (creatureStateWithClockIterator.hasNext()) {
+            CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
+            creatureStateWithClockIterator.remove();
+        }
+    }
 }

@@ -22,12 +22,12 @@ public class ScorpionMonster extends Creature {
     private final double attackIncrement = 30;
     private final double attackSpeedIncrement = 0.5;
     private final double shootRangeIncrement = 80.0;
-    private final double healthIncrement = 1000;
+    private final double healthIncrement = 600;
     private Creature[] creatures = new Creature[3];
 
     public ScorpionMonster(DataInputStream in, DataOutputStream out, int faceDirection, ImageView imageView, ImageView closeAttackImageView) {
         super(in, out, Constant.CampType.MONSTER, CreatureId.SCORPION_MONSTER_ID, CreatureId.SCORPION_MONSTER_NAME,
-                10000, 100, 150, 55, 0.5, 8, 100.0,
+                7500, 150, 150, 55, 0.5, 10, 100.0,
                 faceDirection, 110.0, true, Constant.ClawType.THIRD_CLAW,
                 imageView, closeAttackImageView, ImageUrl.monsterLeftImageMap.get(CreatureId.SCORPION_MONSTER_ID),
                 ImageUrl.monsterLeftSelectImageMap.get(CreatureId.SCORPION_MONSTER_ID),
@@ -146,7 +146,7 @@ public class ScorpionMonster extends Creature {
     public ArrayList<Bullet> qAction() {
         //致残之爪,给5.0近战攻击范围内所有的敌人发射一颗具有致残效果的子弹
         ArrayList<Bullet> arrayList = new ArrayList<>();
-        if (currentMagic < baseMagic)
+        if (currentMagic < 0.5 * baseMagic)
             return arrayList;
         inQAction = true;
         for (Creature creature : enemyFamily.values()) {

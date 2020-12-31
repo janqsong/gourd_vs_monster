@@ -3,6 +3,7 @@ package com.sjq.gourd.equipment;
 import com.sjq.gourd.constant.Constant;
 import com.sjq.gourd.creature.Creature;
 import com.sjq.gourd.creature.ImagePosition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -18,7 +19,6 @@ public abstract class Equipment {
     protected Creature myCreature = null;
     protected boolean isFree = false;
     private final double WIDTH, HEIGHT;
-    private Random random = new Random(System.currentTimeMillis());
 
     Equipment(String name, int id, Image image, ImageView imageView, double width, double height) {
         this.name = name;
@@ -28,6 +28,7 @@ public abstract class Equipment {
         this.WIDTH = width;
         this.HEIGHT = height;
         this.isFree = true;
+        Random random = new Random(System.currentTimeMillis());
         imagePosition = new ImagePosition(random.nextInt((int) (Constant.FIGHT_PANE_WIDTH - width)),
                 random.nextInt((int) (Constant.FIGHT_PANE_HEIGHT - height)));
         this.imageView.setImage(image);
@@ -36,22 +37,31 @@ public abstract class Equipment {
     }
 
 
-
     public void draw() {
-        if (isFree) {
-            imageView.setLayoutX(imagePosition.getLayoutX());
-            imageView.setLayoutY(imagePosition.getLayoutY());
-            imageView.setVisible(true);
-            imageView.setDisable(false);
-        } else {
-            imageView.setVisible(false);
-            imageView.setDisable(true);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isFree) {
+                    imageView.setLayoutX(imagePosition.getLayoutX());
+                    imageView.setLayoutY(imagePosition.getLayoutY());
+                    imageView.setVisible(true);
+                    imageView.setDisable(false);
+                } else {
+                    imageView.setVisible(false);
+                    imageView.setDisable(true);
+                }
+            }
+        });
     }
 
     public void dispose() {
-        imageView.setVisible(false);
-        imageView.setDisable(true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setVisible(false);
+                imageView.setDisable(true);
+            }
+        });
     }
 
     public abstract void takeEffect(Creature creature);
