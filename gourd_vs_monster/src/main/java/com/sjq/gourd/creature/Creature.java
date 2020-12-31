@@ -3,7 +3,9 @@ package com.sjq.gourd.creature;
 import com.sjq.gourd.ai.AiInterface;
 import com.sjq.gourd.ai.FirstGenerationAi;
 import com.sjq.gourd.bullet.Bullet;
+import com.sjq.gourd.bullet.BulletState;
 import com.sjq.gourd.constant.Constant;
+import com.sjq.gourd.constant.CreatureId;
 import com.sjq.gourd.equipment.Equipment;
 import com.sjq.gourd.protocol.*;
 import javafx.application.Platform;
@@ -11,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 import java.io.*;
 import java.util.*;
@@ -215,13 +218,10 @@ public class Creature {
 
     //设置移动方向
     public void setDirection(int direction) {
-        if (isControlled()) {
-            this.direction = direction;
-        } else if (System.currentTimeMillis() - lastDirectionSetTime >= Constant.DIRECTION_LOCK_TIME) {
-            this.direction = direction;
+        this.direction = direction;
+        if (!isControlled())
             lastDirectionSetTime = System.currentTimeMillis();
-            setCreatureImageView();
-        }
+        setCreatureImageView();
     }
 
     //判断是否下载可以攻击,收到攻速的限制
@@ -849,5 +849,27 @@ public class Creature {
             }
         }
         return message.toString();
+    }
+
+    public long getLastDirectionSetTime() {
+        return lastDirectionSetTime;
+    }
+
+
+    //根据当前状态选择普通子弹,不包括技能子弹
+    public Bullet selectBullet(Creature target) {
+        Bullet bullet = null;
+        if (isCloseAttack())
+            bullet = new Bullet(this, target, Constant.CLOSE_BULLET_TYPE, BulletState.NONE);
+        else if (getCreatureId() == CreatureId.GRANDPA_ID) {
+            //爷爷的子弹
+            bullet = new Bullet(this, target, Constant.REMOTE_BULLET_TYPE, BulletState.THE_GOD_OF_HEALING);
+        } else if (getCampType().equals(Constant.CampType.MONSTER)
+                && getEquipment() != null && getEquipment().getName().equals("magicMirror")) {
+            //魔镜的装备者是远程攻击且是妖精时,会有重伤效果
+            bullet = new Bullet(this, target, Constant.REMOTE_BULLET_TYPE, BulletState.GAZE_OF_MAGIC_MIRROR);
+        } else
+            bullet = new Bullet(this, target, Constant.REMOTE_BULLET_TYPE, BulletState.NONE);
+        return bullet;
     }
 }
