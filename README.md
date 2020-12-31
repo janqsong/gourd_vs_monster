@@ -307,13 +307,23 @@ public class SnakeMonster extends Creature {
 
 ### 4.1 需求分析与策划
 
+耗时约`1day`
+
 ### 4.2 模块划分与任务分配
+
+耗时约`1day`
 
 ### 4.3 单机版实现
 
+耗时约`10days` https://github.com/JansonSong/gourd_vs_monster/tree/dev
+
 ### 4.4 联机同步实现
 
+耗时约`8days`
+
 ### 4.5 功能和文档完善
+
+耗时约`3days`
 
 
 
