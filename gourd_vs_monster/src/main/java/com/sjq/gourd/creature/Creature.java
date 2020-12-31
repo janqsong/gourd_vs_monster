@@ -427,9 +427,8 @@ public class Creature {
         });
     }
 
-    //状态标记函数,每回合更新,主要给每个人物的技能定时钟,只要没死就要执行
+    //状态标记函数,每回合更新,主要给每个人物的技能和状态定时钟,只要没死就要执行
     void setCreatureState() {
-        //todo 这里不要写任何代码,每个子类根据需求写代码
         Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
         while (creatureStateWithClockIterator.hasNext()) {
             CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
@@ -441,22 +440,21 @@ public class Creature {
         }
     }
 
-    //封装移动方式,画,攻击,返回子弹
+    //封装移动方式,绘制所有信息,攻击,返回子弹列表
     public ArrayList<Bullet> update() {
         ArrayList<Bullet> bullets = new ArrayList<>();
+        //创建一个需要返回的子弹列表,保证返回值不会null
         if (!isControlled()) {
             if (isAlive()) {
 //                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
+//                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
-            } else {
-                draw();
             }
         } else {
-            draw();
+//            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -475,6 +473,7 @@ public class Creature {
                 rFlag = false;
             }
         }
+        draw();
         return bullets;
     }
 
