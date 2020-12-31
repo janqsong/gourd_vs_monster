@@ -108,6 +108,8 @@ public class Creature {
 
     private long lastRecoveryOfMagicTimeMillis = 0;
 
+    private double showSpeed = 0;
+
     public Creature(String campType, int creatureId, String creatureName,
                     double baseHealth, double baseMagic, double baseAttack, double baseDefense, double baseAttackSpeed,
                     double baseMoveSpeed, double shootRange, int faceDirection, double width, boolean isCloseAttack, int clawType,
@@ -181,7 +183,7 @@ public class Creature {
     }
 
 
-    //todo 千万别改这个
+    //根据方向和玩家控制状态实时更改图片
     public void setCreatureImageView() {
         Platform.runLater(new Runnable() {
             @Override
@@ -203,20 +205,18 @@ public class Creature {
 
     //设置position并更新控件位置
     public void setCreatureImagePos(double layoutX, double layoutY) {
+        imagePosition.setLayoutX(layoutX);
+        imagePosition.setLayoutY(layoutY);
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                imagePosition.setLayoutX(layoutX);
-                imagePosition.setLayoutY(layoutY);
                 creatureImageView.setLayoutX(layoutX);
                 creatureImageView.setLayoutY(layoutY);
-//                creatureImageView.setVisible(true);
-//                creatureImageView.setDisable(false);
             }
         });
     }
 
-    //设置移动方向
+    //根据控制状态设置移动方向
     public void setDirection(int direction) {
         this.direction = direction;
         if (!isControlled())
@@ -226,19 +226,13 @@ public class Creature {
 
     //判断是否下载可以攻击,收到攻速的限制
     public boolean canAttack() {
+        //返回false,防止除0错误
         if (currentAttackSpeed <= 0)
             return false;
         return (System.currentTimeMillis() - lastAttackMillis >= 1000.0 / currentAttackSpeed);
     }
 
-    //这个函数是发生位移的函数,每一帧只要没死,就发生一次位移
-    private void move() {
-        //死则返回
-        if (!isAlive())
-            return;
-        setCreatureState();
-
-        //蓝量回复
+    private void recoveryMagicEverySecond() {
         long currentTime = System.currentTimeMillis();
         //没秒(1000ms)钟恢复两点蓝量
         long recoveryOfMagicTimeGap = 1000;
@@ -246,31 +240,48 @@ public class Creature {
             setCurrentMagic(2 + currentMagic);
             lastRecoveryOfMagicTimeMillis = currentTime;
         }
+    }
 
+    private double calculateEffectiveSpeed() {
+        //根据当前状态计算实际有效的速度
         double speed = currentMoveSpeed;
         boolean notMoveFlag = false, speedCutFlag = false, speedAddFlag = false;
-        Iterator<CreatureStateWithClock> creatureStateWithClockIterator = stateSet.iterator();
-        while (creatureStateWithClockIterator.hasNext()) {
-            CreatureStateWithClock creatureStateWithClock = creatureStateWithClockIterator.next();
+        for (CreatureStateWithClock creatureStateWithClock : stateSet) {
             CreatureState creatureState = creatureStateWithClock.getCreatureState();
-            if (creatureState == CreatureState.FROZEN || creatureState == CreatureState.IMPRISONMENT)
+            if (creatureState.equals(CreatureState.FROZEN) || creatureState.equals(CreatureState.IMPRISONMENT))
                 notMoveFlag = true;//被禁锢或者冰冻,直接不用移动了
-            else if (creatureState == CreatureState.SPEED_CUT)
+            else if (creatureState.equals(CreatureState.SPEED_CUT))
                 speedCutFlag = true;//减速buff,减50%基础移速,如果变成负数,就得0
-            else if (creatureState == CreatureState.STIMULATED)
+            else if (creatureState.equals(CreatureState.STIMULATED))
                 speedAddFlag = true;//振奋buff,增加50%基础移速
-            else if (creatureState == CreatureState.CURE)
+            else if (creatureState.equals(CreatureState.CURE))
                 setCurrentHealth(currentHealth + 10);//爷爷治愈buff,大概每次回血10点
-            else if (creatureState == CreatureState.FIRING)
+            else if (creatureState.equals(CreatureState.FIRING))
                 setCurrentHealth(currentHealth - 10);//火娃灼烧buff,每次掉血10点
         }
-        if (notMoveFlag) return;
-        if (speedAddFlag) speed += 0.5 * baseMoveSpeed;
-        if (speedCutFlag) {
+        if (notMoveFlag)
+            return 0;
+        if (speedAddFlag)
+            speed += 0.5 * baseMoveSpeed;
+        if (speedCutFlag)
             speed -= 0.5 * baseMoveSpeed;
-            if (speed <= 0) return;
-        }
+        if (speed <= 0)
+            return 0;
+        return speed;
+    }
 
+    //这个函数是发生位移的函数,每一帧只要没死,就发生一次位移
+    private void move() {
+        //死则返回
+        if (!isAlive())
+            return;
+        //活着要更新当前状态
+        setCreatureState();
+        //蓝量回复,每次移动,表明活着,活着每秒都要增加蓝量
+        recoveryMagicEverySecond();
+        //根据状态计算实际上的速度
+        double speed = calculateEffectiveSpeed();
+        showSpeed = speed;
         //获取当前位置
         double x = imagePosition.getLayoutX();
         double y = imagePosition.getLayoutY();
@@ -316,25 +327,7 @@ public class Creature {
             y = Constant.FIGHT_PANE_HEIGHT - HEIGHT;
             isLowest = true;
         } else isLowest = false;
-        //立即根据方向和控制人更新图片状态
 
-        //todo 千万别修改这里！！！
-        if (isControlled()) {
-            if (creatureImageView.getImage() != selectCreatureLeftImage
-                    && direction == Constant.Direction.LEFT)
-                setCreatureImageView();
-            else if (creatureImageView.getImage() != selectCreatureRightImage
-                    && direction == Constant.Direction.RIGHT)
-                setCreatureImageView();
-        } else {
-            if (creatureImageView.getImage() != creatureLeftImage
-                    && direction == Constant.Direction.LEFT)
-                setCreatureImageView();
-            else if (creatureImageView.getImage() != creatureRightImage
-                    && direction == Constant.Direction.RIGHT)
-                setCreatureImageView();
-        }
-        //最终
         setCreatureImagePos(x, y);
     }
 
@@ -819,7 +812,7 @@ public class Creature {
         message.append("攻击力: ").append((int) currentAttack).append("/").append((int) baseAttack).append("\n");
         message.append("防御力: ").append((int) currentDefense).append("/").append((int) baseDefense).append("\n");
         message.append("攻速: ").append(String.format("%.2f", currentAttackSpeed)).append("/").append(String.format("%.2f", baseAttackSpeed)).append("\n");
-        message.append("移速: ").append((int) currentMoveSpeed).append("/").append((int) baseMoveSpeed).append("\n");
+        message.append("移速: ").append((int) showSpeed).append("/").append((int) baseMoveSpeed).append("\n");
         message.append("攻击范围: ").append((int) shootRange).append("\n");
         if (equipment != null)
             message.append("装备: ").append(equipment.getName()).append("\n");
@@ -866,4 +859,5 @@ public class Creature {
             bullet = new Bullet(this, target, Constant.REMOTE_BULLET_TYPE, BulletState.NONE);
         return bullet;
     }
+
 }

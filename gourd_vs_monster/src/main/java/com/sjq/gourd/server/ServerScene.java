@@ -52,7 +52,7 @@ public class ServerScene {
         this.inMonster = inMonster;
         this.outMonster = outMonster;
         try {
-            outFile = new ObjectOutputStream(new FileOutputStream("C:/Users/Dlee/Desktop/playbackFiles/a.back"));
+            outFile = new ObjectOutputStream(new FileOutputStream("./a.back"));
         } catch (Exception e) {
             e.printStackTrace();
         }

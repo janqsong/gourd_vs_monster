@@ -3,7 +3,7 @@ package com.sjq.gourd.creature;
 import com.sjq.gourd.constant.Constant;
 
 public class CreatureStateWithClock {
-    private CreatureState creatureState;
+    private final CreatureState creatureState;
     //time是毫秒
     private long lastMillis = 0;
     private long gap = 0;
