@@ -31,16 +31,12 @@ public class Grandpa extends Creature {
         if (!isControlled()) {
             if (isAlive()) {
                 aiInterface.moveMod(this, myFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, myFamily);
                 if (bullet != null) {
                     bullets.add(bullet);
                 }
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -52,6 +48,7 @@ public class Grandpa extends Creature {
             }
             qFlag = false;
         }
+        draw();
         return bullets;
     }
 

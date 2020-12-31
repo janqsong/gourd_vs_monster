@@ -37,18 +37,13 @@ public class SnakeMonster extends Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 updateActionState();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -67,6 +62,7 @@ public class SnakeMonster extends Creature {
             }
             rFlag = false;
         }
+        draw();
         updateActionState();
         return bullets;
     }
@@ -96,7 +92,7 @@ public class SnakeMonster extends Creature {
                         Constant.REMOTE_BULLET_TYPE, BulletState.THE_TEETH_OF_POISONOUS));
         }
         lastQActionMillis = System.currentTimeMillis();
-        addState(new CreatureStateWithClock(CreatureState.Q_ACTION,qGap));
+        addState(new CreatureStateWithClock(CreatureState.Q_ACTION, qGap));
         return arrayList;
     }
 
@@ -108,7 +104,7 @@ public class SnakeMonster extends Creature {
             return;
         currentMagic = 0;
         inEAction = true;
-        addState(new CreatureStateWithClock(CreatureState.E_ACTION,eGap));
+        addState(new CreatureStateWithClock(CreatureState.E_ACTION, eGap));
         for (Creature creature : myFamily.values()) {
             if (creature != this && !creature.isAlive()) {
                 if (creature.getCreatureId() == CreatureId.SCORPION_MONSTER_ID) {
@@ -132,7 +128,7 @@ public class SnakeMonster extends Creature {
         inRAction = true;
         setCurrentHealth(currentHealth + healthIncrement);
         setCurrentDefense(currentDefense + defenseIncrement);
-        addState(new CreatureStateWithClock(CreatureState.R_ACTION,rGap));
+        addState(new CreatureStateWithClock(CreatureState.R_ACTION, rGap));
     }
 
     private void disposeQAction() {

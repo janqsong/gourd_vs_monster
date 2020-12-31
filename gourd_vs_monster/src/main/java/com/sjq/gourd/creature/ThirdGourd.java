@@ -35,19 +35,14 @@ public class ThirdGourd extends Creature {
         ArrayList<Bullet> bullets = new ArrayList<>();
         if (!isControlled()) {
             if (isAlive()) {
-//                setCreatureState();这东西在move里更新就能保证
                 aiInterface.moveMod(this, enemyFamily);
-                draw();
                 Bullet bullet = aiInterface.aiAttack(this, enemyFamily);
                 if (bullet != null)
                     bullets.add(bullet);
                 if (inQAction && (double) System.currentTimeMillis() - lastQActionMillis > gap)
                     disposeQAction();
-            } else {
-                draw();
             }
         } else {
-            draw();
             Bullet bullet = playerAttack();
             if (bullet != null)
                 bullets.add(bullet);
@@ -59,6 +54,7 @@ public class ThirdGourd extends Creature {
             if (inQAction && (double) System.currentTimeMillis() - lastQActionMillis > gap)
                 disposeQAction();
         }
+        draw();
         return bullets;
     }
 
