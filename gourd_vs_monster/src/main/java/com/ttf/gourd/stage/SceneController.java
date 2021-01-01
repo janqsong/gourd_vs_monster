@@ -36,7 +36,7 @@ public class SceneController {
 
     @FXML
     void AboutUsMouseClickEvent(MouseEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert  = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("关于游戏");
         alert.setContentText("参见https://github.com/JansonSong/gourd_vs_monster\n\n" +
                 "作者：Xiang-Xiaoyu 联系方式：xiaoyu-xiang@qq.com\n" +
@@ -93,11 +93,10 @@ public class SceneController {
         }
 
         try {
-//            System.out.println("port: " + port);
             Thread serverThread = new GameServer(port);
             serverThread.start();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setHeaderText("创建服务器成功");
+            alert.setHeaderText("创建服务器成功");
             alert.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -130,15 +129,14 @@ public class SceneController {
             connectScene.setDisable(true);
             fightScene.setVisible(true);
             fightScene.setDisable(false);
-//            System.out.println("ipString: " + ipString + " " + "portString: " + portString);
             new GameClient(ipString, Integer.parseInt(portString), this).run();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setHeaderText("连接服务器成功");
+            alert.setHeaderText("连接服务器成功");
             alert.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setHeaderText("连接服务器失败");
-//            alert.setContentText("请检查服务器ip和port是否输入错误，或者该服务器还未建立");
+            alert.setHeaderText("连接服务器失败");
+            alert.setContentText("请检查服务器ip和port是否输入错误，或者该服务器还未建立");
             alert.show();
         }
     }
