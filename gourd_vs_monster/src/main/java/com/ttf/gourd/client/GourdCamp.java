@@ -80,7 +80,7 @@ public class GourdCamp extends Camp{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sceneController.getMapPane().setLayoutX(Constant.SCENE_MARGIN_SIZE);
+        sceneController.getMapPane().setLayoutX(Constant.FIGHT_INFO_MARGIN_SIZE);
     }
 
     public void startGame() {
