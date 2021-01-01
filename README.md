@@ -775,7 +775,7 @@ public class GamePlayBack {
 
 游戏测试文件在`jlog`文件夹下，此数据是在单机情况下测试的
 
-详细测试代码请看`github`地址 [https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/ttf/gourd/localtest ](https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/ttf/gourd/localtest)
+详细测试代码请看`github`地址 [https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/sjq/gourd/localtest ](https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/sjq/gourd/localtest)
 
 ## 4 开发过程
 
@@ -793,7 +793,7 @@ public class GamePlayBack {
 
 ### 4.4 联机同步实现
 
-耗时约`8days` 详见 [https://github.com/JansonSong/gourd_vs_monster/master](https://github.com/JansonSong/gourd_vs_monster/master)
+耗时约`8days` 详见 [https://github.com/JansonSong/gourd_vs_monster](https://github.com/JansonSong/gourd_vs_monster)
 
 ### 4.5 功能和文档完善
 
