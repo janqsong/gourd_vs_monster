@@ -64,7 +64,7 @@ public class ServerScene {
         this.inMonster = inMonster;
         this.outMonster = outMonster;
         try {
-            String fileName = RandomStringUtils.random(10);
+            String fileName = RandomStringUtils.random(6, "sjqxrhSJQXRHNUnu33418985460");
             outFile = new ObjectOutputStream(new FileOutputStream("../playbackFiles/" + fileName + ".back"));
         } catch (Exception e) {
             e.printStackTrace();
