@@ -276,9 +276,4 @@ public class MsgTest {
         in.close();
         file.delete();
     }
-
-    @Test(timeout = 50)
-    public void test_sort_validity() {
-
-    }
 }

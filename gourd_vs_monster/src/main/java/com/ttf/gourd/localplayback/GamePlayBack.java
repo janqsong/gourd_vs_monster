@@ -39,6 +39,7 @@ public class GamePlayBack {
     private HashMap<Integer, Equipment> equipmentHashMap = new HashMap<>();
 
     private HashMap<Integer, Bullet> bullets = new HashMap<>();
+    private ArrayList<Integer> deleteBulletKey = new ArrayList<>();
 
     private ObjectInputStream inputStream;
     private ContentParse contentParse = null;
@@ -123,7 +124,7 @@ public class GamePlayBack {
         }
 
         contentParse = new ContentParse(gourdFamily, monsterFamily, bullets,
-                equipmentFactory, equipmentHashMap, sceneController);
+                equipmentFactory, equipmentHashMap, sceneController, deleteBulletKey);
 
         sceneController.getFightScene().getChildren().add(myCreatureImageView);
         sceneController.getFightScene().getChildren().add(myCreatureText);
@@ -133,7 +134,7 @@ public class GamePlayBack {
         myCreatureImageView.setFitWidth(80);
         myCreatureImageView.setLayoutY(20);
         myCreatureText.setVisible(false);
-        myCreatureText.setFont(Font.font ("Verdana", 13));
+        myCreatureText.setFont(Font.font("Verdana", 13));
         myCreatureText.setFill(Color.RED);
     }
 
@@ -146,15 +147,14 @@ public class GamePlayBack {
             public void run() {
 //                System.out.println("begin playback game");
                 try {
-                    while(true) {
+                    while (true) {
                         int contentType = inputStream.readInt();
-                        if(contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
-                        else if(contentType == Msg.FINISH_GAME_FLAG_MSG) {
+                        if (contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
+                        else if (contentType == Msg.FINISH_GAME_FLAG_MSG) {
 //                            System.out.println("游戏结束");
                             gameOverFlag = true;
                             break;
-                        }
-                        else contentParse.parsePlayBackContent(inputStream, contentType);
+                        } else contentParse.parsePlayBackContent(inputStream, contentType);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -168,7 +168,7 @@ public class GamePlayBack {
                     creature.notMyCampUpdate();
                 }
 
-                for(int i = 0; i < 3; i++) {
+                for (int i = 0; i < 3; i++) {
                     try {
                         Thread.sleep(1000);
                     } catch (Exception e) {
@@ -176,28 +176,27 @@ public class GamePlayBack {
                     }
                 }
 
-                while(true) {
+                while (true) {
                     try {
                         Thread.sleep(frameTime);
-                        if(stopPlayBack) {
+                        if (stopPlayBack) {
                             continue;
                         }
-                        if(backFlag) {
+                        if (backFlag) {
                             inputStream.close();
                             break;
                         }
-                        while(true) {
+                        while (true) {
                             int contentType = inputStream.readInt();
-                            if(contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
-                            else if(contentType == Msg.FINISH_GAME_FLAG_MSG) {
+                            if (contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
+                            else if (contentType == Msg.FINISH_GAME_FLAG_MSG) {
                                 gameOverFlag = true;
                                 gameOver(Constant.gameOverState.VICTORY);
                                 inputStream.close();
                                 break;
-                            }
-                            else contentParse.parsePlayBackContent(inputStream, contentType);
+                            } else contentParse.parsePlayBackContent(inputStream, contentType);
                         }
-                        if(gameOverFlag) break;
+                        if (gameOverFlag) break;
 
                         for (Creature creature : gourdFamily.values()) {
                             creature.notMyCampUpdate();
@@ -205,6 +204,14 @@ public class GamePlayBack {
 
                         for (Creature creature : monsterFamily.values()) {
                             creature.notMyCampUpdate();
+                        }
+
+                        Iterator<Integer> bulletKeyIterator = deleteBulletKey.iterator();
+                        while(bulletKeyIterator.hasNext()) {
+                            int key = bulletKeyIterator.next();
+                            if(bullets.get(key) == null) continue;
+                            bullets.get(key).setValid(false);
+                            bulletKeyIterator.remove();
                         }
 
                         Iterator<Bullet> bulletIterator = bullets.values().iterator();
@@ -225,7 +232,7 @@ public class GamePlayBack {
                             }
                         }
 
-                        for(Equipment equipment : equipmentHashMap.values()) {
+                        for (Equipment equipment : equipmentHashMap.values()) {
                             equipment.draw();
                         }
 
@@ -312,11 +319,10 @@ public class GamePlayBack {
         stopButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(stopPlayBack) {
+                if (stopPlayBack) {
                     stopPlayBack = false;
                     stopButton.setText("暂停");
-                }
-                else {
+                } else {
                     stopPlayBack = true;
                     stopButton.setText("开始");
                 }
@@ -340,7 +346,7 @@ public class GamePlayBack {
         sceneController.getFightScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(gameOverFlag) {
+                if (gameOverFlag) {
                     sceneController.getFightScene().getChildren().clear();
                     sceneController.getFightScene().getChildren().add(sceneController.getMapPane());
                     sceneController.getMapPane().getChildren().clear();
@@ -367,7 +373,7 @@ public class GamePlayBack {
                                 myCreatureImageView.setVisible(true);
                                 myCreatureImageView.setDisable(false);
                                 int id = myCreature.getCreatureId();
-                                if(CreatureId.MIN_GOURD_ID <= id && id <= CreatureId.MAX_GOURD_ID)
+                                if (CreatureId.MIN_GOURD_ID <= id && id <= CreatureId.MAX_GOURD_ID)
                                     myCreatureImageView.setImage(ImageUrl.gourdLeftImageMap.get(id));
                                 else
                                     myCreatureImageView.setImage(ImageUrl.monsterLeftImageMap.get(id));
@@ -390,7 +396,7 @@ public class GamePlayBack {
         wholeFamily.putAll(monsterFamily);
 
         for (Creature creature : wholeFamily.values()) {
-            ImageView imageView =creature.getCreatureImageView();
+            ImageView imageView = creature.getCreatureImageView();
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -399,7 +405,7 @@ public class GamePlayBack {
             });
         }
         HashMap<KeyCode, Integer> keyCodeCreatureIdMap = new HashMap<>();
-        for(int i = CreatureId.MIN_GOURD_ID; i <= CreatureId.MAX_GOURD_ID; i++) {
+        for (int i = CreatureId.MIN_GOURD_ID; i <= CreatureId.MAX_GOURD_ID; i++) {
             keyCodeCreatureIdMap.put(KeyCode.values()[i + 25], i);
         }
         keyCodeCreatureIdMap.put(KeyCode.Q, CreatureId.SNAKE_MONSTER_ID);
@@ -412,7 +418,7 @@ public class GamePlayBack {
             @Override
             public void handle(KeyEvent event) {
                 KeyCode keyCode = event.getCode();
-                if(keyCodeCreatureIdMap.get(keyCode) != null) {
+                if (keyCodeCreatureIdMap.get(keyCode) != null) {
                     int creatureId = keyCodeCreatureIdMap.get(keyCode);
                     myCreature = wholeFamily.get(creatureId);
                     Platform.runLater(new Runnable() {

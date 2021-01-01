@@ -19,7 +19,7 @@ import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.HashMap;
+import java.util.*;
 
 public class ContentParse {
 
@@ -32,16 +32,20 @@ public class ContentParse {
 
     private SceneController sceneController = null;
 
+    private ArrayList<Integer> deleteBulletKey = new ArrayList<>();
+
 
     public ContentParse(HashMap<Integer, Creature> gourdFamily, HashMap<Integer, Creature> monsterFamily,
                         HashMap<Integer, Bullet> bullets, EquipmentFactory equipmentFactory,
-                        HashMap<Integer, Equipment> equipmentHashMap, SceneController sceneController) {
+                        HashMap<Integer, Equipment> equipmentHashMap, SceneController sceneController,
+                        ArrayList<Integer> deleteBulletKey) {
         this.gourdFamily = gourdFamily;
         this.monsterFamily = monsterFamily;
         this.bullets = bullets;
         this.equipmentFactory = equipmentFactory;
         this.equipmentHashMap = equipmentHashMap;
         this.sceneController = sceneController;
+        this.deleteBulletKey = deleteBulletKey;
     }
 
     public void parsePlayBackContent(ObjectInputStream inputStream, int contentType) throws IOException, ClassNotFoundException {
@@ -168,6 +172,10 @@ public class ContentParse {
                 bulletDeleteMsg.parseMsg(inputStream);
                 int bulletKey = bulletDeleteMsg.getBulletKey();
                 Bullet bullet = bullets.get(bulletKey);
+                if(bullet == null) {
+                    deleteBulletKey.add(bulletKey);
+                    break;
+                }
                 bullet.setValid(false);
                 new Collision(bullet).collisionEvent();
                 Platform.runLater(new Runnable() {
