@@ -21,7 +21,6 @@ import javafx.application.Platform;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class MsgController {
     private HashMap<Integer, Creature> gourdFamily = new HashMap<Integer, Creature>();
@@ -36,7 +35,6 @@ public class MsgController {
     private HashMap<Creature, Integer> equipmentPickUp = new HashMap<>();
     private HashMap<Creature, Double> sameDestinyHashMap = new HashMap<>();
 
-    Logger log = Logger.getLogger(MsgController.class.getName());
     private String campType;
     private int timeRemaining;
     private String winCampType;
@@ -110,16 +108,12 @@ public class MsgController {
                 DistributionCampMsg distributionCampMsg = new DistributionCampMsg();
                 distributionCampMsg.parseMsg(inputStream);
                 campType = distributionCampMsg.getCampType();
-                log.info("\nMsg.DISTRIBUTION_OF_CAMP_MSG\n" +
-                        "campType: " + campType);
                 break;
             }
             case Msg.COUNT_DOWN_MSG: {
                 CountDownMsg countDownMsg = new CountDownMsg();
                 countDownMsg.parseMsg(inputStream);
                 timeRemaining = countDownMsg.getTimeRemaining();
-                log.info("\nMsg.COUNT_DOWN_MSG\n" +
-                        "timeRemaining: " + timeRemaining);
                 break;
             }
             case Msg.POSITION_NOTIFY_MSG: {

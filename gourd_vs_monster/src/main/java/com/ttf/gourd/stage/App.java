@@ -2,12 +2,15 @@ package com.ttf.gourd.stage;
 
 import com.ttf.gourd.constant.Constant;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
+import javafx.stage.WindowEvent;
 
 
 public class App extends Application {
@@ -27,6 +30,13 @@ public class App extends Application {
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/gourd_icon.png")));
             primaryStage.setResizable(false);
             primaryStage.setScene(scene);
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Platform.exit();
+                    System.exit(0);
+                }
+            });
             primaryStage.show();
         } catch(Exception e) {
             e.printStackTrace();

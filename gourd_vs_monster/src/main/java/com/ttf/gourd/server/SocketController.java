@@ -103,7 +103,15 @@ public class SocketController {
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                socketPlayerGourd.shutdownOutput();
+                socketPlayerGourd.shutdownInput();
+                socketPlayerGourd.close();
+                socketPlayerMonster.shutdownInput();
+                socketPlayerMonster.shutdownOutput();
+                socketPlayerMonster.close();
+                if(!serverSocket.isClosed())
+                    serverSocket.close();
             }
         }
         new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);

@@ -15,7 +15,7 @@ public class MsgTest {
 
     ObjectInputStream in = null;
     ObjectOutputStream out = null;
-    File file = new File("testData.back");
+    File file = new File("../playbackFiles/testData");
 
     private final Random randomNum = new Random(System.currentTimeMillis());
 

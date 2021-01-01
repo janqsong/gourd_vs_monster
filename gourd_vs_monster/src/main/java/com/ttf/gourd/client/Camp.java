@@ -115,7 +115,15 @@ public class Camp {
                             break;
                         }
                     } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
+                        try {
+                            socket.shutdownOutput();
+                            socket.shutdownInput();
+                            socket.close();
+                        } catch (Exception e1) {
+                            System.out.println("对面掉线了或者服务器断开了连接");
+                            Platform.exit();
+                            System.exit(0);
+                        }
                     }
                 }
             }
