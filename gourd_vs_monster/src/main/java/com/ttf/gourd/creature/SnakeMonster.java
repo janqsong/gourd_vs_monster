@@ -15,7 +15,7 @@ public class SnakeMonster extends Creature {
     private long lastQActionMillis = 0, qGap = 5000;
     private long lastEActionMillis = 0, eGap = 5000;
     private long lastRActionMillis = 0, rGap = 5000;
-    private final double healthIncrement = 1000;
+    private final double healthIncrement = 600;
     private final double defenseIncrement = 30;
 
     SnakeMonster(int faceDirection, ImageView imageView, ImageView closeAttackImageView) {

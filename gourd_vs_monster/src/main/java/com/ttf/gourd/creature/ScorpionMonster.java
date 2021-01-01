@@ -23,7 +23,7 @@ public class ScorpionMonster extends Creature {
     private final double attackIncrement = 30;
     private final double attackSpeedIncrement = 0.5;
     private final double shootRangeIncrement = 80.0;
-    private final double healthIncrement = 1000;
+    private final double healthIncrement = 600;
     private Creature[] creatures = new Creature[3];
 
     private ObjectOutputStream out = null;
