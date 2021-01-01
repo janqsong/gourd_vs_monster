@@ -60,31 +60,31 @@
 
 ## 1 功能介绍
 
-<img src="screenshot\startScene.png" alt="startScene" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151439248.png" alt="startScene" style="zoom:40%;" />
 
 ### 1.1 联机对战
 
 #### 1.1.1 联机逻辑介绍
 
-<img src="https://github.com/JansonSong/gourd_vs_monster/blob/online/screenshot/connectScene.png" alt="connectScene" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151432665.png" alt="connectScene" style="zoom:40%;" />
 
 创建服务器：输入`Server Port`，再点击“创建服务器”来使用此电脑进行创建服务器，会提示创建成功或者失败。
 
 连接服务器：输入正确的`Server IP`和`Server Port`，点击“连接服务器“来连接服务器，会提示连接成功或者失败。
 
-<img src="screenshot\creatureSucess.png" alt="creatureSucess" style="zoom:75%;" /><img src="screenshot\connectSucess.png" alt="connectSucess" style="zoom:75%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151431538.png" alt="creatureSucess" style="zoom:75%;" /><img src="https://img-blog.csdnimg.cn/20210101151430417.png" alt="connectSucess" style="zoom:75%;" />
 
 #### 1.1.2 游戏逻辑介绍
 
-<img src="screenshot\prepareGame.png" alt="prepareGame" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/2021010115143838.png" alt="prepareGame" style="zoom:40%;" />
 
 点击“准备开始”，当两个客户端都点击之后，进入到排兵布阵界面，玩家有30秒时间，通过移动该阵营的生物到界面上，进行排兵布阵。
 
-<img src="screenshot\prepare.png" alt="prepare" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151438338.png" alt="prepare" style="zoom:40%;" />
 
 30秒倒计时结束之后，玩家双方的界面会同步，然后进行游戏。
 
-<img src="screenshot\fightScene.png" alt="fightScene" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151438550.png" alt="fightScene" style="zoom:40%;" />
 
 > 具体的游戏逻辑将在“关于游戏”这个功能中介绍。
 
@@ -102,13 +102,13 @@
 
 在打开游戏的开始界面，有”本地回放“按钮，用户点击”本地回放“按钮之后，会跳转到回放文件目录界面，这个界面首先会加载某个指定文件夹下的文件，如果该文件夹下存在回放文件（这里区分采用文件的后缀.back，来区分该文件是否为本地回放文件），将会将这些文件的相关信息加载到屏幕上，用户可以通过双击，或者选择后，点击右下角的播放进行本地回放。我们本次实验的回放，将会放到`"../playbackFiles"`文件夹下。
 
-<img src="screenshot\playbackFile.png" alt="playbackFile" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151435650.png" alt="playbackFile" style="zoom:40%;" />
 
 用户还可以通过导入单个文件和批量导入文件来加载本地回放文件，如果文件名合法并且内容合法，就可以进行回放操作。
 
 在回放界面，用户可以通过键盘上的`'1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't'`按键（分别对应，“大娃”、”二娃“、”三娃“、”四娃“、”五娃“、”六娃“、”七娃“、”爷爷“、”穿山甲“、”蛇精“、”蝎精“、“蜈蚣精”、“蝙蝠精”、“鳄鱼精”）进行对生物的选择，选择之后会在屏幕的左边显示出该生物的图片以及生物的状态信息（比如，生命值，魔法值，攻击力、振奋（技能效果）等）。
 
-<img src="screenshot\playbackImage.png" alt="playbackImage" style="zoom:40%;" />
+<img src="https://img-blog.csdnimg.cn/20210101151434584.png" alt="playbackImage" style="zoom:40%;" />
 
 回放界面的左边，会有倍速播放回放按钮，用户可以点击来调整回放的播放速度，并且用户可以通过暂停和开始按钮来控制回放的暂停和开始，也可以通过返回按钮，回到选择回放文件界面。
 
