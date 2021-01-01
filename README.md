@@ -119,6 +119,14 @@
 
 ### 1.3 关于游戏
 
+作者：Xiang-Xiaoyu 联系方式：xiaoyu-xiang@qq.com
+
+作者：JansonSong 联系方式：1149602149@qq.com
+
+此项目为2020年秋季NJU JAVA大作业，后期可能会进行后续的修改bug以及功能的添加。
+
+游戏中的玩法介绍已经在[5 写给玩家](#5-写给玩家)处给出。
+
 ## 2 代码分析
 
 ### 2.1 包`com.ttf.gourd.stage`
