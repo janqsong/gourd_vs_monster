@@ -273,6 +273,8 @@ public class MsgTest {
                 }
             }
         }
+        in.close();
+        file.delete();
     }
 
     @Test(timeout = 50)
