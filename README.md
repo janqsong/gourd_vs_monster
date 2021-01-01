@@ -66,7 +66,7 @@
 
 #### 1.1.1 联机逻辑介绍
 
-<img src="screenshot\connectScene.png" alt="connectScene" style="zoom:40%;" />
+<img src="https://github.com/JansonSong/gourd_vs_monster/blob/online/screenshot/connectScene.png" alt="connectScene" style="zoom:40%;" />
 
 创建服务器：输入`Server Port`，再点击“创建服务器”来使用此电脑进行创建服务器，会提示创建成功或者失败。
 
