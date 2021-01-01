@@ -94,7 +94,7 @@ public class MonsterCamp extends Camp{
     }
 
     public void bindDragEvent() {
-        System.out.println("MonsterCamp bindDragEvent");
+//        System.out.println("MonsterCamp bindDragEvent");
         for(Creature creature : monsterFamily.values()) {
             ImageView tempImageView = creature.getCreatureImageView();
             tempImageView.setVisible(true);
@@ -126,16 +126,16 @@ public class MonsterCamp extends Camp{
                     deltaY = Math.max(Constant.SCENE_MARGIN_SIZE, deltaY);
                     if(deltaY > Constant.FIGHT_PANE_HEIGHT - creature.getHEIGHT() + Constant.SCENE_MARGIN_SIZE)
                         deltaY = Constant.FIGHT_PANE_HEIGHT - creature.getHEIGHT() + Constant.SCENE_MARGIN_SIZE;
-                    System.out.println("deltaX: " + deltaX + " " + "deltaY: " + deltaY);
+//                    System.out.println("deltaX: " + deltaX + " " + "deltaY: " + deltaY);
                     creature.setCreatureImagePos(deltaX, deltaY);
-                    System.out.println(tempImageView.getParent() == sceneController.getFightScene());
+//                    System.out.println(tempImageView.getParent() == sceneController.getFightScene());
                 }
             });
         }
     }
 
     public void notifyServerImagePosition() throws IOException {
-        System.out.println("monster notify server image position");
+//        System.out.println("monster notify server image position");
         for (Map.Entry<Integer, Creature> entry : monsterFamily.entrySet()) {
             int creatureId = entry.getKey();
             Creature creature = entry.getValue();
@@ -169,7 +169,7 @@ public class MonsterCamp extends Camp{
                 if(msgType == Msg.POSITION_NOTIFY_MSG) {
                     msgController.getMsgClass(msgType, in);
                 } else if(msgType == Msg.START_GAME_MSG) {
-                    System.out.println("start game");
+//                    System.out.println("start game");
                     break;
                 }
             } catch (Exception e) {

@@ -92,7 +92,7 @@ public class GourdCamp extends Camp{
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("waitForAnother");
+//                    System.out.println("waitForAnother");
                     try {
                         int msgType = in.readInt();
                         if (msgType == Msg.PREPARE_GAME_MSG) break;
@@ -100,14 +100,14 @@ public class GourdCamp extends Camp{
                         e.printStackTrace();
                     }
                 }
-                System.out.println("finish wait for another");
+//                System.out.println("finish wait for another");
                 prepareForGame();
             }
         }).start();
     }
 
     public void bindDragEvent() {
-        System.out.println("GourdCamp bindDragEvent");
+//        System.out.println("GourdCamp bindDragEvent");
         for(Creature creature : gourdFamily.values()) {
             ImageView tempImageView = creature.getCreatureImageView();
             tempImageView.setVisible(true);
@@ -120,7 +120,7 @@ public class GourdCamp extends Camp{
                         selectCreature.setCreatureImageView();
                     }
                     beginPosition.setPosition(event.getX(), event.getY());
-                    System.out.println(beginPosition.X + " " + beginPosition.Y);
+//                    System.out.println(beginPosition.X + " " + beginPosition.Y);
                     creature.flipControlled();
                     creature.setCreatureImageView();
                     selectCreature = creature;
@@ -146,7 +146,7 @@ public class GourdCamp extends Camp{
     }
 
     public void notifyServerImagePosition() throws IOException {
-        System.out.println("gourd notify server image position");
+//        System.out.println("gourd notify server image position");
         for (Map.Entry<Integer, Creature> entry : gourdFamily.entrySet()) {
             int creatureId = entry.getKey();
             Creature creature = entry.getValue();
@@ -180,7 +180,7 @@ public class GourdCamp extends Camp{
                 if(msgType == Msg.POSITION_NOTIFY_MSG) {
                     msgController.getMsgClass(msgType, in);
                 } else if(msgType == Msg.START_GAME_MSG) {
-                    System.out.println("start game");
+//                    System.out.println("start game");
                     break;
                 }
             } catch (Exception e) {

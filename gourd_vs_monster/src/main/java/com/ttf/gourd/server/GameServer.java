@@ -21,7 +21,7 @@ public class GameServer extends Thread{
         int count = 1;
         while(true) {
             try {
-                System.out.println("等待远程连接，ip地址/端口号：" + ipLocalHost + "/" + serverSocket.getLocalPort() + "...");
+//                System.out.println("等待远程连接，ip地址/端口号：" + ipLocalHost + "/" + serverSocket.getLocalPort() + "...");
                 if(count == 1) {
                     campType = randomNum.nextInt(2);
                     Socket socket = serverSocket.accept();

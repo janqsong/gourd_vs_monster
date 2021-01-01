@@ -289,7 +289,7 @@ public class MsgController {
                 FinishGameFlagMsg finishGameFlagMsg = new FinishGameFlagMsg();
                 finishGameFlagMsg.parseMsg(inputStream);
                 winCampType = finishGameFlagMsg.getWinCampType();
-                System.out.println("winCampType: " + winCampType);
+//                System.out.println("winCampType: " + winCampType);
                 break;
             }
             default: {

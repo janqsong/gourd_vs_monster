@@ -3,6 +3,7 @@ package com.ttf.gourd.stage;
 import com.ttf.gourd.client.GameClient;
 import com.ttf.gourd.localplayback.LoadPlayBackFiles;
 import com.ttf.gourd.server.GameServer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -35,12 +36,18 @@ public class SceneController {
 
     @FXML
     void AboutUsMouseClickEvent(MouseEvent event) {
-        System.out.println("about");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("关于游戏");
+        alert.setContentText("参见https://github.com/JansonSong/gourd_vs_monster\n\n" +
+                "作者：Xiang-Xiaoyu 联系方式：xiaoyu-xiang@qq.com\n" +
+                "作者：JansonSong 联系方式：1149602149@qq.com\n\n" +
+                "此项目为2020年秋季NJU JAVA大作业，后期可能会进行后续的修改bug以及功能的添加。\n\n");
+        alert.show();
     }
 
     @FXML
     void ExitMouseClickEvent(MouseEvent event) {
-        System.out.println("exit");
+        Platform.exit();
     }
 
     @FXML
@@ -86,11 +93,11 @@ public class SceneController {
         }
 
         try {
-            System.out.println("port: " + port);
+//            System.out.println("port: " + port);
             Thread serverThread = new GameServer(port);
             serverThread.start();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("创建服务器成功");
+//            alert.setHeaderText("创建服务器成功");
             alert.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -123,15 +130,15 @@ public class SceneController {
             connectScene.setDisable(true);
             fightScene.setVisible(true);
             fightScene.setDisable(false);
-            System.out.println("ipString: " + ipString + " " + "portString: " + portString);
+//            System.out.println("ipString: " + ipString + " " + "portString: " + portString);
             new GameClient(ipString, Integer.parseInt(portString), this).run();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("连接服务器成功");
+//            alert.setHeaderText("连接服务器成功");
             alert.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("连接服务器失败");
-            alert.setContentText("请检查服务器ip和port是否输入错误，或者该服务器还未建立");
+//            alert.setHeaderText("连接服务器失败");
+//            alert.setContentText("请检查服务器ip和port是否输入错误，或者该服务器还未建立");
             alert.show();
         }
     }

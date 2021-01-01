@@ -61,9 +61,9 @@
 
 # 葫芦娃大战妖精
 
-**项目开发人员**：
-
 ## 1 功能介绍
+
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151439248.png)
 
 <img src="https://img-blog.csdnimg.cn/20210101151439248.png" alt="startScene" style="zoom:40%;" />
 
@@ -71,23 +71,37 @@
 
 #### 1.1.1 联机逻辑介绍
 
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151432665.png)
+
 <img src="https://img-blog.csdnimg.cn/20210101151432665.png" alt="connectScene" style="zoom:40%;" />
 
 创建服务器：输入`Server Port`，再点击“创建服务器”来使用此电脑进行创建服务器，会提示创建成功或者失败。
 
 连接服务器：输入正确的`Server IP`和`Server Port`，点击“连接服务器“来连接服务器，会提示连接成功或者失败。
 
-<img src="https://img-blog.csdnimg.cn/20210101151431538.png" alt="creatureSucess" style="zoom:75%;" /><img src="https://img-blog.csdnimg.cn/20210101151430417.png" alt="connectSucess" style="zoom:75%;" />
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151431538.png)
+
+<img src="https://img-blog.csdnimg.cn/20210101151431538.png" alt="creatureSucess" style="zoom:75%;" />
+
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151430417.png)
+
+<img src="https://img-blog.csdnimg.cn/20210101151430417.png" alt="connectSucess" style="zoom:75%;" />
 
 #### 1.1.2 游戏逻辑介绍
+
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/2021010115143838.png)
 
 <img src="https://img-blog.csdnimg.cn/2021010115143838.png" alt="prepareGame" style="zoom:40%;" />
 
 点击“准备开始”，当两个客户端都点击之后，进入到排兵布阵界面，玩家有30秒时间，通过移动该阵营的生物到界面上，进行排兵布阵。
 
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151438338.png)
+
 <img src="https://img-blog.csdnimg.cn/20210101151438338.png" alt="prepare" style="zoom:40%;" />
 
 30秒倒计时结束之后，玩家双方的界面会同步，然后进行游戏。
+
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151438550.png)
 
 <img src="https://img-blog.csdnimg.cn/20210101151438550.png" alt="fightScene" style="zoom:40%;" />
 
@@ -107,11 +121,15 @@
 
 在打开游戏的开始界面，有”本地回放“按钮，用户点击”本地回放“按钮之后，会跳转到回放文件目录界面，这个界面首先会加载某个指定文件夹下的文件，如果该文件夹下存在回放文件（这里区分采用文件的后缀.back，来区分该文件是否为本地回放文件），将会将这些文件的相关信息加载到屏幕上，用户可以通过双击，或者选择后，点击右下角的播放进行本地回放。我们本次实验的回放，将会放到`"../playbackFiles"`文件夹下。
 
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151435650.png)
+
 <img src="https://img-blog.csdnimg.cn/20210101151435650.png" alt="playbackFile" style="zoom:40%;" />
 
-用户还可以通过导入单个文件和批量导入文件来加载本地回放文件，如果文件名合法并且内容合法，就可以进行回放操作。
+用户还可以通过导入单个文件和批量导入文件来加载本地回放文件，如果文件名合法并且内容合法，就可以进行回放操作。加载进去之后，需要等待3秒钟，才会开始进行回放。
 
 在回放界面，用户可以通过键盘上的`'1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't'`按键（分别对应，“大娃”、”二娃“、”三娃“、”四娃“、”五娃“、”六娃“、”七娃“、”爷爷“、”穿山甲“、”蛇精“、”蝎精“、“蜈蚣精”、“蝙蝠精”、“鳄鱼精”）进行对生物的选择，选择之后会在屏幕的左边显示出该生物的图片以及生物的状态信息（比如，生命值，魔法值，攻击力、振奋（技能效果）等）。
+
+[下面的图片如果显示不出来，点这里](https://img-blog.csdnimg.cn/20210101151434584.png)
 
 <img src="https://img-blog.csdnimg.cn/20210101151434584.png" alt="playbackImage" style="zoom:40%;" />
 
@@ -131,9 +149,7 @@
 
 ### 2.1 包`com.ttf.gourd.stage`
 
-实现人`sjq`
-
-==TODO==功能：`javafx`显示的界面控制。
+功能：`javafx`显示的界面控制。
 
 代码分析：一些界面采用的`.fxml`文件进行生成，然后用`SceneController.java`对界面进行控制。
 
@@ -143,7 +159,7 @@
 
 ### 2.2 包`com.ttf.gourd.server`
 
-==TODO==功能：用于建立服务器，与客户端通信，保证两个阵营的客户端界面同步，以及保存本地回放文件。
+功能：用于建立服务器，与客户端通信，保证两个阵营的客户端界面同步，以及保存本地回放文件。
 
 代码分析：
 
@@ -274,7 +290,7 @@ public class MsgController {
 
 ### 2.3 包`com.ttf.gourd.client`
 
-==TODO==功能：用于连接服务器，然后进行不同阵营的初始化以及游戏界面的显示和与服务器进行通信。
+功能：用于连接服务器，然后进行不同阵营的初始化以及游戏界面的显示和与服务器进行通信。
 
 代码分析：
 
@@ -325,7 +341,7 @@ private void gameOver(int gameOverState) {
 
 ### 2.4 包`com.ttf.gourd.protocol`
 
-==TODO==功能：这个包主要用于网络通信以及本地回放功能的依赖功能，协议。
+功能：这个包主要用于网络通信以及本地回放功能的依赖功能，协议。
 
 代码分析：首先定义一个接口`Msg`，在这个接口中，静态变量定义协议的类型，然后再写多个类用于处理协议内部信息。
 
@@ -659,7 +675,7 @@ public class SnakeMonster extends Creature {
 
 ### 2.10 包`com.ttf.gourd.localplayback`
 
-==TODO==功能：这个包主要用于本地回放。
+功能：这个包主要用于本地回放。
 
 代码分析：
 
@@ -759,7 +775,7 @@ public class GamePlayBack {
 
 游戏测试文件在`jlog`文件夹下，此数据是在单机情况下测试的
 
-详细测试代码请看`github`地址 https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/ttf/gourd/localtest ==加链接的地方请注意==
+详细测试代码请看`github`地址 [https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/ttf/gourd/localtest ](https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/ttf/gourd/localtest)
 
 ## 4 开发过程
 
@@ -773,11 +789,11 @@ public class GamePlayBack {
 
 ### 4.3 单机版实现
 
-耗时约`10days` 详见 https://github.com/JansonSong/gourd_vs_monster/tree/dev
+耗时约`12days` 详见 [https://github.com/JansonSong/gourd_vs_monster/tree/dev](https://github.com/JansonSong/gourd_vs_monster/tree/dev)
 
 ### 4.4 联机同步实现
 
-耗时约`8days` 详见 https://github.com/JansonSong/gourd_vs_monster/tree/online
+耗时约`8days` 详见 [https://github.com/JansonSong/gourd_vs_monster/master](https://github.com/JansonSong/gourd_vs_monster/master)
 
 ### 4.5 功能和文档完善
 

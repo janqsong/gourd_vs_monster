@@ -293,7 +293,7 @@ public class GameStartFight {
                         }
                         Thread.sleep(Constant.FRAME_TIME);
                     } catch (Exception e) {
-                        System.out.println("while(true)出错");
+//                        System.out.println("while(true)出错");
                         e.printStackTrace();
                     } finally {
                         //flag = !flag;

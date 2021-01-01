@@ -144,13 +144,13 @@ public class GamePlayBack {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("begin playback game");
+//                System.out.println("begin playback game");
                 try {
                     while(true) {
                         int contentType = inputStream.readInt();
                         if(contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
                         else if(contentType == Msg.FINISH_GAME_FLAG_MSG) {
-                            System.out.println("游戏结束");
+//                            System.out.println("游戏结束");
                             gameOverFlag = true;
                             break;
                         }

@@ -123,10 +123,10 @@ public class Camp {
     }
 
     public void bindDragEvent() {
-        System.out.println("Camp Event");
+//        System.out.println("Camp Event");
     }
 
     public void notifyServerImagePosition() throws IOException {
-        System.out.println("notify server image position");
+//        System.out.println("notify server image position");
     }
 }

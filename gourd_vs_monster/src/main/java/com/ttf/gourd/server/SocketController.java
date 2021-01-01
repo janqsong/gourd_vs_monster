@@ -25,7 +25,7 @@ public class SocketController {
     public void addGourdPlayer(Socket socket) {
         socketPlayerGourd = socket;
         try {
-            System.out.println("分配葫芦娃" + socketPlayerGourd);
+//            System.out.println("分配葫芦娃" + socketPlayerGourd);
             outGourd = new ObjectOutputStream(socketPlayerGourd.getOutputStream());
             inGourd = new ObjectInputStream(socketPlayerGourd.getInputStream());
             new DistributionCampMsg(Constant.CampType.GOURD).sendMsg(outGourd);
@@ -47,7 +47,7 @@ public class SocketController {
 
 
     public void prepareFight() throws IOException {
-        System.out.println("prepareFight");
+//        System.out.println("prepareFight");
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outGourd);
         new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outMonster);
         new Thread(new Runnable() {
@@ -58,7 +58,7 @@ public class SocketController {
                         int msgType = inGourd.readInt();
                         if(msgType == Msg.FINISH_FLAG_MSG) {
                             gourdFinishFlag = true;
-                            System.out.println("gourdFinishFlag");
+//                            System.out.println("gourdFinishFlag");
                             break;
                         }
                     } catch (Exception e) {
@@ -76,7 +76,7 @@ public class SocketController {
                         int msgType = inMonster.readInt();
                         if(msgType == Msg.FINISH_FLAG_MSG) {
                             monsterFinishFlag = true;
-                            System.out.println("monsterFinishFlag");
+//                            System.out.println("monsterFinishFlag");
                             break;
                         }
                     } catch (Exception e) {
@@ -96,7 +96,7 @@ public class SocketController {
             }
         }
 
-        System.out.println("Server countDown");
+//        System.out.println("Server countDown");
         for(int i = 0; i < 30; i++) {
             new CountDownMsg(30 - i).sendMsg(outGourd);
             new CountDownMsg(30 - i).sendMsg(outMonster);
