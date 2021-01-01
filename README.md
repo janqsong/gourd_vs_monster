@@ -7,18 +7,18 @@
     * [1\.2 本地回放](#12-本地回放)
     * [1\.3 关于游戏](#13-关于游戏)
   * [2 代码分析](#2-代码分析)
-    * [2\.1 包com\.sjq\.gourd\.ai](#21-包comsjqgourdai)
+    * [2\.1 包com\.ttf\.gourd\.ai](#21-包comsjqgourdai)
       * [2\.1\.1 内容](#211-内容)
       * [2\.1\.2 接口介绍](#212-接口介绍)
       * [2\.1\.3 ai开发过程](#213-ai开发过程)
       * [2\.1\.4 可扩展性](#214-可扩展性)
-    * [2\.2 包 com\.sjq\.gourd\.bullet](#22-包-comsjqgourdbullet)
+    * [2\.2 包 com\.ttf\.gourd\.bullet](#22-包-comsjqgourdbullet)
       * [2\.2\.1 内容](#221-内容)
       * [2\.2\.2 Bullet子弹类的设计](#222-bullet子弹类的设计)
       * [2\.2\.3 子弹的各种状态](#223-子弹的各种状态)
-    * [2\.3 包com\.sjq\.gourd\.collision](#23-包comsjqgourdcollision)
+    * [2\.3 包com\.ttf\.gourd\.collision](#23-包comsjqgourdcollision)
       * [2\.3\.1 内容](#231-内容)
-    * [2\.4 包com\.sjq\.gourd\.Creature](#24-包comsjqgourdcreature)
+    * [2\.4 包com\.ttf\.gourd\.Creature](#24-包comsjqgourdcreature)
       * [2\.4\.1 内容](#241-内容)
       * [2\.4\.2 包内类的关系](#242-包内类的关系)
       * [2\.4\.3 Creature类的设计](#243-creature类的设计)
@@ -26,13 +26,13 @@
       * [2\.4\.5 CreatureFactory类的设计](#245-creaturefactory类的设计)
       * [2\.4\.6 CreatureStateWithClockand CreatureState](#246-creaturestatewithclockand-creaturestate)
       * [2\.4\.7 ImagePosition类的设计](#247-imageposition类的设计)
-    * [2\.5 包com\.sjq\.gourd\.Equipment](#25-包comsjqgourdequipment)
+    * [2\.5 包com\.ttf\.gourd\.Equipment](#25-包comsjqgourdequipment)
       * [2\.5\.1 内容](#251-内容)
       * [2\.5\.2 各个类的关系](#252-各个类的关系)
       * [2\.5\.3 Equipment抽象类的设计](#253-equipment抽象类的设计)
       * [2\.5\.4 Equipment子类设计](#254-equipment子类设计)
       * [2\.5\.5 EquipmentFactory装备工厂设计](#255-equipmentfactory装备工厂设计)
-    * [2\.6 包com\.sjq\.gourd\.constant](#26-包comsjqgourdconstant)
+    * [2\.6 包com\.ttf\.gourd\.constant](#26-包comsjqgourdconstant)
       * [2\.6\.1 内容](#261-内容)
   * [3 游戏测试](#3-游戏测试)
     * [3\.1 单元测试](#31-单元测试)
@@ -54,31 +54,350 @@
 
 # 葫芦娃大战妖精
 
+==TODO==
 
+**项目开发人员**：
 
 ## 1 功能介绍
 
+<img src="screenshot\startScene.png" alt="startScene" style="zoom:40%;" />
+
 ### 1.1 联机对战
 
-#### 1.1.1 联机方式介绍
+#### 1.1.1 联机逻辑介绍
+
+<img src="screenshot\connectScene.png" alt="connectScene" style="zoom:40%;" />
+
+创建服务器：输入`Server Port`，再点击“创建服务器”来使用此电脑进行创建服务器，会提示创建成功或者失败。
+
+连接服务器：输入正确的`Server IP`和`Server Port`，点击“连接服务器“来连接服务器，会提示连接成功或者失败。
+
+<img src="screenshot\creatureSucess.png" alt="creatureSucess" style="zoom:75%;" /><img src="screenshot\connectSucess.png" alt="connectSucess" style="zoom:75%;" />
 
 #### 1.1.2 游戏逻辑介绍
 
+<img src="screenshot\prepareGame.png" alt="prepareGame" style="zoom:40%;" />
+
+点击“准备开始”，当两个客户端都点击之后，进入到排兵布阵界面，玩家有30秒时间，通过移动该阵营的生物到界面上，进行排兵布阵。
+
+<img src="screenshot\prepare.png" alt="prepare" style="zoom:40%;" />
+
+30秒倒计时结束之后，玩家双方的界面会同步，然后进行游戏。
+
+<img src="screenshot\fightScene.png" alt="fightScene" style="zoom:40%;" />
+
+> 具体的游戏逻辑将在“关于游戏”这个功能中介绍。
+
 #### 1.1.3 网络协议设计
 
+服务器和两个玩家建立起连接之后，通过传输字符流来保持界面一致，协议便是保证通信的必要和重要手段。
+
+协议分为需要解析协议和不需要解析协议。
+
+不需要解析协议指，用户获得该协议的类型之后，根据类型进行操作，而不需要其他额外的信息。
+
+需要解析协议指，根据用户传过来的消息类型，进行相应的解析，以获取传过来的信息。
+
 ### 1.2 本地回放
+
+在打开游戏的开始界面，有”本地回放“按钮，用户点击”本地回放“按钮之后，会跳转到回放文件目录界面，这个界面首先会加载某个指定文件夹下的文件，如果该文件夹下存在回放文件（这里区分采用文件的后缀.back，来区分该文件是否为本地回放文件），将会将这些文件的相关信息加载到屏幕上，用户可以通过双击，或者选择后，点击右下角的播放进行本地回放。我们本次实验的回放，将会放到`"../playbackFiles"`文件夹下。
+
+<img src="screenshot\playbackFile.png" alt="playbackFile" style="zoom:40%;" />
+
+用户还可以通过导入单个文件和批量导入文件来加载本地回放文件，如果文件名合法并且内容合法，就可以进行回放操作。
+
+在回放界面，用户可以通过键盘上的`'1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't'`按键（分别对应，“大娃”、”二娃“、”三娃“、”四娃“、”五娃“、”六娃“、”七娃“、”爷爷“、”穿山甲“、”蛇精“、”蝎精“、“蜈蚣精”、“蝙蝠精”、“鳄鱼精”）进行对生物的选择，选择之后会在屏幕的左边显示出该生物的图片以及生物的状态信息（比如，生命值，魔法值，攻击力、振奋（技能效果）等）。
+
+<img src="screenshot\playbackImage.png" alt="playbackImage" style="zoom:40%;" />
+
+回放界面的左边，会有倍速播放回放按钮，用户可以点击来调整回放的播放速度，并且用户可以通过暂停和开始按钮来控制回放的暂停和开始，也可以通过返回按钮，回到选择回放文件界面。
 
 ### 1.3 关于游戏
 
 ## 2 代码分析
 
-### 2.1 包`com.sjq.gourd.ai`
+### 2.1 包`com.ttf.gourd.stage`
 
-#### 2.1.1 内容
+实现人`sjq`
+
+==TODO==功能：`javafx`显示的界面控制。
+
+代码分析：一些界面采用的`.fxml`文件进行生成，然后用`SceneController.java`对界面进行控制。
+
+- `App.java`用于加载`.fxml`和`.css`文件然后进行窗口显示；
+- `SceneController.java`用于控制窗口中控件以及绑定事件等。
+- 
+
+### 2.2 包`com.ttf.gourd.server`
+
+==TODO==功能：用于建立服务器，与客户端通信，保证两个阵营的客户端界面同步，以及保存本地回放文件。
+
+代码分析：
+
+- `GameServer.java`，用于建立服务器，并且等待客户端的连接；
+- `SocketController.java`，用于给客户端分配阵营，以及给双方阵营30秒的排兵布阵时间。
+- `ServerScene.java`，用于界面的相关信息显示，这里并没有真正显示到屏幕上，而只是将图片以及生物的状态信息进行相应的改变，然后再把这个改变分发给客户端，以达到同步，并且会记录下每次改变到本地文件中，这样可以就行后续的回放。
+- `MsgController.java`，用于对通信协议的信息进行解析，以保持服务器和两个客户端的状态信息在一帧之内相同，这个文件与`com.ttf.client`包下的`MsgController.java`以及`com.ttf.localplayback`包下的`ContentParse.java`功能都相同，所以后续在介绍相关的两个包的时候，不会对这个文件进行过多解释。
+
+```java
+// GameServer.java
+
+// 建立服务器连接后，等待客户端链接，客户端链接上之后，随机分配阵营
+while(true) {
+    try {
+        if(count == 1) {
+            campType = randomNum.nextInt(2);
+            Socket socket = serverSocket.accept();
+            if(campType == 0)
+                // 使用SocketServerController.java分配阵营，即告诉该客户端他是什么阵营的，
+                socketServerController.addGourdPlayer(socket);
+            else
+                socketServerController.addMonsterPlayer(socket);
+            count++;
+        } else {
+            Socket socket = serverSocket.accept();
+            if(campType == 0)
+                socketServerController.addMonsterPlayer(socket);
+            else
+                socketServerController.addGourdPlayer(socket);
+            break;
+        }
+    } catch(Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+```java
+// SocketController.java
+public void prepareFight() throws IOException {
+    // 发送开始准备消息给客户端
+    new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outGourd);
+    new NoParseMsg(Msg.PREPARE_GAME_MSG).sendMsg(outMonster);
+    // ...等待客户端准备就绪的消息，在新的线程中
+    // ...等待客户端准备就绪的消息，在新的线程中
+
+    // 30秒准备倒计时
+    for(int i = 0; i < 30; i++) {
+        new CountDownMsg(30 - i).sendMsg(outGourd);
+        new CountDownMsg(30 - i).sendMsg(outMonster);
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // 30秒倒计时结束，发送开始游戏的消息给两个客户端
+    new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outGourd);
+    new NoParseMsg(Msg.START_GAME_MSG).sendMsg(outMonster);
+    new ServerScene(serverSocket, socketPlayerGourd, socketPlayerMonster, inGourd, outGourd, inMonster, outMonster).startGame();
+
+}
+```
+
+```java
+// ServerScene.java 最重要的界面同步
+
+// 初始化资源配置
+public void initScene() {
+}
+
+// 同步双方摆放阵营的位置信息
+public void startGame() throws IOException {
+}
+
+// 开始战斗函数
+public void startFight() throws IOException {
+    // 下面在一个新的线程进行监听葫芦娃阵营客户端传来的信息
+    while (true) {
+        int gourdMsgType = inGourd.readInt();
+        if (gourdMsgType == Msg.FINISH_FLAG_MSG) {
+            gourdFinishFlag = true;
+        } else if(gourdMsgType == Msg.SOCKET_DISCONNECT_MSG) {
+            Thread.sleep(3000);
+            inGourd.close();
+            outGourd.close();
+            gourdSocket.close();
+            if(!serverSocket.isClosed())
+                serverSocket.close();
+            break;
+        }
+        else {
+            gourdMsgController.getMsgClass(gourdMsgType, inGourd);
+        }
+    }
+    // 同理，再开一个线程，监听妖精阵营传来的信息，代码同上，省略
+    
+	// 在这个while(true)中进行服务器与两个客户端的信息同步，并在这里实时发送信息给客户端
+    while (true) {
+        // 这里主要是一些信息的设置，比如图片的位置信息设置，生物的状态信息以及子弹和装备的信息设置。
+        // 举例说明如何同步：葫芦娃阵营的移动是客户端控制的，客户端通过通信，将位置和状态变动信息传给服务器，服务器在上面监听事件中，进行监听，然后在这个线程中进行获取监听获得的信息，并自己设置位置信息以及将葫芦娃的变动信息发给妖精
+    }
+}
+
+//根据阵营以及两个family判断是谁获胜了,-1,0,1,2返回值只可能是这四种状态
+private int judgeWin(HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+}
+
+```
+
+```java
+// MsgController.java
+public class MsgController {
+	// 用于解析接收到的消息，根据消息的类型，用对应的协议进行解析，然后获取解析得到的值，为了保证`ServerScene.java`能够获得完整的解析信息，会定义需要临时列表，供`ServerScene.java`调用，然后进行信息同步
+    public void getMsgClass(int msgType, ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        switch (msgType) {
+            case Msg.POSITION_NOTIFY_MSG: {
+                break;
+            }
+            // ......省略了其他消息类型
+            default: {
+                break;
+            }
+        }
+    }
+}
+```
+
+### 2.3 包`com.ttf.gourd.client`
+
+==TODO==功能：用于连接服务器，然后进行不同阵营的初始化以及游戏界面的显示和与服务器进行通信。
+
+代码分析：
+
+- `GameClient.java`用于连接服务器，保持通信
+- `Camp.java`用于不同阵营中的相同操作，比如初始化一些都需要初始化的变量，以及摆放生物时的信息同步等
+- `GourdCamp.java`和`MonsterCamp.java`用于不同阵营的初始化。
+- `GameStartFight.java`用于游戏界面的操作和与服务器相关信息同步的操作。
+- `MsgController.java`用于通信的信息解析，与`com.ttf.gourd.server`包中相似，不在赘述。
+
+```java
+// GameStartFight.java
+
+public void start() {
+    init(campType, myFamily, enemyFamily);
+    // 下面是在一个新的线程中操作，用于监听服务器端发来的信息
+    while (true) {
+        int msgType = in.readInt();
+        if (msgType == Msg.FINISH_GAME_FLAG_MSG) {
+            msgController.getMsgClass(msgType, in);
+            if(campType.equals(msgController.getWinCampType()))
+                gameOver(Constant.gameOverState.VICTORY);
+            else
+                gameOver(Constant.gameOverState.DEFEAT);
+            gameOverTimeMillis = System.currentTimeMillis();
+            gameOverFlag = true;
+        } else if(msgType == Msg.SOCKET_DISCONNECT_MSG) {
+            break;
+        }
+        else
+            msgController.getMsgClass(msgType, in);
+    }
+    
+    // 下面是显示游戏界面和发送信息给服务器的while(true)
+    while(true) {
+    }
+
+}
+
+// 下面是初始化一些绑定事件，用于操纵自己放的生物
+private void init(String camp, HashMap<Integer, Creature> myFamily, HashMap<Integer, Creature> enemyFamily) {
+}
+
+//游戏结束，播放结束的图片
+private void gameOver(int gameOverState) {
+}
+
+```
+
+### 2.4 包`com.ttf.gourd.protocol`
+
+==TODO==功能：这个包主要用于网络通信以及本地回放功能的依赖功能，协议。
+
+代码分析：首先定义一个接口`Msg`，在这个接口中，静态变量定义协议的类型，然后再写多个类用于处理协议内部信息。
+
+```java
+// Msg.java
+public interface Msg {
+    // 负责通知位置变动信息
+    public static final int POSITION_NOTIFY_MSG = 4;
+    // ...还有很多其他协议类型，详情请参考com.ttf.gourd.protocol下的Msg.java
+
+    // 发送信息函数
+    public void sendMsg(ObjectOutputStream outStream) throws IOException;
+    // 接受信息函数
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException;
+}
+```
+
+```java
+// 举例：PositionNotifyMsg.java
+// 这样定义，用于序列化
+class PositionNotify implements Serializable {
+    public String campType;
+    public int creatureId;
+    public double layoutX;
+    public double layoutY;
+}
+
+// 使用Msg的接口，重写发送和接收函数。
+public class PositionNotifyMsg implements Msg {
+    private static final int msgType = POSITION_NOTIFY_MSG;
+    PositionNotify positionNotify = new PositionNotify();
+	
+    // 用于接收解析定义用
+    public PositionNotifyMsg() {
+    }
+    
+	// 用于发送定义用
+    public PositionNotifyMsg(String campType, int creatureId,
+                             double layoutX, double layoutY) {
+        positionNotify.campType = campType;
+        positionNotify.creatureId = creatureId;
+        positionNotify.layoutX = layoutX;
+        positionNotify.layoutY = layoutY;
+    }
+
+    @Override // 重写发送函数
+    public void sendMsg(ObjectOutputStream outStream) throws IOException {
+        outStream.writeInt(msgType); // 发送协议类型
+        outStream.writeObject(positionNotify); // 发送协议中需要传递的内容
+        outStream.flush();
+    }
+
+    @Override
+    public void parseMsg(ObjectInputStream inStream) throws IOException, ClassNotFoundException {
+        // 在之前会有一个判断这个协议是什么类型的，然后才会调用这个函数，来获取协议中的信息。
+        positionNotify = (PositionNotify) inStream.readObject();
+    }
+	// 下面还有获取这些解析得到的变量信息，没有展现出来
+}
+```
+
+```java
+// 如何使用这些协议
+// 发送方
+ObjectOutputStream out;
+new PositionNotifyMsg("GOURD", 2, 300, 300).sendMsg(out);
+
+// 接收方
+ObjectInputStream in;
+PositionNotifyMsg positionNotifyMsg = new PositionNotifyMsg().parseMsg(in);
+String campType = positionNotifyMsg.getCampType();
+int creatureId = positionNotifyMsg.getCreatureId();
+double layoutX = positionNotifyMsg.getLayoutX();
+double layoutY = positionNotifyMsg.getLayoutY();
+```
+
+
+
+### 2.5 包`com.ttf.gourd.ai`
+
+#### 2.5.1 内容
 
 这个包内主要包括一个接口`AiInterface`,和两个实现该接口的类`FoolAi`和`FirstGenerationAi`，这个接口的设计模式是委托模式,与`Creature`类的关系是聚合，`Creature`将方向的选择与攻击功能交给`AiInterface`来实现
 
-#### 2.1.2 接口介绍
+#### 2.5.2 接口介绍
 
 ```java
 public interface AiInterface {
@@ -93,25 +412,25 @@ public interface AiInterface {
 
 该接口定义了三个功能,分别是观测敌军选取攻击目标,基于观测选择移动方式(设置方向),基于观测攻击目标产生子弹
 
-#### 2.1.3 `ai`开发过程
+#### 2.5.3 `ai`开发过程
 
 `FoolAi`采用完全随机的选取方向，观测的第一优先级生物是最近的生物,攻击最近的生物。缺点有两点,其一是生物每一帧的方向都可能会发生改变,导致图片频繁抖动。其二是选取最近的生物攻击会导致总体上生物会越来越趋向合在一起,不美观，操作难。
 
 `FirstGenerationAi`综合距离，血量，我方攻击力，敌方防御力等多项因素设置第一优先攻击目标,根据攻击距离以及与攻击目标之间的关系设置方向,并在每次设置方向后锁定方向一段时间,解决了图片抖动问题,使得生物在自动攻击与移动时相对分散且较为智能
 
-#### 2.1.4 可扩展性
+#### 2.5.4 可扩展性
 
 这个`ai`接口的可扩展性好,只要实现三个方法就行,可继承`FirstGenerationAi`类实现第二代`ai`，也可通过实现接口的方式为任何一个生物设计`ai`战斗方式
 
 
 
-### 2.2 包 `com.sjq.gourd.bullet`
+### 2.6 包 `com.ttf.gourd.bullet`
 
-#### 2.2.1 内容
+#### 2.6.1 内容
 
 这个包里面包含了子弹类`Bullet`和子弹状态`BulletState`
 
-#### 2.2.2 `Bullet`子弹类的设计
+#### 2.6.2 `Bullet`子弹类的设计
 
 子弹分为近战子弹和远程子弹
 
@@ -127,15 +446,15 @@ public interface AiInterface {
 
 在每一帧内执行这个`update`方法,该方法返回一个可能存在的碰撞`Collision`
 
-#### 2.2.3 子弹的各种状态
+#### 2.6.3 子弹的各种状态
 
 子弹包含各种各样的状态，NONE为普通子弹，其他的各种在碰撞时会给目标生物附加各种状态
 
 
 
-### 2.3 包`com.sjq.gourd.collision`
+### 2.7 包`com.ttf.gourd.collision`
 
-#### 2.3.1 内容
+#### 2.7.1 内容
 
 这个包内仅包含一个类`Collision`碰撞类
 
@@ -143,9 +462,9 @@ public interface AiInterface {
 
 
 
-### 2.4 包`com.sjq.gourd.Creature`
+### 2.8 包`com.ttf.gourd.Creature`
 
-#### 2.4.1 内容
+#### 2.8.1 内容
 
 这个包内包含三个方面的内容:
 
@@ -155,7 +474,7 @@ public interface AiInterface {
 
 3.`ImagePosition`
 
-#### 2.4.2 包内类的关系
+#### 2.8.2 包内类的关系
 
 `Creature`是包括葫芦娃阵营的九个生物和妖精阵营的六个生物的父类
 
@@ -163,7 +482,7 @@ public interface AiInterface {
 
 15种子类和父类`Creature`的构造器都是默认访问权限,包外的生物对象仅能在工厂内创建,体现了面向对象的封装特性
 
-#### 2.4.3 `Creature`类的设计
+#### 2.8.3 `Creature`类的设计
 
  `Creature`类的主要功能被封装在`update()`和`notMyCampUpdate()`两个方法中，分别用来更新本地我的阵营和敌方阵营的生物信息
 
@@ -185,7 +504,7 @@ public interface AiInterface {
 
 由于这部分内容过多，这里不详细介绍，具体可见`Creature.java`,此类中有详细注释
 
-#### 2.4.4 `Creature`子类的设计
+#### 2.8.4 `Creature`子类的设计
 
 这里以`SnakeMonster`为例,介绍一下Creature子类的设计方法
 
@@ -243,7 +562,7 @@ public class SnakeMonster extends Creature {
 
 但父类方法没有必要定义成`abstract`因为有些子类会重写它，而另一些不会(不是所有生物都有三个技能)
 
-#### 2.4.5 `CreatureFactory`类的设计
+#### 2.8.5 `CreatureFactory`类的设计
 
 `CreatureFactory`中有两个对外接口
 
@@ -253,7 +572,7 @@ public class SnakeMonster extends Creature {
 
 通过这个工厂的设计，我们将生物对象和外部分离开来，使它具有良好的封装性
 
-#### 2.4.6 `CreatureStateWithClock`and `CreatureState`
+#### 2.8.6 `CreatureStateWithClock`and `CreatureState`
 
 `CreatureState` 是个枚举类型,其中包含了多种多样的生物状态,还包括了生物技能状态
 
@@ -263,23 +582,25 @@ public class SnakeMonster extends Creature {
 
 这个类帮助`Creature`实现了各种`buff`和`debuff`功能，已经这些功能的倒计时,同时也实现了技能的`cd`倒计时
 
-#### 2.4.7 `ImagePosition`类的设计
+#### 2.8.7 `ImagePosition`类的设计
 
 这个类表示的是一个位置信息,`Creature`和`Bullet`以及`Equipment`都会用到它
 
-### 2.5 包`com.sjq.gourd.Equipment`
 
-#### 2.5.1 内容
+
+### 2.9 包`com.ttf.gourd.Equipment`
+
+#### 2.9.1 内容
 
 这个包内包含了各种装备的信息以及装备生成工厂
 
-#### 2.5.2 各个类的关系
+#### 2.9.2 各个类的关系
 
 1.`Equipment`是一个抽象类,游戏中存在的5种装备都继承自这个类并且实现了这个类中的抽象方法
 
 2.`EquipmentFactory`是装备对象的生成工厂
 
-#### 2.5.3 `Equipment`抽象类的设计
+#### 2.9.3 `Equipment`抽象类的设计
 
 这个类中有四个较为重要的方法
 
@@ -297,7 +618,7 @@ public class SnakeMonster extends Creature {
 
 `Creature`类的子类只有部分会重写`update()``QAction()`等方法,所以Creature没有被设计为抽象类
 
-#### 2.5.4 `Equipment`子类设计
+#### 2.9.4 `Equipment`子类设计
 
 针对每个`Equipment`子类,我们重写`takeEffect()`和`giveUpTakeEffect()`方法
 
@@ -305,7 +626,7 @@ public class SnakeMonster extends Creature {
 
 
 
-#### 2.5.5 `EquipmentFactory`装备工厂设计
+#### 2.9.5 `EquipmentFactory`装备工厂设计
 
 `EquipmentFactory`与`CreatureFactory`的设计原则是一样的
 
@@ -319,9 +640,63 @@ public class SnakeMonster extends Creature {
 
 `CreatureFactory`的`hasNext()`是因为阵营的生物个数是恒定的
 
-### 2.6 包`com.sjq.gourd.constant`
 
-#### 2.6.1 内容
+
+
+
+### 2.10 包`com.ttf.gourd.localplayback`
+
+==TODO==功能：这个包主要用于本地回放。
+
+代码分析：
+
+- `PlayBackFile.java`主要用于存储本地回放文件的相关信息；
+- `LoadPlayBackFiles.java`主要用于显示本地回放文件，添加本地回放文件到list中，通过选择本地回放文件进行回放；
+- `GamePlayBack.java`，关键文件，用于初始化回放中的资源，以及接收本地回放文件中协议的类型，然后调用`ContentParse.java`文件进行内容解析，根据解析得到的信息来设置界面上的图片信息以及葫芦娃，子弹和装备的状态信息。
+
+```java
+// GamePlayBack.java文件
+public class GamePlayBack {
+	// 首先初始化资源信息
+    public void initGame() {
+    }
+
+    public void playBackGame() {
+        initGame();
+        init();
+        // 下面是在一个新的线程里进行工作的，每次循环都会sleep一帧的时间，这个时间是可以通过倍速进行修改的。
+        // ...
+        // 用于解析回放文件中的信息
+        while(true) {
+            int contentType = inputStream.readInt();
+            // 第一个if，是原游戏的一帧结束，即break，在下面进行设置各项资源，然后继续解析
+            if(contentType == Msg.FRAME_FINISH_FLAG_MSG) break;
+            else if(contentType == Msg.FINISH_GAME_FLAG_MSG) {
+                gameOverFlag = true;
+                gameOver(Constant.gameOverState.VICTORY);
+                inputStream.close();
+                break;
+            }
+            else contentParse.parsePlayBackContent(inputStream, contentType);
+        }
+        // ...
+    }
+
+    // 这个函数主要就是初始化界面以及绑定一些函数的地方
+    private void init() {
+    }
+
+    // 这个函数主要是用于检测到游戏结束后，播放结束的一个图片，然后任意点击屏幕即可退出回放界面
+    private void gameOver(int gameOverState) {
+    }
+}
+```
+
+
+
+### 2.11 包`com.ttf.gourd.constant`
+
+#### 2.11.1 内容
 
 这个包中包含了游戏过程中各种常量信息,以及很多静态数据
 
@@ -335,9 +710,25 @@ public class SnakeMonster extends Creature {
 
 5.静态加载的图片信息
 
+
+
+### 2.12 包`com.ttf.gourd.tool`
+
+功能：主要是作为工具类使用
+
+
+
 ## 3 游戏测试
 
 ### 3.1 单元测试
+
+#### 3.1.1 测试通信中的输入输出的协议是否能够正确解析
+
+**准备**：随机生成一个信息种类，然后根据信息种类随机生成相应的信息，然后保存到本地，与此同时将该信息存放到一个`ArrayList`中。
+
+**测试**:通过读入保存到本地的测试文件，根据协议进行协议，即通过不同的消息种类进行不同的解析，然后与`ArrayList`存储的信息进行比较。
+
+**结果**：完全一致，说明协议相关的类和函数从测试来看是不存很大问题的。
 
 ### 3.2 胜率测试
 
@@ -355,7 +746,7 @@ public class SnakeMonster extends Creature {
 
 游戏测试文件在`jlog`文件夹下，此数据是在单机情况下测试的
 
-详细测试代码请看`github`地址 https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/sjq/gourd/localtest
+详细测试代码请看`github`地址 https://github.com/JansonSong/gourd_vs_monster/tree/dev/gourd_vs_monster/src/main/java/com/ttf/gourd/localtest ==加链接的地方请注意==
 
 ## 4 开发过程
 

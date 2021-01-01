@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="basePane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sjq.gourd.stage.SceneController">
+<Pane fx:id="basePane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ttf.gourd.stage.SceneController">
    <children>
       <Pane fx:id="startScene" prefHeight="740" prefWidth="1360">
         <children>
@@ -22,17 +22,17 @@
             </ImageView>
             <ImageView fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="200.0" onMouseClicked="#NetPlayMouseClickEvent" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@images/net_play.png" />
+                    <Image url="@images/netPlay.png" />
                 </image>
             </ImageView>
             <ImageView fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="300.0" onMouseClicked="#LocalPlaybackMouseClickEvent" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@images/local_playback.png" />
+                    <Image url="@images/localPlayBack.png" />
                 </image>
             </ImageView>
             <ImageView fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="400.0" onMouseClicked="#AboutUsMouseClickEvent" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@images/about_us.png" />
+                    <Image url="@images/aboutGame.png" />
                 </image>
             </ImageView>
             <ImageView fx:id="ExitImage" fitHeight="131.0" fitWidth="260.0" layoutX="550.0" layoutY="500.0" onMouseClicked="#ExitMouseClickEvent" pickOnBounds="true" preserveRatio="true">

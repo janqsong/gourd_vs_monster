@@ -3,7 +3,7 @@
            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                                http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <groupId>com.sjq.gourd</groupId>
+   <groupId>com.ttf.gourd</groupId>
    <artifactId>gourd_vs_monster</artifactId>
    <version>1.0.0</version>
 
@@ -118,7 +118,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.sjq.gourd.Main</mainClass>
+                                    <mainClass>com.ttf.gourd.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
