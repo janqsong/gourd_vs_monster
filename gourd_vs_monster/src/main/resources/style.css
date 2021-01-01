@@ -1,9 +1,0 @@
-#StartScene{ 
-    -fx-background-image: url("/background.png");
-    -fx-background-size: 1360 740;
-}
-
-#ConnectScene{ 
-    -fx-background-image: url("/background.png");
-    -fx-background-size: 1360 740;
-} 
